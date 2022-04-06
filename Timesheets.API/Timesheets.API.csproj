@@ -21,7 +21,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="..\.editorconfig" Link=".editorconfig"/>
+		<AdditionalFiles Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 
 </Project>
