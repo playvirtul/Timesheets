@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Timesheets.API.Contracts;
 using Timesheets.Domain;
 
 namespace Timesheets.API.Controllers
@@ -14,12 +15,12 @@ namespace Timesheets.API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectsService _projectsService;
-        private readonly ILogger<ProjectsController> logger;
+        private readonly ILogger<ProjectsController> _logger;
 
         public ProjectsController(IProjectsService projectsService, ILogger<ProjectsController> logger)
         {
             _projectsService = projectsService;
-            this.logger = logger;
+            _logger = logger;
         }
 
         /// <summary>
@@ -49,9 +50,17 @@ namespace Timesheets.API.Controllers
         /// <remarks>Test message</remarks>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(NewProject newProject)
         {
-            return Ok();
+            var project = new Project
+            {
+                Id = newProject.Id,
+                Title = newProject.Title,
+                EmployeeName = newProject.EmployeeName
+            };
+
+            await _projectsService.Create(project);
+            return Ok(project.Id);
         }
 
         /// <summary>
@@ -74,6 +83,22 @@ namespace Timesheets.API.Controllers
         [HttpDelete("{projectId:int}")]
         public async Task<IActionResult> Delete(int projectId)
         {
+            var deletedProjectId = await _projectsService.Delete(projectId);
+
+            return Ok(deletedProjectId);    
+        }
+
+        /// <summary>
+        /// AddWorkingHours
+        /// </summary>
+        /// <param name="employeeName"></param>
+        /// <param name="hours"></param>
+        /// <returns></returns>
+        [HttpPost("{hours:int}")]
+        public async Task<IActionResult> AddWorkingHours(string employeeName, int hours)
+        {
+            await _projectsService.AddWorkingHours(employeeName, hours);
+
             return Ok();
         }
     }
