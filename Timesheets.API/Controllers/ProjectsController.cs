@@ -55,7 +55,6 @@ namespace Timesheets.API.Controllers
             var project = new Project
             {
                 Id = newProject.Id,
-                Title = newProject.Title,
                 EmployeeName = newProject.EmployeeName
             };
 
