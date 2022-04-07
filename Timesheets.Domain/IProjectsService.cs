@@ -6,10 +6,10 @@ namespace Timesheets.Domain
     {
         Task<Project[]> Get();
         
-        Task<int> Create(Project newProject);
+        Task<bool> Create(Project newProject);
 
-        Task<int> Delete(int projectId);
+        Task<bool> Delete(int projectId);
 
-        Task AddWorkingHours(string employeeName, int hours);
+        Task<bool> AddWorkingHours(string employeeName, int hours);
     }
 }

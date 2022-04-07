@@ -13,11 +13,10 @@ namespace Timesheets.BusinessLogic
             return new Project[0];
         }
 
-        public async Task<int> Create(Project newProject)
+        public async Task<bool> Create(Project newProject)
         {
             bool isValid = !string.IsNullOrWhiteSpace(newProject.EmployeeName) 
                 && newProject.Id > default(int)
-                && newProject.WorkingHours >= default(int)
                 && !Projects.ProjectsList.Any(x => x.Id == newProject.Id);
 
             if (!isValid)
@@ -27,10 +26,10 @@ namespace Timesheets.BusinessLogic
 
             Projects.ProjectsList.Add(newProject);
 
-            return newProject.Id;
+            return true;
         }
 
-        public async Task<int> Delete(int projectId)
+        public async Task<bool> Delete(int projectId)
         {
             if (projectId <= default(int))
             {
@@ -40,14 +39,21 @@ namespace Timesheets.BusinessLogic
             var project = Projects.ProjectsList.FirstOrDefault(x => x.Id == projectId);
 
             Projects.ProjectsList.Remove(project);
-            return project.Id;
+            return true;
         }
 
-        public async Task AddWorkingHours(string employeeName, int hours)
+        public async Task<bool> AddWorkingHours(string employeeName, int hours)
         {
+            if (hours <= default(int) || string.IsNullOrWhiteSpace(employeeName))
+            {
+                throw new ArgumentException();
+            }
+
             var index = Projects.ProjectsList.FindIndex(x => x.EmployeeName == employeeName);
 
             Projects.ProjectsList[index].WorkingHours += hours;
+
+            return true;
         }
     }
 
