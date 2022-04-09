@@ -29,18 +29,16 @@ namespace Timesheets.BusinessLogic
             return true;
         }
 
-        public async Task<bool> AddWorkTime(WorkTime workTime)
+        public async Task<string[]> AddWorkTime(WorkTime workTime)
         {
             var project = Projects.Get(workTime.ProjectId);
 
             if (project == null)
             {
-                return false;
+                return new string[] { "Project is null" };
             }
 
-            project.AddWorkTime(workTime);
-
-            return true;
+            return project.AddWorkTime(workTime);
         }
     }
 
