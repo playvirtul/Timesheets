@@ -239,6 +239,9 @@ dotnet_diagnostic.SA1101.severity = none
 # SX1309: 
 dotnet_diagnostic.SX1309.severity = warning
 
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = none
+
 [*.{cs,vb}]
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion

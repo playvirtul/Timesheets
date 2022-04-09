@@ -1,11 +1,3 @@
-using AutoFixture;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Timesheets.BusinessLogic;
-using Timesheets.Domain;
-using Xunit;
-
 namespace Timesheets.UnitTests
 {
     public class ProjectsServiceTests

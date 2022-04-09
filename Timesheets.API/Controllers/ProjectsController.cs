@@ -25,24 +25,28 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Get.
+        /// Get projects.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok();
+            var projects = await _projectsService.Get();
+
+            return Ok(projects);
         }
 
         /// <summary>
-        /// Get
+        /// Get project.
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
         [HttpGet("{projectId:int}")]
         public async Task<IActionResult> Get(int projectId)
         {
-            return Ok();
+            var project = await _projectsService.Get(projectId);
+
+            return Ok(project);
         }
 
         /// <summary>
@@ -67,19 +71,7 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Create
-        /// </summary>
-        /// <remarks>Test message</remarks>
-        /// <returns></returns>
-        [ApiVersion("2.0")]
-        [HttpPost]
-        public async Task<IActionResult> CreateV2()
-        {
-            return Ok();
-        }
-
-        /// <summary>
-        /// Delete
+        /// Delete project.
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
@@ -88,21 +80,23 @@ namespace Timesheets.API.Controllers
         {
             var deletedProjectId = await _projectsService.Delete(projectId);
 
-            return Ok(deletedProjectId);    
+            return Ok(deletedProjectId);
         }
 
-        /// <summary>
-        /// AddWorkingHours
-        /// </summary>
-        /// <param name="employeeName"></param>
-        /// <param name="hours"></param>
-        /// <returns></returns>
-        [HttpPost("{projectId:int}")]
-        public async Task<IActionResult> AddWorkingHours(int projectId, [FromBody]int hours)
+        [HttpPost("workTime")]
+        public async Task<IActionResult> AddWorkTime([FromBody] NewWorkTime newWorkTime)
         {
-            await _projectsService.AddWorkingHours(projectId, hours);
+            var (workTime, errors) = WorkTime.Create(newWorkTime.ProjectId, newWorkTime.Hours, newWorkTime.Date);
 
-            return Ok();
+            if (errors.Any())
+            {
+                _logger.LogError("{errors}", errors);
+                return BadRequest(errors);
+            }
+
+            var result = await _projectsService.AddWorkTime(workTime);
+
+            return Ok(result);
         }
     }
 }

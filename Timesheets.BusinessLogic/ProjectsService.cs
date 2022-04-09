@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
@@ -8,9 +7,14 @@ namespace Timesheets.BusinessLogic
 {
     public class ProjectsService : IProjectsService
     {
+        public async Task<Project?> Get(int projectId)
+        {
+            return Projects.Get(projectId);
+        }
+
         public async Task<Project[]> Get()
         {
-            return new Project[0];
+            return Projects.Get();
         }
 
         public async Task<int> Create(Project newProject)
@@ -25,16 +29,16 @@ namespace Timesheets.BusinessLogic
             return true;
         }
 
-        public async Task<bool> AddWorkingHours(int projectId, int hours)
+        public async Task<bool> AddWorkTime(WorkTime workTime)
         {
-            var project = Projects.Get(projectId);
+            var project = Projects.Get(workTime.ProjectId);
 
             if (project == null)
             {
                 return false;
             }
 
-            project.AddHours(hours);
+            project.AddWorkTime(workTime);
 
             return true;
         }
@@ -51,6 +55,11 @@ namespace Timesheets.BusinessLogic
             ProjectsList.Add(project with { Id = id });
 
             return id;
+        }
+
+        public static Project[] Get()
+        {
+            return ProjectsList.ToArray();
         }
 
         public static Project? Get(int projectId)
