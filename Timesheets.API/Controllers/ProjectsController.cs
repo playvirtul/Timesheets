@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
@@ -24,7 +25,7 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -45,21 +46,24 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Create
+        /// Creates new project.
         /// </summary>
-        /// <remarks>Test message</remarks>
+        /// <param name="newProject"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create(NewProject newProject)
+        public async Task<IActionResult> Create([FromBody]NewProject newProject)
         {
-            var project = new Project
-            {
-                Id = newProject.Id,
-                EmployeeName = newProject.EmployeeName
-            };
+            var (project, errors) = Project.Create(newProject.Title);
 
-            await _projectsService.Create(project);
-            return Ok(project.Id);
+            if (errors.Any())
+            {
+                _logger.LogError("{errors}", errors);
+                return BadRequest(errors);
+            }
+
+            var projectId = await _projectsService.Create(project);
+
+            return Ok(projectId);
         }
 
         /// <summary>
@@ -93,10 +97,10 @@ namespace Timesheets.API.Controllers
         /// <param name="employeeName"></param>
         /// <param name="hours"></param>
         /// <returns></returns>
-        [HttpPost("{hours:int}")]
-        public async Task<IActionResult> AddWorkingHours(string employeeName, int hours)
+        [HttpPost("{projectId:int}")]
+        public async Task<IActionResult> AddWorkingHours(int projectId, [FromBody]int hours)
         {
-            await _projectsService.AddWorkingHours(employeeName, hours);
+            await _projectsService.AddWorkingHours(projectId, hours);
 
             return Ok();
         }

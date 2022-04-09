@@ -1,11 +1,11 @@
-﻿namespace Timesheets.API.Contracts
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Timesheets.API.Contracts
 {
     public class NewProject
     {
-        public int Id { get; set; }
-
+        [Required]
+        [StringLength(200)]
         public string Title { get; set; }
-
-        public string EmployeeName { get; set; }
     }
 }

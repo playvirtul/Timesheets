@@ -13,45 +13,28 @@ namespace Timesheets.BusinessLogic
             return new Project[0];
         }
 
-        public async Task<bool> Create(Project newProject)
+        public async Task<int> Create(Project newProject)
         {
-            bool isValid = !string.IsNullOrWhiteSpace(newProject.EmployeeName) 
-                && newProject.Id > default(int)
-                && !Projects.ProjectsList.Any(x => x.Id == newProject.Id);
-
-            if (!isValid)
-            {
-                throw new ArgumentException();
-            }
-
-            Projects.ProjectsList.Add(newProject);
-
-            return true;
+            return Projects.Add(newProject);
         }
 
         public async Task<bool> Delete(int projectId)
         {
-            if (projectId <= default(int))
-            {
-                throw new ArgumentException();
-            }
+            Projects.Delete(projectId);
 
-            var project = Projects.ProjectsList.FirstOrDefault(x => x.Id == projectId);
-
-            Projects.ProjectsList.Remove(project);
             return true;
         }
 
-        public async Task<bool> AddWorkingHours(string employeeName, int hours)
+        public async Task<bool> AddWorkingHours(int projectId, int hours)
         {
-            if (hours <= default(int) || string.IsNullOrWhiteSpace(employeeName))
+            var project = Projects.Get(projectId);
+
+            if (project == null)
             {
-                throw new ArgumentException();
+                return false;
             }
 
-            var index = Projects.ProjectsList.FindIndex(x => x.EmployeeName == employeeName);
-
-            Projects.ProjectsList[index].WorkingHours += hours;
+            project.AddHours(hours);
 
             return true;
         }
@@ -59,6 +42,27 @@ namespace Timesheets.BusinessLogic
 
     public static class Projects
     {
-        public static List<Project> ProjectsList { get; set; } = new List<Project>();
+        private static List<Project> ProjectsList { get; set; } = new List<Project>();
+
+        public static int Add(Project project)
+        {
+            var id = ProjectsList.Count + 1;
+
+            ProjectsList.Add(project with { Id = id });
+
+            return id;
+        }
+
+        public static Project? Get(int projectId)
+        {
+            return ProjectsList.FirstOrDefault(x => x.Id == projectId);
+        }
+
+        public static void Delete(int projectId)
+        {
+            var project = ProjectsList.FirstOrDefault(x => x.Id == projectId);
+
+            ProjectsList.Remove(project);
+        }
     }
 }
