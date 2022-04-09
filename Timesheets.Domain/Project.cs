@@ -17,7 +17,6 @@
 
         public WorkTime[] WorkingHours => _workingHours.ToArray();
 
-
         public static (Project? Result, string[] Errors) Create(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
@@ -37,6 +36,11 @@
 
         public string[] AddWorkTime(WorkTime workTime)
         {
+            if (_workingHours.Any(x => x.Date == workTime.Date))
+            {
+                return new string[] { "Can not add hours on the same date." };
+            }
+
             _workingHours.Add(workTime);
 
             return Array.Empty<string>();
