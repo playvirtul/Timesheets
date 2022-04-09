@@ -2,20 +2,20 @@
 {
     public record Project
     {
-        private readonly List<int> _workingHours;
+        private readonly List<WorkTime> _workingHours;
 
-        private Project(int id, string? title, int[] workingHours)
+        private Project(int id, string? title, WorkTime[] workingHours)
         {
             Id = id;
             Title = title;
-            _workingHours = new List<int>(workingHours);
+            _workingHours = new List<WorkTime>(workingHours);
         }
 
         public int Id { get; init; }
 
         public string? Title { get; init; }
 
-        public int[] WorkingHours => _workingHours.ToArray();
+        public WorkTime[] WorkingHours => _workingHours.ToArray();
 
 
         public static (Project? Result, string[] Errors) Create(string title)
@@ -31,18 +31,13 @@
             }
 
             return (
-                new Project(0, title, Array.Empty<int>()),
+                new Project(0, title, Array.Empty<WorkTime>()),
                 Array.Empty<string>());
         }
 
-        public string[] AddHours(int hours)
+        public string[] AddWorkTime(WorkTime workTime)
         {
-            if (hours <= 0 || hours > 24)
-            {
-                return new string[] { "Hours should be between 0 and 24" };
-            }
-
-            _workingHours.Add(hours);
+            _workingHours.Add(workTime);
 
             return Array.Empty<string>();
         }

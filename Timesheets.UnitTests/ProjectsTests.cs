@@ -15,7 +15,7 @@ namespace Timesheets.UnitTests
             var title = Guid.NewGuid().ToString();
 
             // act
-            var (project, errors) = Project.Create(title); 
+            var (project, errors) = Project.Create(title);
 
             // assert
             Assert.NotNull(project);
