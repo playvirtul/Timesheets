@@ -14,8 +14,8 @@
   </ItemGroup>
 
     <ItemGroup>
-	    <AdditionalFiles Include="../stylecop.json"/>
-	    <AdditionalFiles Include="../.editorconfig"/>
+	    <AdditionalFiles Include="../stylecop.json" />
+	    <AdditionalFiles Include="../.editorconfig" />
     </ItemGroup>
 
 </Project>

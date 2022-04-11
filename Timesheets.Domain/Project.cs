@@ -36,7 +36,7 @@
 
         public string[] AddWorkTime(WorkTime workTime)
         {
-            if (_workingHours.Any(x => x.Date == workTime.Date))
+            if (_workingHours.Any(x => x.Date.Day == workTime.Date.Day))
             {
                 return new string[] { "Can not add hours on the same date." };
             }

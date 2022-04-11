@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
-using Timesheets.BusinessLogic;
-using Timesheets.Domain;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Timesheets.Domain.Interfaces;
+using Timesheets.BusinessLogic;
 
 namespace Timesheets.API
 {
@@ -53,6 +53,7 @@ namespace Timesheets.API
             });
 
             services.AddScoped<IProjectsService, ProjectsService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

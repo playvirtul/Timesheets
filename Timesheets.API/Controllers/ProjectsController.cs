@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace Timesheets.Domain
+﻿namespace Timesheets.Domain.Interfaces
 {
     public interface IProjectsService
     {
