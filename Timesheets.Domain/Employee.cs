@@ -16,14 +16,14 @@
 
         public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, string position)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > 100)
             {
-                return (null, new string[] { "FirstName cannot be null or empty." });
+                return (null, new string[] { "FirstName cannot be null or empty or greater then 100 symbols." });
             }
 
-            if (string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > 100)
             {
-                return (null, new string[] { "LastName cannot be null or empty." });
+                return (null, new string[] { "LastName cannot be null or empty or greater then 100 symbols." });
             }
 
             if (string.IsNullOrWhiteSpace(position))
