@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.BusinessLogic
 {
@@ -44,32 +45,32 @@ namespace Timesheets.BusinessLogic
 
     public static class Projects
     {
-        private static List<Project> ProjectsList { get; set; } = new List<Project>();
+        private static List<Project> _projectList = new List<Project>();
 
         public static int Add(Project project)
         {
-            var id = ProjectsList.Count + 1;
+            var id = _projectList.Count + 1;
 
-            ProjectsList.Add(project with { Id = id });
+            _projectList.Add(project with { Id = id });
 
             return id;
         }
 
         public static Project[] Get()
         {
-            return ProjectsList.ToArray();
+            return _projectList.ToArray();
         }
 
         public static Project? Get(int projectId)
         {
-            return ProjectsList.FirstOrDefault(x => x.Id == projectId);
+            return _projectList.FirstOrDefault(x => x.Id == projectId);
         }
 
         public static void Delete(int projectId)
         {
-            var project = ProjectsList.FirstOrDefault(x => x.Id == projectId);
+            var project = _projectList.FirstOrDefault(x => x.Id == projectId);
 
-            ProjectsList.Remove(project);
+            _projectList.Remove(project);
         }
     }
 }
