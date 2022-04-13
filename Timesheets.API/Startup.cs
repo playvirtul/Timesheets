@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Timesheets.Domain.Interfaces;
 using Timesheets.BusinessLogic;
+using Timesheets.DataAccess.Postgre;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API
 {
@@ -24,6 +26,9 @@ namespace Timesheets.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TimesheetsDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString(nameof(TimesheetsDbContext))));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

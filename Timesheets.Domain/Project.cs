@@ -4,7 +4,7 @@
     {
         private readonly List<WorkTime> _workingHours;
 
-        private Project(int id, string? title, WorkTime[] workingHours)
+        private Project(int id, string title, WorkTime[] workingHours)
         {
             Id = id;
             Title = title;
@@ -13,7 +13,7 @@
 
         public int Id { get; init; }
 
-        public string? Title { get; init; }
+        public string Title { get; init; }
 
         public WorkTime[] WorkingHours => _workingHours.ToArray();
 
@@ -29,8 +29,16 @@
                 return (null, new string[] { "Title cannot contains more then 200 symbols." });
             }
 
+            return Create(title, 0, Array.Empty<WorkTime>());
+        }
+
+        public static (Project? Result, string[] Errors) Create(
+            string title,
+            int id,
+            WorkTime[] workTimes)
+        {
             return (
-                new Project(0, title, Array.Empty<WorkTime>()),
+                new Project(id, title, workTimes),
                 Array.Empty<string>());
         }
 
