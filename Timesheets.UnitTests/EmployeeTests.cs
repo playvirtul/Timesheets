@@ -15,7 +15,7 @@ namespace Timesheets.UnitTests
         [InlineData("manager")]
         [InlineData("stuffemployee")]
         [InlineData("freelancer")]
-        public void Create_ShouldCreateValidProject(string position)
+        public void Create_ShouldCreateValidEmployee(string position)
         {
             // arrange
             var firstName = Guid.NewGuid().ToString();

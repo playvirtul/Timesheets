@@ -2,18 +2,18 @@
 {
     public class WorkTime
     {
-        public WorkTime(int projectId, int hours, DateTime date)
+        private WorkTime(int projectId, int hours, DateTime date)
         {
             ProjectId = projectId;
             WorkingHours = hours;
             Date = date;
         }
 
-        public int ProjectId { get; set; }
+        public int ProjectId { get; }
 
-        public int WorkingHours { get; set; }
+        public int WorkingHours { get; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; }
 
         public static (WorkTime? Result, string[] Errors) Create(int projectId, int hours, DateTime date)
         {

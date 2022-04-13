@@ -11,7 +11,7 @@ namespace Timesheets.IntegrationalTests
         [Fact]
         public async Task Get_ShouldReturnProjects()
         {
-            //arrange
+            // arrange
             var application = new WebHostBuilder()
                 .UseKestrel()
                 .UseStartup<Startup>();
@@ -20,10 +20,10 @@ namespace Timesheets.IntegrationalTests
 
             var client = testServer.CreateClient();
 
-            //act
+            // act
             var response = await client.GetAsync("api/v1/projects");
 
-            //assert
+            // assert
             response.EnsureSuccessStatusCode();
         }
     }
