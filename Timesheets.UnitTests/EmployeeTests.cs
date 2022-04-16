@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Timesheets.Domain;
 using Xunit;
 
@@ -11,11 +9,11 @@ namespace Timesheets.UnitTests
     public class EmployeeTests
     {
         [Theory]
-        [InlineData("chief")]
-        [InlineData("manager")]
-        [InlineData("stuffemployee")]
-        [InlineData("freelancer")]
-        public void Create_ShouldCreateValidEmployee(string position)
+        [InlineData(EmployeeRole.Chief)]
+        [InlineData(EmployeeRole.StuffEmployee)]
+        [InlineData(EmployeeRole.Manager)]
+        [InlineData(EmployeeRole.Freelancer)]
+        public void Create_ShouldCreateValidEmployee(EmployeeRole position)
         {
             // arrange
             var firstName = Guid.NewGuid().ToString();
@@ -31,7 +29,7 @@ namespace Timesheets.UnitTests
 
         [Theory]
         [MemberData(nameof(GenerateInvalidTitle))]
-        public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, string position)
+        public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, EmployeeRole position)
         {
             // act
             var (employee, errors) = Employee.Create(firstName, lastName, position);
@@ -43,14 +41,16 @@ namespace Timesheets.UnitTests
 
         public static IEnumerable<object[]> GenerateInvalidTitle()
         {
+            var randomRole = new Random();
+
             for (int i = 0; i < 10; i++)
             {
-                yield return new string[] { " ", " ", " " };
-                yield return new string[] { string.Empty, string.Empty, string.Empty };
-                yield return new string[] { null, null, null };
+                yield return new object[] { " ", " ",  randomRole.Next(10, 100) };
+                yield return new object[] { string.Empty, string.Empty, randomRole.Next(10, 100) };
+                yield return new object[] { null, null, randomRole.Next(10, 100) };
                 var invalidString = Enumerable.Range(0, 100 + 50);
                 var incorrectString = string.Join(string.Empty, invalidString);
-                yield return new string[] { incorrectString, incorrectString, incorrectString };
+                yield return new object[] { incorrectString, incorrectString, randomRole.Next(10, 100) };
             }
         }
     }
