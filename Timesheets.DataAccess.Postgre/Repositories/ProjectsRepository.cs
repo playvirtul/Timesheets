@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
+using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.DataAccess.Postgre.Repositories

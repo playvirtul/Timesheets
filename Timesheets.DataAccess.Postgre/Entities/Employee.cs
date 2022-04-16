@@ -1,6 +1,6 @@
-﻿namespace Timesheets.DataAccess.Postgre
+﻿namespace Timesheets.DataAccess.Postgre.Entities
 {
-    internal class Employee
+    public class Employee
     {
     }
 }
