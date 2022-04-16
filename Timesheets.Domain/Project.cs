@@ -44,14 +44,23 @@
 
         public string[] AddWorkTime(WorkTime workTime)
         {
-            if (_workingHours.Any(x => x.Date.Day == workTime.Date.Day))
+            if (workTime.WorkingHours + CountHoursPerDay(workTime) > 24)
             {
-                return new string[] { "Can not add hours on the same date." };
+                return new string[] { "can not add more than 24 hours on the same date." };
             }
 
             _workingHours.Add(workTime);
 
             return Array.Empty<string>();
+        }
+
+        private int CountHoursPerDay(WorkTime workTime)
+        {
+            var hoursPerDay = _workingHours
+                .Where(x => x.Date.Day == workTime.Date.Day)
+                .Sum(x => x.WorkingHours);
+
+            return hoursPerDay;
         }
     }
 }

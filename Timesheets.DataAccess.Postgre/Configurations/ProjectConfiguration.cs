@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Timesheets.DataAccess.Postgre
 {
-    internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
+    public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {

@@ -12,9 +12,7 @@
 
         public string LastName { get; set; }
 
-        public string Salary { get; set; }
-
-        public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, string position)
+        public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, EmployeeRole position)
         {
             if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > 100)
             {
@@ -26,24 +24,19 @@
                 return (null, new string[] { "LastName cannot be null or empty or greater then 100 symbols." });
             }
 
-            if (string.IsNullOrWhiteSpace(position))
+            switch (position)
             {
-                return (null, new string[] { "Position cannot be null or empty." });
-            }
+                case EmployeeRole.Chief:
+                    return (new Chief(firstName, lastName), Array.Empty<string>());
 
-            switch (position.ToLower())
-            {
-                case "stuffemployee":
+                case EmployeeRole.StuffEmployee:
                     return (new StuffEmployee(firstName, lastName), Array.Empty<string>());
 
-                case "manager":
+                case EmployeeRole.Manager:
                     return (new Manager(firstName, lastName), Array.Empty<string>());
 
-                case "freelancer":
+                case EmployeeRole.Freelancer:
                     return (new Freelancer(firstName, lastName), Array.Empty<string>());
-
-                case "chief":
-                    return (new Chief(firstName, lastName), Array.Empty<string>());
 
                 default:
                     return (null, new string[] { "Position is incorrect" });
