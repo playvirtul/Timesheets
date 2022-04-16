@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Timesheets.DataAccess.Postgre.Entities;
 
 namespace Timesheets.DataAccess.Postgre
 {

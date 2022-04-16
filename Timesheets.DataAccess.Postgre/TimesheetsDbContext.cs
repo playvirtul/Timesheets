@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
+using Timesheets.DataAccess.Postgre.Configurations;
+using Timesheets.DataAccess.Postgre.Entities;
 
 namespace Timesheets.DataAccess.Postgre
 {

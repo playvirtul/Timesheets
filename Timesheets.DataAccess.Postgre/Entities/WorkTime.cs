@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Timesheets.DataAccess.Postgre
+namespace Timesheets.DataAccess.Postgre.Entities
 {
     public class WorkTime
     {
