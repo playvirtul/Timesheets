@@ -8,9 +8,9 @@ namespace Timesheets.DataAccess.Postgre.Repositories
     public class WorkTimesRepository : IWorkTimesRepository
     {
         private readonly TimesheetsDbContext _context;
-        private readonly Mapper _mapper;
+        private readonly IMapper _mapper;
 
-        public WorkTimesRepository(TimesheetsDbContext context, Mapper mapper)
+        public WorkTimesRepository(TimesheetsDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
