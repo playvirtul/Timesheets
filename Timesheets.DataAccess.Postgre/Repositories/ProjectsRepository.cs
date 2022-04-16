@@ -1,83 +1,91 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Linq;
-//using System.Threading.Tasks;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
+using Timesheets.Domain.Interfaces;
 
-//namespace Timesheets.DataAccess.Postgre.Repositories
-//{
-//    public class ProjectsRepository
-//    {
-//        private readonly TimesheetsDbContext _context;
+namespace Timesheets.DataAccess.Postgre.Repositories
+{
+    public class ProjectsRepository : IProjectsRepository
+    {
+        private readonly TimesheetsDbContext _context;
+        private readonly Mapper _mapper;
 
-//        public ProjectsRepository(TimesheetsDbContext context)
-//        {
-//            _context = context;
-//        }
+        public ProjectsRepository(TimesheetsDbContext context, Mapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
-//        public async Task<Domain.Project[]> Get()
-//        {
-//            var projectEntities = await _context.Projects
-//                .Include(p => p.WorkTimes)
-//                .AsNoTracking()
-//                .ToArrayAsync();
+        public async Task<Domain.Project[]> Get()
+        {
+            var projectEntities = await _context.Projects
+                .Include(p => p.WorkTimes)
+                .AsNoTracking()
+                .ToArrayAsync();
 
-//            var projects = projectEntities
-//                .Where(x => x != null)
-//                .Select(x =>
-//            {
-//                var workTimes = x.WorkTimes
-//                    .Select(y =>
-//                    {
-//                        var (workTime, errors) = Domain.WorkTime.Create(y.ProjectId, y.WorkingHours, y.Date);
+            var projects = _mapper.Map<Project[], Domain.Project[]>(projectEntities);
 
-//                        if (errors.Any() && workTime == null)
-//                        {
-//                            return (null, Errors: errors);
-//                        }
-//                        else
-//                        {
-//                            return (workTime, Errors: Array.Empty<string>());
-//                        }
-//                    })
-//                    .Aggregate((new Domain.WorkTime[0], new string[0]), (a, b) =>
-//                    {
-//                        if (b.Errors.Any())
-//                        {
-//                            return b;
-//                        }
-//                        else
-//                        {
+            return projects;
+        }
 
-//                        }
-//                    });
-//                    .ToArray();
+        public async Task<int> Create(Domain.Project newProject)
+        {
+            var project = _mapper.Map<Domain.Project, Project>(newProject);
 
-//                var workTimesErrors = workTimes
-//                    .Where(y => y.Errors.Any())
-//                    .SelectMany(y => y.Errors).ToArray();
+            await _context.Projects.AddAsync(project);
 
-//                if (workTimesErrors.Any())
-//                {
-//                    return (null, workTimesErrors);
-//                }
-//                else
-//                {
-//                    var d = workTimes
-//                .Select(y => y.workTime)
-//                .Where(x => x != null)
-//                .ToArray();
+            return project.Id;
+        }
 
-//                    var (projects, errors) = Domain.Project
-//                        .Create(x.Title, x.Id, d);
+        //public async Task<(Domain.Project[], string[])> Get()
+        //{
+        //    var projectEntities = await _context.Projects
+        //        .Include(p => p.WorkTimes)
+        //        .AsNoTracking()
+        //        .ToArrayAsync();
 
-//                    return (projects, errors);
-//                }
-//            });
-//        }
+        //    var projects = projectEntities
+        //        .Select(x =>
+        //        {
+        //            var (workTimes, errors) = x.WorkTimes
+        //                .Select(y => Domain.WorkTime.Create(y.ProjectId, y.WorkingHours, y.Date))
+        //                .Aggregate((Result: new List<Domain.WorkTime>(), Errors: Array.Empty<string>()), (a, b) =>
+        //                {
+        //                    if (b.Result == null || b.Errors.Any())
+        //                    {
+        //                        return (a.Result, a.Errors.Union(b.Errors).ToArray());
+        //                    }
+        //                    else
+        //                    {
+        //                        a.Result.Add(b.Result);
+        //                        return (a.Result, a.Errors);
+        //                    }
+        //                });
 
-//        public async Task<int> Create(Domain.Project project)
-//        {
+        //            if (errors.Any())
+        //            {
+        //                return (null, errors);
+        //            }
+        //            else
+        //            {
+        //                return Domain.Project.Create(x.Title, x.Id, workTimes.ToArray());
+        //            }
+        //        })
+        //        .Aggregate((Result: new List<Domain.Project>(), Errors: Array.Empty<string>()), (a, b) =>
+        //        {
+        //            if (b.Result == null || b.Errors.Any())
+        //            {
+        //                return (a.Result, a.Errors.Union(b.Errors).ToArray());
+        //            }
+        //            else
+        //            {
+        //                a.Result.Add(b.Result);
+        //                return (a.Result, a.Errors);
+        //            }
+        //        });
 
-//        }
-//    }
-//}
+        //    return (projects.Result.ToArray(), projects.Errors);
+        //}
+    }
+}

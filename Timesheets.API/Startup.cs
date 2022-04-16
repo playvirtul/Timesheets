@@ -29,6 +29,11 @@ namespace Timesheets.API
             services.AddDbContext<TimesheetsDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString(nameof(TimesheetsDbContext))));
 
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<DataAccessMappingProfile>();
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
