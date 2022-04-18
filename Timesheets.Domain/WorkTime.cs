@@ -2,6 +2,8 @@
 {
     public class WorkTime
     {
+        private const int MAX_WORKING_HOURS_PER_DAY = 24;
+        
         private WorkTime(int projectId, int hours, DateTime date)
         {
             ProjectId = projectId;
@@ -22,7 +24,7 @@
                 return (null, new string[] { "Id cannot be less then 1." });
             }
 
-            if (hours <= 0 || hours > 24)
+            if (hours <= 0 || hours > MAX_WORKING_HOURS_PER_DAY)
             {
                 return (null, new string[] { "Hours should be between 0 and 24." });
             }
