@@ -14,6 +14,6 @@ namespace Timesheets.API.Contracts
         public string LastName { get; set; }
 
         [Required]
-        public EmployeeRole Position { get; set; }
+        public Position Position { get; set; }
     }
 }

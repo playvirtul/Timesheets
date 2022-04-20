@@ -1,6 +1,6 @@
 ﻿namespace Timesheets.Domain
 {
-    public enum EmployeeRole
+    public enum Position
     {
         Chief,
         StuffEmployee,

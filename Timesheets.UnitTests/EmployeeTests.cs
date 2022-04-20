@@ -9,11 +9,11 @@ namespace Timesheets.UnitTests
     public class EmployeeTests
     {
         [Theory]
-        [InlineData(EmployeeRole.Chief)]
-        [InlineData(EmployeeRole.StuffEmployee)]
-        [InlineData(EmployeeRole.Manager)]
-        [InlineData(EmployeeRole.Freelancer)]
-        public void Create_ShouldCreateValidEmployee(EmployeeRole position)
+        [InlineData(Position.Chief)]
+        [InlineData(Position.StuffEmployee)]
+        [InlineData(Position.Manager)]
+        [InlineData(Position.Freelancer)]
+        public void Create_ShouldCreateValidEmployee(Position position)
         {
             // arrange
             var firstName = Guid.NewGuid().ToString();
@@ -29,7 +29,7 @@ namespace Timesheets.UnitTests
 
         [Theory]
         [MemberData(nameof(GenerateInvalidTitle))]
-        public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, EmployeeRole position)
+        public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, Position position)
         {
             // act
             var (employee, errors) = Employee.Create(firstName, lastName, position);

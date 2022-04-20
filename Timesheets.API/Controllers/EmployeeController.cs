@@ -12,12 +12,12 @@ namespace Timesheets.API.Controllers
     [Route("api/v{version:apiversion}/[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeesService _employeeService;
+        private readonly IEmployeesService _employeesService;
         private readonly ILogger _logger;
 
-        public EmployeeController(IEmployeesService employeeService, ILogger<EmployeeController> logger)
+        public EmployeeController(IEmployeesService employeesService, ILogger<EmployeeController> logger)
         {
-            _employeeService = employeeService;
+            _employeesService = employeesService;
             _logger = logger;
         }
 
@@ -28,7 +28,7 @@ namespace Timesheets.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var employees = await _employeeService.Get();
+            var employees = await _employeesService.Get();
 
             return Ok(employees);
         }
@@ -49,7 +49,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            await _employeeService.Add(employee);
+            await _employeesService.Add(employee);
 
             return Ok();
         }

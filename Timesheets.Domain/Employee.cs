@@ -12,7 +12,7 @@
 
         public string LastName { get; set; }
 
-        public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, EmployeeRole position)
+        public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, Position position)
         {
             if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > 100)
             {
@@ -26,16 +26,16 @@
 
             switch (position)
             {
-                case EmployeeRole.Chief:
+                case Position.Chief:
                     return (new Chief(firstName, lastName), Array.Empty<string>());
 
-                case EmployeeRole.StuffEmployee:
+                case Position.StuffEmployee:
                     return (new StuffEmployee(firstName, lastName), Array.Empty<string>());
 
-                case EmployeeRole.Manager:
+                case Position.Manager:
                     return (new Manager(firstName, lastName), Array.Empty<string>());
 
-                case EmployeeRole.Freelancer:
+                case Position.Freelancer:
                     return (new Freelancer(firstName, lastName), Array.Empty<string>());
 
                 default:

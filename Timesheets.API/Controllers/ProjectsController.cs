@@ -89,10 +89,10 @@ namespace Timesheets.API.Controllers
         /// </summary>
         /// <param name="newWorkTime"></param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        [HttpPost("workTime")]
-        public async Task<IActionResult> AddWorkTime([FromBody]NewWorkTime newWorkTime)
+        [HttpPost("{projectId:int}")]
+        public async Task<IActionResult> AddWorkTime(int projectId, [FromBody]NewWorkTime newWorkTime)
         {
-            var (workTime, errors) = WorkTime.Create(newWorkTime.ProjectId, newWorkTime.Hours, newWorkTime.Date);
+            var (workTime, errors) = WorkTime.Create(projectId, newWorkTime.Hours, newWorkTime.Date);
 
             if (errors.Any())
             {

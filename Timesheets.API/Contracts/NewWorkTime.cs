@@ -6,9 +6,6 @@ namespace Timesheets.API.Contracts
     public class NewWorkTime
     {
         [Required]
-        public int ProjectId { get; set; }
-
-        [Required]
         [Range(1, 24)]
         public int Hours { get; set; }
 
