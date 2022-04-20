@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
@@ -8,6 +9,6 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public string Title { get; set; } = string.Empty;
 
-        public WorkTime[] WorkTimes { get; set; } = Array.Empty<WorkTime>();
+        public ICollection<WorkTime> WorkTimes { get; set; } = Array.Empty<WorkTime>();
     }
 }

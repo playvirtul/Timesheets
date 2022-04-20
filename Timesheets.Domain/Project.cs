@@ -4,6 +4,11 @@
     {
         private readonly List<WorkTime> _workingHours;
 
+        private Project()
+        {
+            _workingHours = new List<WorkTime>();
+        }
+
         private Project(int id, string title, WorkTime[] workingHours)
         {
             Id = id;

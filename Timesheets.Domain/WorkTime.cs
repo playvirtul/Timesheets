@@ -3,7 +3,12 @@
     public class WorkTime
     {
         private const int MAX_WORKING_HOURS_PER_DAY = 24;
-        
+
+        private WorkTime()
+        {
+
+        }
+
         private WorkTime(int projectId, int hours, DateTime date)
         {
             ProjectId = projectId;

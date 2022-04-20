@@ -8,24 +8,31 @@ namespace Timesheets.BusinessLogic
 {
     public class ProjectsService : IProjectsService
     {
+        private readonly IProjectsRepository _projectsRepository;
+
+        public ProjectsService(IProjectsRepository projectsRepository)
+        {
+            _projectsRepository = projectsRepository;
+        }
+
         public async Task<Project?> Get(int projectId)
         {
-            return Projects.Get(projectId);
+            return await _projectsRepository.Get(projectId);
         }
 
         public async Task<Project[]> Get()
         {
-            return Projects.Get();
+            return await _projectsRepository.Get();
         }
 
         public async Task<int> Create(Project newProject)
         {
-            return Projects.Add(newProject);
+            return await _projectsRepository.Add(newProject);
         }
 
         public async Task<bool> Delete(int projectId)
         {
-            Projects.Delete(projectId);
+            await _projectsRepository.Delete(projectId);
 
             return true;
         }

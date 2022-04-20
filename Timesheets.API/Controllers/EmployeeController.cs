@@ -12,10 +12,10 @@ namespace Timesheets.API.Controllers
     [Route("api/v{version:apiversion}/[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IEmployeesService _employeeService;
         private readonly ILogger _logger;
 
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger)
+        public EmployeeController(IEmployeesService employeeService, ILogger<EmployeeController> logger)
         {
             _employeeService = employeeService;
             _logger = logger;

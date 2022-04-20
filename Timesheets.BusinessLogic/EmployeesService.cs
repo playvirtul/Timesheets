@@ -5,7 +5,7 @@ using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.BusinessLogic
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeesService : IEmployeesService
     {
         public async Task Add(Employee employee)
         {
