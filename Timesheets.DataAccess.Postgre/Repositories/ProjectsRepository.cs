@@ -24,14 +24,14 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var projects = _mapper.Map<Project[], Domain.Project[]>(projectEntities);
+            var projects = _mapper.Map<Domain.Project[]>(projectEntities);
 
             return projects;
         }
 
         public async Task<int> Create(Domain.Project newProject)
         {
-            var project = _mapper.Map<Domain.Project, Project>(newProject);
+            var project = _mapper.Map<Project>(newProject);
 
             await _context.Projects.AddAsync(project);
 
