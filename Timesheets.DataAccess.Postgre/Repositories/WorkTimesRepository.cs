@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.DataAccess.Postgre.Repositories
 {
@@ -22,14 +23,14 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var workTimes = _mapper.Map<WorkTime[], Domain.WorkTime[]>(workTimesEntities);
+            var workTimes = _mapper.Map<Domain.WorkTime[]>(workTimesEntities);
 
             return workTimes;
         }
 
         public async Task<int> Create(Domain.WorkTime newWorkTime)
         {
-            var workTime = _mapper.Map<Domain.WorkTime, WorkTime>(newWorkTime);
+            var workTime = _mapper.Map<WorkTime>(newWorkTime);
 
             await _context.WorkTimes.AddAsync(workTime);
 

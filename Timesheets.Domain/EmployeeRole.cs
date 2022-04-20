@@ -4,7 +4,7 @@
     {
         Chief,
         StuffEmployee,
-        Manager, 
+        Manager,
         Freelancer
     }
 }
