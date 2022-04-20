@@ -2,8 +2,12 @@
 {
     public interface IProjectsRepository
     {
-        Task<int> Create(Project newProject);
+        Task<int> Add(Project newProject);
 
         Task<Project[]> Get();
+
+        Task<Project?> Get(int projectId);
+
+        Task<bool> Delete(int projectId);
     }
 }

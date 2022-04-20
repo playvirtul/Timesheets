@@ -17,6 +17,21 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
+        public async Task<Domain.Project?> Get(int projectId)
+        {
+            var project = await _context.Projects
+                .Include(p => p.WorkTimes)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == projectId);
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<Project, Domain.Project>(project);
+        }
+
         public async Task<Domain.Project[]> Get()
         {
             var projectEntities = await _context.Projects
@@ -29,13 +44,24 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return projects;
         }
 
-        public async Task<int> Create(Domain.Project newProject)
+        public async Task<int> Add(Domain.Project newProject)
         {
             var project = _mapper.Map<Project>(newProject);
 
-            await _context.Projects.AddAsync(project);
+            _context.Projects.Add(project);
+
+            await _context.SaveChangesAsync();
 
             return project.Id;
+        }
+
+        public async Task<bool> Delete(int projectId)
+        {
+            _context.Projects.Remove(new Project { Id = projectId });
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         //public async Task<(Domain.Project[], string[])> Get()

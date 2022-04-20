@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using Timesheets.BusinessLogic;
 using Timesheets.DataAccess.Postgre;
+using Timesheets.DataAccess.Postgre.Repositories;
 using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API
@@ -63,7 +64,8 @@ namespace Timesheets.API
             });
 
             services.AddScoped<IProjectsService, ProjectsService>();
-            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IEmployeesService, EmployeesService>();
+            services.AddScoped<IProjectsRepository, ProjectsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
