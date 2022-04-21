@@ -24,7 +24,6 @@ namespace Timesheets.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TimesheetsDbContext>(options =>
@@ -48,12 +47,8 @@ namespace Timesheets.API
             services.AddVersionedApiExplorer(
                 options =>
                 {
-                    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-                    // note: the specified format code will format the version as "'v'major[.minor][-status]"
                     options.GroupNameFormat = "'v'VVV";
 
-                    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-                    // can also be used to control the format of the API version in route templates
                     options.SubstituteApiVersionInUrl = true;
                 });
 
@@ -65,10 +60,12 @@ namespace Timesheets.API
 
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
+
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
+            services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
+            services.AddScoped<IEmployeesRepository, EmployeesRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
@@ -78,7 +75,6 @@ namespace Timesheets.API
                 app.UseSwaggerUI(
                  options =>
                  {
-                     // build a swagger endpoint for each discovered API version
                      foreach (var description in provider.ApiVersionDescriptions)
                      {
                          options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());

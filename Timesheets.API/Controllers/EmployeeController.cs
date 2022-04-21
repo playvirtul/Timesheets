@@ -49,7 +49,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            await _employeesService.Add(employee);
+            await _employeesService.Create(employee);
 
             return Ok();
         }

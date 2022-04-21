@@ -47,25 +47,25 @@
                 Array.Empty<string>());
         }
 
-        public string[] AddWorkTime(WorkTime workTime)
-        {
-            if (workTime.WorkingHours + CountHoursPerDay(workTime) > 24)
-            {
-                return new string[] { "can not add more than 24 hours on the same date." };
-            }
+        //public string[] AddWorkTime(WorkTime workTime)
+        //{
+        //    if (workTime.WorkingHours + CountHoursPerDay(workTime) > 24)
+        //    {
+        //        return new string[] { "can not add more than 24 hours on the same date." };
+        //    }
 
-            _workingHours.Add(workTime);
+        //    _workingHours.Add(workTime);
 
-            return Array.Empty<string>();
-        }
+        //    return Array.Empty<string>();
+        //}
 
-        private int CountHoursPerDay(WorkTime workTime)
-        {
-            var hoursPerDay = _workingHours
-                .Where(x => x.Date.Day == workTime.Date.Day)
-                .Sum(x => x.WorkingHours);
+        //private int CountHoursPerDay(WorkTime workTime)
+        //{
+        //    var hoursPerDay = _workingHours
+        //        .Where(x => x.Date.Day == workTime.Date.Day)
+        //        .Sum(x => x.WorkingHours);
 
-            return hoursPerDay;
-        }
+        //    return hoursPerDay;
+        //}
     }
 }

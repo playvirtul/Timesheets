@@ -7,14 +7,31 @@ namespace Timesheets.BusinessLogic
 {
     public class EmployeesService : IEmployeesService
     {
-        public async Task Add(Employee employee)
+        private readonly IEmployeesRepository _employeesRepository;
+
+        public EmployeesService(IEmployeesRepository employeesRepository)
         {
-            Employees.Add(employee);
+            _employeesRepository = employeesRepository;
+        }
+
+        public async Task Create(Employee employee)
+        {
+            await _employeesRepository.Add(employee);
         }
 
         public async Task<Employee[]> Get()
         {
-            return Employees.Get();
+            return await _employeesRepository.Get();
+        }
+
+        public async Task<Employee?> Get(int employeeId)
+        {
+            return await _employeesRepository.Get(employeeId);
+        }
+
+        public Task<bool> Delete(int employeeId)
+        {
+            return _employeesRepository.Delete(employeeId);
         }
     }
 

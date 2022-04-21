@@ -28,11 +28,13 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return workTimes;
         }
 
-        public async Task<int> Create(Domain.WorkTime newWorkTime)
+        public async Task<int> Add(Domain.WorkTime newWorkTime)
         {
             var workTime = _mapper.Map<WorkTime>(newWorkTime);
 
-            await _context.WorkTimes.AddAsync(workTime);
+            _context.WorkTimes.Add(workTime);
+
+            await _context.SaveChangesAsync();
 
             return workTime.Id;
         }

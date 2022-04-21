@@ -2,8 +2,12 @@
 {
     public interface IEmployeesService
     {
-        Task Add(Employee employee);
+        Task Create(Employee employee);
 
         Task<Employee[]> Get();
+
+        Task<Employee?> Get(int employeeId);
+
+        Task<bool> Delete(int employeeId);
     }
 }

@@ -10,5 +10,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
         public string Title { get; set; } = string.Empty;
 
         public ICollection<WorkTime> WorkTimes { get; set; } = Array.Empty<WorkTime>();
+
+        public ICollection<Employee> Employees { get; set; } = Array.Empty<Employee>();
     }
 }

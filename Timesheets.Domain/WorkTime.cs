@@ -6,7 +6,6 @@
 
         private WorkTime()
         {
-
         }
 
         private WorkTime(int projectId, int hours, DateTime date)

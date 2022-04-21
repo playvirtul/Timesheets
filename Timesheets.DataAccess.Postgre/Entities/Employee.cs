@@ -1,4 +1,7 @@
-﻿namespace Timesheets.DataAccess.Postgre.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Timesheets.DataAccess.Postgre.Entities
 {
     public class Employee
     {
@@ -8,6 +11,8 @@
 
         public string LastName { get; set; }
 
-        public Salary Salary { get; set; }
+        public ICollection<Project> Projects { get; set; } = Array.Empty<Project>();
+
+        //public Salary Salary { get; set; }
     }
 }
