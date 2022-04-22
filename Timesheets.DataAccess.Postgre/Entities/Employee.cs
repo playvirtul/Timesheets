@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Timesheets.Domain;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
@@ -7,11 +7,13 @@ namespace Timesheets.DataAccess.Postgre.Entities
     {
         public int Id { get; set; }
 
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
-        public ICollection<Project> Projects { get; set; } = Array.Empty<Project>();
+        public Position Position { get; set; }
+
+        public List<Project> Projects { get; set; } = new();
 
         //public Salary Salary { get; set; }
     }

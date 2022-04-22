@@ -8,7 +8,18 @@ namespace Timesheets.DataAccess.Postgre
         public DataAccessMappingProfile()
         {
             CreateMap<Project, Domain.Project>().ReverseMap();
+
             CreateMap<WorkTime, Domain.WorkTime>().ReverseMap();
+
+            CreateMap<Employee, Domain.Employee>().ReverseMap();
+
+            CreateMap<Employee, Domain.Chief>();
+
+            CreateMap<Employee, Domain.StuffEmployee>();
+
+            CreateMap<Employee, Domain.Manager>();
+
+            CreateMap<Employee, Domain.Freelancer>();
         }
     }
 }

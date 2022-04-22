@@ -10,12 +10,12 @@ namespace Timesheets.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiversion}/[controller]")]
-    public class EmployeeController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
         private readonly ILogger _logger;
 
-        public EmployeeController(IEmployeesService employeesService, ILogger<EmployeeController> logger)
+        public EmployeesController(IEmployeesService employeesService, ILogger<EmployeesController> logger)
         {
             _employeesService = employeesService;
             _logger = logger;
@@ -39,7 +39,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newEmployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Add(NewEmployee newEmployee)
+        public async Task<IActionResult> Create([FromBody]NewEmployee newEmployee)
         {
             var (employee, errors) = Employee.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
 

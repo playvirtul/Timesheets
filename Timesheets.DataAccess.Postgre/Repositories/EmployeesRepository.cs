@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -19,13 +20,43 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
         public async Task<Domain.Employee[]> Get()
         {
+            var employees = new List<Domain.Employee>();
+
             var employeeEntities = await _context.Employees
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var employees = _mapper.Map<Employee[], Domain.Employee[]>(employeeEntities);
+            foreach (var item in employeeEntities)
+            {
+                Domain.Employee? employee = null;
 
-            return employees;
+                switch (item.Position)
+                {
+                    case Domain.Position.Chief:
+                        employee = _mapper.Map<Employee, Domain.Chief>(item);
+                        break;
+
+                    case Domain.Position.StuffEmployee:
+                        employee = _mapper.Map<Employee, Domain.StuffEmployee>(item);
+                        break;
+
+                    case Domain.Position.Manager:
+                        employee = _mapper.Map<Employee, Domain.Manager>(item);
+                        break;
+
+                    case Domain.Position.Freelancer:
+                        employee = _mapper.Map<Employee, Domain.Freelancer>(item);
+                        break;
+
+                    default:
+                        employee = null;
+                        break;
+                }
+
+                employees.Add(employee);
+            }
+
+            return employees.ToArray();
         }
 
         public async Task<Domain.Employee?> Get(int employeeId)

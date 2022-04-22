@@ -10,6 +10,10 @@ namespace Timesheets.DataAccess.Postgre.Configurations
         {
             builder.HasKey(e => e.Id);
 
+            builder.Property(e => e.FirstName).IsRequired();
+
+            builder.Property(e => e.LastName).IsRequired();
+
             builder.HasMany(e => e.Projects)
                 .WithMany(p => p.Employees);
         }

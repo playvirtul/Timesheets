@@ -45,34 +45,34 @@ namespace Timesheets.BusinessLogic
         }
     }
 
-    public static class Projects
-    {
-        private static List<Project> _projectList = new List<Project>();
-
-        public static int Add(Project project)
-        {
-            var id = _projectList.Count + 1;
-
-            _projectList.Add(project with { Id = id });
-
-            return id;
-        }
-
-        public static Project[] Get()
-        {
-            return _projectList.ToArray();
-        }
-
-        public static Project? Get(int projectId)
-        {
-            return _projectList.FirstOrDefault(x => x.Id == projectId);
-        }
-
-        public static void Delete(int projectId)
-        {
-            var project = _projectList.FirstOrDefault(x => x.Id == projectId);
-
-            _projectList.Remove(project);
-        }
-    }
+    // public static class Projects
+    // {
+    //     private static List<Project> _projectList = new List<Project>();
+    //
+    //     public static int Add(Project project)
+    //     {
+    //         var id = _projectList.Count + 1;
+    //
+    //         _projectList.Add(project with { Id = id });
+    //
+    //         return id;
+    //     }
+    //
+    //     public static Project[] Get()
+    //     {
+    //         return _projectList.ToArray();
+    //     }
+    //
+    //     public static Project? Get(int projectId)
+    //     {
+    //         return _projectList.FirstOrDefault(x => x.Id == projectId);
+    //     }
+    //
+    //     public static void Delete(int projectId)
+    //     {
+    //         var project = _projectList.FirstOrDefault(x => x.Id == projectId);
+    //
+    //         _projectList.Remove(project);
+    //     }
+    // }
 }

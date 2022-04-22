@@ -9,6 +9,7 @@
         }
 
         private WorkTime(int projectId, int hours, DateTime date)
+            : this()
         {
             ProjectId = projectId;
             WorkingHours = hours;

@@ -35,18 +35,18 @@ namespace Timesheets.BusinessLogic
         }
     }
 
-    public static class Employees
-    {
-        private static List<Employee> _employeeList = new List<Employee>();
-
-        public static void Add(Employee employee)
-        {
-            _employeeList.Add(employee);
-        }
-
-        public static Employee[] Get()
-        {
-            return _employeeList.ToArray();
-        }
-    }
+    // public static class Employees
+    // {
+    //     private static List<Employee> _employeeList = new List<Employee>();
+    //
+    //     public static void Add(Employee employee)
+    //     {
+    //         _employeeList.Add(employee);
+    //     }
+    //
+    //     public static Employee[] Get()
+    //     {
+    //         return _employeeList.ToArray();
+    //     }
+    // }
 }

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Timesheets.Domain;
-
-namespace Timesheets.Domain.Interfaces
+﻿namespace Timesheets.Domain.Interfaces
 {
     public interface IEmployeesRepository
     {

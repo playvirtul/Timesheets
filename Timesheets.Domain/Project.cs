@@ -2,25 +2,26 @@
 {
     public record Project
     {
-        private readonly List<WorkTime> _workingHours;
+        //private readonly List<WorkTime> _workingHours;
 
         private Project()
         {
-            _workingHours = new List<WorkTime>();
+            WorkTimes = new List<WorkTime>();
         }
 
-        private Project(int id, string title, WorkTime[] workingHours)
+        private Project(string title, WorkTime[] workingHours)
         {
-            Id = id;
             Title = title;
-            _workingHours = new List<WorkTime>(workingHours);
+            WorkTimes = new List<WorkTime>(workingHours);
         }
 
         public int Id { get; init; }
 
         public string Title { get; init; }
 
-        public WorkTime[] WorkingHours => _workingHours.ToArray();
+        public List<WorkTime> WorkTimes { get; init; }
+
+        //public WorkTime[] WorkingHours => _workingHours.ToArray();
 
         public static (Project? Result, string[] Errors) Create(string title)
         {
@@ -34,18 +35,19 @@
                 return (null, new string[] { "Title cannot contains more then 200 symbols." });
             }
 
-            return Create(title, 0, Array.Empty<WorkTime>());
+            return (new Project(title, Array.Empty<WorkTime>()),
+                    Array.Empty<string>());
         }
 
-        public static (Project? Result, string[] Errors) Create(
-            string title,
-            int id,
-            WorkTime[] workTimes)
-        {
-            return (
-                new Project(id, title, workTimes),
-                Array.Empty<string>());
-        }
+        //public static (Project? Result, string[] Errors) Create(
+        //    string title,
+        //    int id,
+        //    WorkTime[] workTimes)
+        //{
+        //    return (
+        //        new Project(id, title, workTimes),
+        //        Array.Empty<string>());
+        //}
 
         //public string[] AddWorkTime(WorkTime workTime)
         //{

@@ -11,15 +11,5 @@
         {
             throw new NotImplementedException();
         }
-
-        public void AddEmployee(string employeeRole)
-        {
-            switch (employeeRole.ToLower())
-            {
-                case "stuffemployee":
-
-                    break;
-            }
-        }
     }
 }

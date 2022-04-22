@@ -2,24 +2,28 @@
 {
     public abstract class Employee
     {
-        public Employee(string firstName, string lastName)
+        private const int MAX_STRING_LENGTH = 100;
+
+        protected Employee(string firstName, string lastName)
         {
             FirstName = firstName;
             LastName = lastName;
         }
 
-        public string FirstName { get; set; }
+        public int Id { get; }
 
-        public string LastName { get; set; }
+        public string FirstName { get; }
+
+        public string LastName { get; }
 
         public static (Employee? Result, string[] Errors) Create(string firstName, string lastName, Position position)
         {
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > 100)
+            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_STRING_LENGTH)
             {
                 return (null, new string[] { "FirstName cannot be null or empty or greater then 100 symbols." });
             }
 
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > 100)
+            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_STRING_LENGTH)
             {
                 return (null, new string[] { "LastName cannot be null or empty or greater then 100 symbols." });
             }
