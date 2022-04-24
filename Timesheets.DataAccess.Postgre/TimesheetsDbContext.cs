@@ -15,11 +15,13 @@ namespace Timesheets.DataAccess.Postgre
 
         public DbSet<WorkTime> WorkTimes { get; set; }
 
-        //DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
+            modelBuilder.ApplyConfiguration(new WorkTimeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,13 +1,13 @@
 ﻿namespace Timesheets.Domain.Interfaces
 {
-    public interface IEmployeesService
+    public interface IEmployeesRepository
     {
-        Task Create(Employee employee);
+        Task<int> Add(Employee newEmployee);
+
+        Task<bool> Delete(int employeeId);
 
         Task<Employee[]> Get();
 
         Task<Employee?> Get(int employeeId);
-
-        Task<bool> Delete(int employeeId);
     }
 }

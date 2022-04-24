@@ -9,10 +9,12 @@ namespace Timesheets.BusinessLogic
     public class ProjectsService : IProjectsService
     {
         private readonly IProjectsRepository _projectsRepository;
+        private readonly IWorkTimesRepository _workTimesRepository;
 
-        public ProjectsService(IProjectsRepository projectsRepository)
+        public ProjectsService(IProjectsRepository projectsRepository, IWorkTimesRepository workTimesRepository)
         {
             _projectsRepository = projectsRepository;
+            _workTimesRepository = workTimesRepository;
         }
 
         public async Task<Project?> Get(int projectId)
@@ -32,52 +34,45 @@ namespace Timesheets.BusinessLogic
 
         public async Task<bool> Delete(int projectId)
         {
-            await _projectsRepository.Delete(projectId);
-
-            return true;
+            return await _projectsRepository.Delete(projectId);
         }
 
-        public async Task<string[]> AddWorkTime(WorkTime workTime)
+        public async Task<int> AddWorkTime(WorkTime workTime)
         {
-            var project = Projects.Get(workTime.ProjectId);
+            var workTimeId = await _workTimesRepository.Add(workTime);
 
-            if (project == null)
-            {
-                return new string[] { "Project is null" };
-            }
-
-            return project.AddWorkTime(workTime);
+            return workTimeId;
         }
     }
 
-    public static class Projects
-    {
-        private static List<Project> _projectList = new List<Project>();
-
-        public static int Add(Project project)
-        {
-            var id = _projectList.Count + 1;
-
-            _projectList.Add(project with { Id = id });
-
-            return id;
-        }
-
-        public static Project[] Get()
-        {
-            return _projectList.ToArray();
-        }
-
-        public static Project? Get(int projectId)
-        {
-            return _projectList.FirstOrDefault(x => x.Id == projectId);
-        }
-
-        public static void Delete(int projectId)
-        {
-            var project = _projectList.FirstOrDefault(x => x.Id == projectId);
-
-            _projectList.Remove(project);
-        }
-    }
+    // public static class Projects
+    // {
+    //     private static List<Project> _projectList = new List<Project>();
+    //
+    //     public static int Add(Project project)
+    //     {
+    //         var id = _projectList.Count + 1;
+    //
+    //         _projectList.Add(project with { Id = id });
+    //
+    //         return id;
+    //     }
+    //
+    //     public static Project[] Get()
+    //     {
+    //         return _projectList.ToArray();
+    //     }
+    //
+    //     public static Project? Get(int projectId)
+    //     {
+    //         return _projectList.FirstOrDefault(x => x.Id == projectId);
+    //     }
+    //
+    //     public static void Delete(int projectId)
+    //     {
+    //         var project = _projectList.FirstOrDefault(x => x.Id == projectId);
+    //
+    //         _projectList.Remove(project);
+    //     }
+    // }
 }

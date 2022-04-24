@@ -5,11 +5,11 @@
         Task<Project[]> Get();
 
         Task<Project> Get(int projectId);
-        
+
         Task<int> Create(Project newProject);
 
         Task<bool> Delete(int projectId);
 
-        Task<string[]> AddWorkTime(WorkTime workTime);
+        Task<int> AddWorkTime(WorkTime workTime);
     }
 }

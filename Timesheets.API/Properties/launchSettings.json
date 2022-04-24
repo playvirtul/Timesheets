@@ -29,6 +29,15 @@
     },
     "Docker": {
       "commandName": "Docker",
+      "commandLineArgs": "--network timesheets_default",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "useSSL": true
+    },
+    "Dockercompose": {
+      "commandName": "Dockercompose",
+      "commandLineArgs": "--network timesheets_default",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,

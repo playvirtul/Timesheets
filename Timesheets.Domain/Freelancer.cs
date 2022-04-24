@@ -1,9 +1,9 @@
 ﻿namespace Timesheets.Domain
 {
-    public class Freelancer : Employee
+    public record Freelancer : Employee
     {
-        public Freelancer(string firstName, string lastName)
-            : base(firstName, lastName)
+        public Freelancer(int id, string firstName, string lastName)
+            : base(id, firstName, lastName)
         {
         }
 

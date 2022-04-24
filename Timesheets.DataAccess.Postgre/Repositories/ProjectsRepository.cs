@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -19,17 +21,20 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
         public async Task<Domain.Project?> Get(int projectId)
         {
-            var project = await _context.Projects
+            // ошибка связанная с include
+            var projectEntity = await _context.Projects
                 .Include(p => p.WorkTimes)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == projectId);
 
-            if (project == null)
+            if (projectEntity == null)
             {
                 return null;
             }
 
-            return _mapper.Map<Project, Domain.Project>(project);
+            var project = _mapper.Map<Project, Domain.Project>(projectEntity);
+
+            return project;
         }
 
         public async Task<Domain.Project[]> Get()
@@ -39,14 +44,20 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var projects = _mapper.Map<Domain.Project[]>(projectEntities);
+            //var projects = _mapper.Map<Project[], Domain.Project[]>(projectEntities);
 
-            return projects;
+            var p = projectEntities.Select(x =>
+            {
+                var o = _mapper.Map<List<WorkTime>, Domain.WorkTime[]>(x.WorkTimes);
+                return _mapper.Map<Project, Domain.Project>(x);
+            }).ToArray();
+
+            return p;
         }
 
         public async Task<int> Add(Domain.Project newProject)
         {
-            var project = _mapper.Map<Project>(newProject);
+            var project = _mapper.Map<Domain.Project, Project>(newProject);
 
             _context.Projects.Add(project);
 
@@ -63,55 +74,5 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             return true;
         }
-
-        //public async Task<(Domain.Project[], string[])> Get()
-        //{
-        //    var projectEntities = await _context.Projects
-        //        .Include(p => p.WorkTimes)
-        //        .AsNoTracking()
-        //        .ToArrayAsync();
-
-        //    var projects = projectEntities
-        //        .Select(x =>
-        //        {
-        //            var (workTimes, errors) = x.WorkTimes
-        //                .Select(y => Domain.WorkTime.Create(y.ProjectId, y.WorkingHours, y.Date))
-        //                .Aggregate((Result: new List<Domain.WorkTime>(), Errors: Array.Empty<string>()), (a, b) =>
-        //                {
-        //                    if (b.Result == null || b.Errors.Any())
-        //                    {
-        //                        return (a.Result, a.Errors.Union(b.Errors).ToArray());
-        //                    }
-        //                    else
-        //                    {
-        //                        a.Result.Add(b.Result);
-        //                        return (a.Result, a.Errors);
-        //                    }
-        //                });
-
-        //            if (errors.Any())
-        //            {
-        //                return (null, errors);
-        //            }
-        //            else
-        //            {
-        //                return Domain.Project.Create(x.Title, x.Id, workTimes.ToArray());
-        //            }
-        //        })
-        //        .Aggregate((Result: new List<Domain.Project>(), Errors: Array.Empty<string>()), (a, b) =>
-        //        {
-        //            if (b.Result == null || b.Errors.Any())
-        //            {
-        //                return (a.Result, a.Errors.Union(b.Errors).ToArray());
-        //            }
-        //            else
-        //            {
-        //                a.Result.Add(b.Result);
-        //                return (a.Result, a.Errors);
-        //            }
-        //        });
-
-        //    return (projects.Result.ToArray(), projects.Errors);
-        //}
     }
 }

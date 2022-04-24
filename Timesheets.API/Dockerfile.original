@@ -8,9 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Timesheets.API/Timesheets.API.csproj", "Timesheets.API/"]
-COPY ["Timesheets.BusinessLogic/Timesheets.BusinessLogic.csproj", "Timesheets.BusinessLogic/"]
-COPY ["Timesheets.Domain/Timesheets.Domain.csproj", "Timesheets.Domain/"]
-COPY ["Timesheets.DataAccess.Postgre/Timesheets.DataAccess.Postgre.csproj", "Timesheets.DataAccess.Postgre/"]
 RUN dotnet restore "Timesheets.API/Timesheets.API.csproj"
 COPY . .
 WORKDIR "/src/Timesheets.API"
