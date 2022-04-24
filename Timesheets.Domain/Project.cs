@@ -4,15 +4,11 @@
     {
         //private readonly List<WorkTime> _workingHours;
 
-        private Project()
+        public Project(int id, string title, List<WorkTime> workTimes)
         {
-            WorkTimes = new List<WorkTime>();
-        }
-
-        private Project(string title, WorkTime[] workingHours)
-        {
+            Id = id;
             Title = title;
-            WorkTimes = new List<WorkTime>(workingHours);
+            WorkTimes = workTimes;
         }
 
         public int Id { get; init; }
@@ -35,19 +31,9 @@
                 return (null, new string[] { "Title cannot contains more then 200 symbols." });
             }
 
-            return (new Project(title, Array.Empty<WorkTime>()),
+            return (new Project(0, title, new List<WorkTime>()),
                     Array.Empty<string>());
         }
-
-        //public static (Project? Result, string[] Errors) Create(
-        //    string title,
-        //    int id,
-        //    WorkTime[] workTimes)
-        //{
-        //    return (
-        //        new Project(id, title, workTimes),
-        //        Array.Empty<string>());
-        //}
 
         //public string[] AddWorkTime(WorkTime workTime)
         //{

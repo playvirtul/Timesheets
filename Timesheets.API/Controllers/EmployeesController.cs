@@ -41,7 +41,9 @@ namespace Timesheets.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]NewEmployee newEmployee)
         {
-            var (employee, errors) = Employee.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
+            var chief = Chief.Create("name", "lasname").Result;
+
+            var (employee, errors) = chief.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
 
             if (errors.Any())
             {

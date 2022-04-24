@@ -1,26 +1,21 @@
 ﻿namespace Timesheets.Domain
 {
-    public class WorkTime
+    public record WorkTime
     {
         private const int MAX_WORKING_HOURS_PER_DAY = 24;
 
-        private WorkTime()
-        {
-        }
-
-        private WorkTime(int projectId, int hours, DateTime date)
-            : this()
+        private WorkTime(int projectId, int workingHours, DateTime date)
         {
             ProjectId = projectId;
-            WorkingHours = hours;
+            Hours = workingHours;
             Date = date;
         }
 
-        public int ProjectId { get; }
+        public int ProjectId { get; init; }
 
-        public int WorkingHours { get; }
+        public int Hours { get; init; }
 
-        public DateTime Date { get; }
+        public DateTime Date { get; init; }
 
         public static (WorkTime? Result, string[] Errors) Create(int projectId, int hours, DateTime date)
         {

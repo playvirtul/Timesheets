@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
@@ -8,6 +9,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public int ProjectId { get; set; }
 
+        //[Column("WorkingHours")]
         public int WorkingHours { get; set; }
 
         public DateTime Date { get; set; }

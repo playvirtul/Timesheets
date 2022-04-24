@@ -1,9 +1,9 @@
 ﻿namespace Timesheets.Domain
 {
-    public class Manager : Employee
+    public record Manager : Employee
     {
-        public Manager(string firstName, string lastName)
-            : base(firstName, lastName)
+        public Manager(int id, string firstName, string lastName)
+            : base(id, firstName, lastName)
         {
         }
 
