@@ -9,8 +9,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public int ProjectId { get; set; }
 
-        //[Column("WorkingHours")]
-        public int WorkingHours { get; set; }
+        public int Hours { get; set; }
 
         public DateTime Date { get; set; }
     }

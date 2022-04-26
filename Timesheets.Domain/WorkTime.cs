@@ -4,10 +4,10 @@
     {
         private const int MAX_WORKING_HOURS_PER_DAY = 24;
 
-        private WorkTime(int projectId, int workingHours, DateTime date)
+        private WorkTime(int projectId, int hours, DateTime date)
         {
             ProjectId = projectId;
-            Hours = workingHours;
+            Hours = hours;
             Date = date;
         }
 

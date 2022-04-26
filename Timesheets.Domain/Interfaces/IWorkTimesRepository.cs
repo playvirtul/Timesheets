@@ -2,8 +2,10 @@
 {
     public interface IWorkTimesRepository
     {
-        Task<int> Add(WorkTime newWorkTime);
+        Task<bool> Add(WorkTime newWorkTime);
 
         Task<WorkTime[]> Get();
+
+        Task<WorkTime[]> Get(int projectId);
     }
 }

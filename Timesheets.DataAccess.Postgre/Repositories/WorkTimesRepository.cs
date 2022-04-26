@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -28,7 +29,19 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return workTimes;
         }
 
-        public async Task<int> Add(Domain.WorkTime newWorkTime)
+        public async Task<Domain.WorkTime[]> Get(int projectId)
+        {
+            var workTimesEntities = await _context.WorkTimes
+                .AsNoTracking()
+                .Where(x => x.ProjectId == projectId)
+                .ToArrayAsync();
+
+            var workTimes = _mapper.Map<WorkTime[], Domain.WorkTime[]>(workTimesEntities);
+
+            return workTimes;
+        }
+
+        public async Task<bool> Add(Domain.WorkTime newWorkTime)
         {
             var workTime = _mapper.Map<WorkTime>(newWorkTime);
 
@@ -36,7 +49,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             await _context.SaveChangesAsync();
 
-            return workTime.Id;
+            return true;
         }
     }
 }

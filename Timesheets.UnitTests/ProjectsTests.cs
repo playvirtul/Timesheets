@@ -41,7 +41,7 @@ namespace Timesheets.UnitTests
                 yield return new string[] { " " };
                 yield return new string[] { string.Empty };
                 yield return new string[] { null };
-                var invalidString = Enumerable.Range(0, 200 + 50);
+                var invalidString = Enumerable.Range(0, 1000 + 50);
                 yield return new string[] { string.Join(string.Empty, invalidString) };
             }
         }

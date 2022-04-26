@@ -9,7 +9,7 @@ using Timesheets.Domain.Interfaces;
 namespace Timesheets.API.Controllers
 {
     /// <summary>
-    /// ProjectsController
+    /// ProjectsController.
     /// </summary>
     [ApiVersion("1.0")]
     [ApiController]
