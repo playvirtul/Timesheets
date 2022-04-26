@@ -2,7 +2,7 @@
 {
     public interface IEmployeesService
     {
-        Task Create(Employee employee);
+        Task<int> Create(Employee employee);
 
         Task<Employee[]> Get();
 

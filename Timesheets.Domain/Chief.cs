@@ -25,13 +25,13 @@
                     return Chief.Create(firstName, lastName);
 
                 case Position.StuffEmployee:
-                    return (new StuffEmployee(0, firstName, lastName), Array.Empty<string>());
+                    return StuffEmployee.Create(firstName, lastName);
 
                 case Position.Manager:
-                    return (new Manager(0, firstName, lastName), Array.Empty<string>());
+                    return Manager.Create(firstName, lastName);
 
                 case Position.Freelancer:
-                    return (new Freelancer(0, firstName, lastName), Array.Empty<string>());
+                    return Freelancer.Create(firstName, lastName);
 
                 default:
                     return (null, new string[] { "Position is incorrect" });

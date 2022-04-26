@@ -6,11 +6,11 @@ namespace Timesheets.API.Contracts
     public class NewEmployee
     {
         [Required]
-        [StringLength(100)]
+        [StringLength(Employee.MAX_FIRSTNAME_LENGTH)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(Employee.MAX_LASTNAME_LENGTH)]
         public string LastName { get; set; }
 
         [Required]

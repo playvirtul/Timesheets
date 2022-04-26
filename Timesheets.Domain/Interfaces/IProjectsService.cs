@@ -10,6 +10,6 @@
 
         Task<bool> Delete(int projectId);
 
-        Task<int> AddWorkTime(WorkTime workTime);
+        Task<bool> AddWorkTime(WorkTime workTime);
     }
 }

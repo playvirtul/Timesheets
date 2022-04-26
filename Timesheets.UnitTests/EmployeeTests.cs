@@ -20,7 +20,9 @@ namespace Timesheets.UnitTests
             var lastName = Guid.NewGuid().ToString();
 
             // act
-            var (employee, errors) = Employee.Create(firstName, lastName, position);
+            var chief = Chief.Create(firstName, lastName).Result;
+
+            var (employee, errors) = chief.Create(firstName, lastName, position);
 
             // assert
             Assert.NotNull(employee);
@@ -32,7 +34,11 @@ namespace Timesheets.UnitTests
         public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, Position position)
         {
             // act
-            var (employee, errors) = Employee.Create(firstName, lastName, position);
+            var chiefName = "test";
+
+            var chief = Chief.Create(chiefName, chiefName).Result;
+
+            var (employee, errors) = chief.Create(firstName, lastName, position);
 
             // assert
             Assert.Null(employee);

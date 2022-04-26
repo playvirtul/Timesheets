@@ -1,8 +1,8 @@
 ﻿namespace Timesheets.Domain
 {
-    public record Project
+    public class Project
     {
-        //private readonly List<WorkTime> _workingHours;
+        public const int MAX_TITLE_LENGHT = 1000;
 
         public Project(int id, string title, List<WorkTime> workTimes)
         {
@@ -11,11 +11,11 @@
             WorkTimes = workTimes;
         }
 
-        public int Id { get; init; }
+        public int Id { get; }
 
-        public string Title { get; init; }
+        public string Title { get; }
 
-        public List<WorkTime> WorkTimes { get; init; }
+        public List<WorkTime> WorkTimes { get; }
 
         //public WorkTime[] WorkingHours => _workingHours.ToArray();
 
@@ -26,34 +26,27 @@
                 return (null, new string[] { "Title cannot be null or empty." });
             }
 
-            if (title.Length > 200)
+            if (title.Length > MAX_TITLE_LENGHT)
             {
-                return (null, new string[] { "Title cannot contains more then 200 symbols." });
+                return (null, new string[] { "Title cannot contains more then 1000 symbols." });
             }
 
             return (new Project(0, title, new List<WorkTime>()),
                     Array.Empty<string>());
         }
 
-        //public string[] AddWorkTime(WorkTime workTime)
-        //{
-        //    if (workTime.WorkingHours + CountHoursPerDay(workTime) > 24)
-        //    {
-        //        return new string[] { "can not add more than 24 hours on the same date." };
-        //    }
+        public string[] AddWorkTime(WorkTime workTime)
+        {
+            var hoursPerDay = WorkTimes
+                .Where(x => x.Date.Day == workTime.Date.Day)
+                .Sum(x => x.Hours);
 
-        //    _workingHours.Add(workTime);
+            if (workTime.Hours + hoursPerDay > 24)
+            {
+                return new string[] { "can not add more than 24 hours on the same date." };
+            }
 
-        //    return Array.Empty<string>();
-        //}
-
-        //private int CountHoursPerDay(WorkTime workTime)
-        //{
-        //    var hoursPerDay = _workingHours
-        //        .Where(x => x.Date.Day == workTime.Date.Day)
-        //        .Sum(x => x.WorkingHours);
-
-        //    return hoursPerDay;
-        //}
+            return Array.Empty<string>();
+        }
     }
 }

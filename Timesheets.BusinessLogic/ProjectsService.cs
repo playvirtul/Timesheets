@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
@@ -37,42 +38,16 @@ namespace Timesheets.BusinessLogic
             return await _projectsRepository.Delete(projectId);
         }
 
-        public async Task<int> AddWorkTime(WorkTime workTime)
+        public async Task<bool> AddWorkTime(WorkTime workTime)
         {
-            var workTimeId = await _workTimesRepository.Add(workTime);
+            var project = await _projectsRepository.Get(workTime.ProjectId);
 
-            return workTimeId;
+            if (project == null || project.AddWorkTime(workTime).Length != 0)
+            {
+                return false;
+            }
+
+            return await _workTimesRepository.Add(workTime);
         }
     }
-
-    // public static class Projects
-    // {
-    //     private static List<Project> _projectList = new List<Project>();
-    //
-    //     public static int Add(Project project)
-    //     {
-    //         var id = _projectList.Count + 1;
-    //
-    //         _projectList.Add(project with { Id = id });
-    //
-    //         return id;
-    //     }
-    //
-    //     public static Project[] Get()
-    //     {
-    //         return _projectList.ToArray();
-    //     }
-    //
-    //     public static Project? Get(int projectId)
-    //     {
-    //         return _projectList.FirstOrDefault(x => x.Id == projectId);
-    //     }
-    //
-    //     public static void Delete(int projectId)
-    //     {
-    //         var project = _projectList.FirstOrDefault(x => x.Id == projectId);
-    //
-    //         _projectList.Remove(project);
-    //     }
-    // }
 }

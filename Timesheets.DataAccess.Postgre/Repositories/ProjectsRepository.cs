@@ -44,15 +44,17 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            //var projects = _mapper.Map<Project[], Domain.Project[]>(projectEntities);
+            var projects = _mapper.Map<Project[], Domain.Project[]>(projectEntities);
 
-            var p = projectEntities.Select(x =>
-            {
-                var o = _mapper.Map<List<WorkTime>, Domain.WorkTime[]>(x.WorkTimes);
-                return _mapper.Map<Project, Domain.Project>(x);
-            }).ToArray();
+            return projects;
 
-            return p;
+            //var p = projectEntities.Select(x =>
+            //{
+            //    var o = _mapper.Map<List<WorkTime>, Domain.WorkTime[]>(x.WorkTimes);
+            //    return _mapper.Map<Project, Domain.Project>(x);
+            //}).ToArray();
+
+            //return p;
         }
 
         public async Task<int> Add(Domain.Project newProject)

@@ -51,9 +51,9 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            await _employeesService.Create(employee);
+            var employeeId = await _employeesService.Create(employee);
 
-            return Ok();
+            return Ok(employeeId);
         }
     }
 }

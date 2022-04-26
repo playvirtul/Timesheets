@@ -14,9 +14,9 @@ namespace Timesheets.BusinessLogic
             _employeesRepository = employeesRepository;
         }
 
-        public async Task Create(Employee employee)
+        public async Task<int> Create(Employee employee)
         {
-            await _employeesRepository.Add(employee);
+            return await _employeesRepository.Add(employee);
         }
 
         public async Task<Employee[]> Get()
@@ -34,19 +34,4 @@ namespace Timesheets.BusinessLogic
             return _employeesRepository.Delete(employeeId);
         }
     }
-
-    // public static class Employees
-    // {
-    //     private static List<Employee> _employeeList = new List<Employee>();
-    //
-    //     public static void Add(Employee employee)
-    //     {
-    //         _employeeList.Add(employee);
-    //     }
-    //
-    //     public static Employee[] Get()
-    //     {
-    //         return _employeeList.ToArray();
-    //     }
-    // }
 }
