@@ -2,8 +2,8 @@
 {
     public class Salary
     {
-        public int MonthSalary { get; set; }
+        public int MonthSalary { get; }
 
-        public int MonthPremium { get; set; }
+        public int MonthPremium { get; }
     }
 }

@@ -38,16 +38,27 @@ namespace Timesheets.BusinessLogic
             return await _projectsRepository.Delete(projectId);
         }
 
-        public async Task<bool> AddWorkTime(WorkTime workTime)
+        public async Task<string[]> AddWorkTime(WorkTime workTime)
         {
             var project = await _projectsRepository.Get(workTime.ProjectId);
 
-            if (project == null || project.AddWorkTime(workTime).Length != 0)
+            if (project == null)
             {
-                return false;
+                return new string[] { "Project is null" };
             }
 
-            return await _workTimesRepository.Add(workTime);
+            var errors = project.CheckAddingWorkTime(workTime);
+
+            if (errors.Length != 0)
+            {
+                return errors;
+            }
+            else
+            {
+                await _workTimesRepository.Add(workTime);
+
+                return Array.Empty<string>();
+            }
         }
     }
 }

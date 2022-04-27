@@ -1,6 +1,6 @@
 ﻿namespace Timesheets.Domain
 {
-    public class Project
+    public record Project
     {
         public const int MAX_TITLE_LENGHT = 1000;
 
@@ -16,8 +16,6 @@
         public string Title { get; }
 
         public List<WorkTime> WorkTimes { get; }
-
-        //public WorkTime[] WorkingHours => _workingHours.ToArray();
 
         public static (Project? Result, string[] Errors) Create(string title)
         {
@@ -35,7 +33,7 @@
                     Array.Empty<string>());
         }
 
-        public string[] AddWorkTime(WorkTime workTime)
+        public string[] CheckAddingWorkTime(WorkTime workTime)
         {
             var hoursPerDay = WorkTimes
                 .Where(x => x.Date.Day == workTime.Date.Day)
@@ -43,7 +41,7 @@
 
             if (workTime.Hours + hoursPerDay > 24)
             {
-                return new string[] { "can not add more than 24 hours on the same date." };
+                return new string[] { "Can not add more than 24 hours on the same date." };
             }
 
             return Array.Empty<string>();
