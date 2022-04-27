@@ -1,6 +1,12 @@
-version: '3.6'
+version: '3.4'
 
 services:
+  timesheets.api:
+    image: ${DOCKER_REGISTRY-}timesheetsapi
+    build:
+      context: .
+      dockerfile: Timesheets.API/Dockerfile
+
   db:
     container_name: db
     image: postgres
@@ -9,18 +15,3 @@ services:
       POSTGRES_PASSWORD: pwd
     ports:
       - 5434:5432
-  #api:
-  #  image: timesheetsapi
-  #  container_name: api
-  #  build:
-  #    context: .
-  #    dockerfile: Timesheets.API/Dockerfile
-  #  ports:
-  #    - 5000:80
-  #  environment:
-  #   "ConnectionStrings:TimesheetsDbContext": "User ID=postgres;Password=pwd;Host=localhost;Port=5434;Database=TimesheetsDb;"
-
-networks:
-  default:
-    external:
-      name: timesheets_default

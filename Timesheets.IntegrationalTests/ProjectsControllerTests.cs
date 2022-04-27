@@ -10,24 +10,15 @@ using Xunit;
 
 namespace Timesheets.IntegrationalTests
 {
-    public class ProjectsControllerTests
+    public class ProjectsControllerTests : BaseControllerTests
     {
-        private readonly HttpClient _client;
-
-        public ProjectsControllerTests()
-        {
-            var application = new WebApplicationFactory<Program>();
-
-            _client = application.CreateClient();
-        }
-
         [Fact]
         public async Task Get_ShouldReturnProjects()
         {
             // arrange
 
             // act
-            var response = await _client.GetAsync("api/v1/projects");
+            var response = await Client.GetAsync("api/v1/projects");
 
             // assert
             response.EnsureSuccessStatusCode();
@@ -45,7 +36,7 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var response = await _client.PostAsJsonAsync("api/v1/projects", project);
+            var response = await Client.PostAsJsonAsync("api/v1/projects", project);
 
             // assert
             response.EnsureSuccessStatusCode();
@@ -69,7 +60,7 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var response = await _client.PostAsJsonAsync("api/v1/projects", project);
+            var response = await Client.PostAsJsonAsync("api/v1/projects", project);
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
