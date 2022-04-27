@@ -36,10 +36,6 @@ jobs:
      with:
        postgresql db: TimesheetsDb
        postgresql password: pwd
- 
-   - name: Setup tool manifest
-     run: dotnet new tool-manifest
-   - name: Install dotnet ef
-     run: dotnet tool install dotnet-ef
+
    - name: Update database
      run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API
