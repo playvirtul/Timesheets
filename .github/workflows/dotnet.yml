@@ -36,6 +36,9 @@ jobs:
      with:
        postgresql db: TimesheetsDb
        postgresql password: pwd
-
+       
+   - name: Tool restore
+     run: dotnet tool restore
+     
    - name: Update database
      run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API
