@@ -19,6 +19,21 @@
 
         public string LastName { get; }
 
+        //public List<Project> Projects { get; }
+
+        public Salary Salary { get; set; } = null!;
+
+        public void SetupSalary(Salary salary)
+        {
+            Salary = salary with
+            {
+                Position = salary.Position,
+                MonthSalary = salary.MonthSalary,
+                MonthBonus = salary.MonthBonus,
+                SalaryPerHour = salary.SalaryPerHour
+            };
+        }
+
         public abstract decimal CalculateSalary(Project project);
     }
 }

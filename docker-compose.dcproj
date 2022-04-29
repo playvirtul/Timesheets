@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>58ac9d35-d464-4f1f-bccc-3419b09a495b</ProjectGuid>
+    <ProjectGuid>b9e9156b-b47a-4c1e-a82b-343d9a7aff0a</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>timesheets.api</DockerServiceName>

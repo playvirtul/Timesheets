@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Timesheets.DataAccess.Postgre;
@@ -11,9 +12,11 @@ using Timesheets.DataAccess.Postgre;
 namespace Timesheets.DataAccess.Postgre.Migrations
 {
     [DbContext(typeof(TimesheetsDbContext))]
-    partial class TimesheetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220429132008_AddSalaryFixEmployee")]
+    partial class AddSalaryFixEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Timesheets.DataAccess.Postgre.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("EmployeeProject", (string)null);
+                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Employee", b =>
@@ -55,7 +58,7 @@ namespace Timesheets.DataAccess.Postgre.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Project", b =>
@@ -73,7 +76,7 @@ namespace Timesheets.DataAccess.Postgre.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Salary", b =>
@@ -92,7 +95,7 @@ namespace Timesheets.DataAccess.Postgre.Migrations
 
                     b.HasKey("Position");
 
-                    b.ToTable("Salaries", (string)null);
+                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.WorkTime", b =>
@@ -116,7 +119,7 @@ namespace Timesheets.DataAccess.Postgre.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("WorkTimes", (string)null);
+                    b.ToTable("WorkTimes");
                 });
 
             modelBuilder.Entity("EmployeeProject", b =>

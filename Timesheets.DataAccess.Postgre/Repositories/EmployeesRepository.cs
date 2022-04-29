@@ -23,6 +23,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             var employees = new List<Domain.Employee>();
 
             var employeeEntities = await _context.Employees
+                .Include(e => e.Salary)
                 .AsNoTracking()
                 .ToArrayAsync();
 
@@ -30,30 +31,29 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             {
                 Domain.Employee? employee = null;
 
-                switch (item.Position)
+                switch (item.Salary.Position)
                 {
-                    case Domain.Position.Chief:
+                    case (int)Domain.Position.Chief:
                         employee = _mapper.Map<Employee, Domain.Chief>(item);
                         break;
 
-                    case Domain.Position.StuffEmployee:
+                    case (int)Domain.Position.StuffEmployee:
                         employee = _mapper.Map<Employee, Domain.StuffEmployee>(item);
                         break;
 
-                    case Domain.Position.Manager:
+                    case (int)Domain.Position.Manager:
                         employee = _mapper.Map<Employee, Domain.Manager>(item);
                         break;
 
-                    case Domain.Position.Freelancer:
+                    case (int)Domain.Position.Freelancer:
                         employee = _mapper.Map<Employee, Domain.Freelancer>(item);
-                        break;
-
-                    default:
-                        employee = null;
                         break;
                 }
 
-                employees.Add(employee);
+                if (employee != null)
+                {
+                    employees.Add(employee);
+                }
             }
 
             return employees.ToArray();

@@ -2,9 +2,9 @@
 {
     public enum Position
     {
-        Chief,
-        StuffEmployee,
-        Manager,
-        Freelancer
+        Chief = 1,
+        StuffEmployee = 2,
+        Manager = 3,
+        Freelancer = 4
     }
 }

@@ -7,10 +7,9 @@ namespace Timesheets.DataAccess.Postgre
     {
         public DataAccessMappingProfile()
         {
-            CreateMap<Project, Domain.Project>();
-                //.ForMember(dest => dest.WorkTimes, opt => opt.MapFrom(x => x.WorkTimes));
+            CreateMap<Project, Domain.Project>().ReverseMap();
 
-            CreateMap<Domain.Project, Project>();
+            CreateMap<Domain.Salary, Salary>().ReverseMap();
 
             CreateMap<WorkTime, Domain.WorkTime>().ReverseMap();
 

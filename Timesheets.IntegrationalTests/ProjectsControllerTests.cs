@@ -1,10 +1,8 @@
 using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
+using System;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Timesheets.API;
 using Timesheets.API.Contracts;
 using Xunit;
 
@@ -22,6 +20,30 @@ namespace Timesheets.IntegrationalTests
 
             // assert
             response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task Create_ShouldCreateWorkTime()
+        {
+            // arrange
+            var fixture = new Fixture();
+            var projectId = 1;
+
+            var workTime = new NewWorkTime
+            {
+                Hours = fixture.Create<int>(),
+                Date = fixture.Create<DateTime>()
+            };
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}", workTime);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+
+            var workTimeErrors = await response.Content.ReadFromJsonAsync<string[]>();
+
+            Assert.NotEqual(Array.Empty<string>(), workTimeErrors);
         }
 
         [Fact]
