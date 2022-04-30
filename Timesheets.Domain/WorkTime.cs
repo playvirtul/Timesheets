@@ -2,7 +2,8 @@
 {
     public record WorkTime
     {
-        private const int MAX_WORKING_HOURS_PER_DAY = 24;
+        public const int MIN_WORKING_HOURS_PER_DAY = 1;
+        public const int MAX_WORKING_HOURS_PER_DAY = 24;
 
         private WorkTime(int projectId, int hours, DateTime date)
         {
@@ -11,20 +12,20 @@
             Date = date;
         }
 
-        public int ProjectId { get; init; }
+        public int ProjectId { get; }
 
-        public int Hours { get; init; }
+        public int Hours { get; }
 
-        public DateTime Date { get; init; }
+        public DateTime Date { get;  }
 
         public static (WorkTime? Result, string[] Errors) Create(int projectId, int hours, DateTime date)
         {
-            if (projectId <= default(int))
+            if (projectId < MIN_WORKING_HOURS_PER_DAY)
             {
                 return (null, new string[] { "Id cannot be less then 1." });
             }
 
-            if (hours <= 0 || hours > MAX_WORKING_HOURS_PER_DAY)
+            if (hours < MIN_WORKING_HOURS_PER_DAY || hours > MAX_WORKING_HOURS_PER_DAY)
             {
                 return (null, new string[] { "Hours should be between 0 and 24." });
             }

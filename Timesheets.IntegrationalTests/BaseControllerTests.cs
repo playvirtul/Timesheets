@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Timesheets.API;
 using Timesheets.DataAccess.Postgre;
-using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +27,14 @@ namespace Timesheets.IntegrationalTests
 
         public BaseControllerTests()
         {
-            var application = new WebApplicationFactory<Program>();
+            var application = new WebApplicationFactory<Program>()
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureAppConfiguration((context, configurationBuilder) =>
+                    {
+                        configurationBuilder.AddUserSecrets<BaseControllerTests>();
+                    });
+                });
 
             var configuration = application.Server.Services.GetRequiredService<IConfiguration>();
 

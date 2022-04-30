@@ -10,7 +10,7 @@ namespace Timesheets.UnitTests
     {
         [Theory]
         [InlineData(Position.Chief)]
-        [InlineData(Position.StuffEmployee)]
+        [InlineData(Position.StaffEmployee)]
         [InlineData(Position.Manager)]
         [InlineData(Position.Freelancer)]
         public void Create_ShouldCreateValidEmployee(Position position)

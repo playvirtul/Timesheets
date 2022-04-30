@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
@@ -38,6 +36,7 @@ namespace Timesheets.BusinessLogic
             return await _projectsRepository.Delete(projectId);
         }
 
+        // for check
         public async Task<string[]> AddWorkTime(WorkTime workTime)
         {
             var project = await _projectsRepository.Get(workTime.ProjectId);

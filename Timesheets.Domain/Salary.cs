@@ -1,9 +1,11 @@
 ﻿namespace Timesheets.Domain
 {
-    public class Salary
+    public record Salary
     {
-        public int MonthSalary { get; }
-
-        public int MonthPremium { get; }
+        public int EmployeeId { get; set; }
+        
+        public decimal Amount { get; set; }
+        
+        public SalaryType SalaryType { get; set; }
     }
 }

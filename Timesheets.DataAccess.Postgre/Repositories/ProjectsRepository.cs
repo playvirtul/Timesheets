@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;

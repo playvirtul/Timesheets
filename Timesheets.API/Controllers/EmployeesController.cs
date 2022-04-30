@@ -13,11 +13,22 @@ namespace Timesheets.API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
+        private readonly ISalariesService _salariesService;
         private readonly ILogger _logger;
 
-        public EmployeesController(IEmployeesService employeesService, ILogger<EmployeesController> logger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmployeesController"/> class.
+        /// </summary>
+        /// <param name="employeesService"></param>
+        /// <param name="salariesService"></param>
+        /// <param name="logger"></param>
+        public EmployeesController(
+            IEmployeesService employeesService,
+            ISalariesService salariesService,
+            ILogger<EmployeesController> logger)
         {
             _employeesService = employeesService;
+            _salariesService = salariesService;
             _logger = logger;
         }
 

@@ -3,13 +3,8 @@
     public record Manager : Employee
     {
         public Manager(int id, string firstName, string lastName)
-            : base(id, firstName, lastName)
+            : base(id, firstName, lastName, Position.Manager)
         {
-        }
-
-        public override decimal CalculateSalary(Project project)
-        {
-            throw new NotImplementedException();
         }
 
         public static (Manager? Result, string[] Errors) Create(string firstName, string lastName)
