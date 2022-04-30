@@ -29,7 +29,16 @@ jobs:
 #         path: ~/
 #         key: ${{ runner.os }}-api
       
-  test:
+  unit_tests:
+   runs-on: ubuntu-latest
+   
+   steps:
+   - uses: actions/checkout@v3
+     
+   - name: Test
+     run: dotnet test Timesheets.UnitTests/Timesheets.UnitTests.csproj --verbosity normal
+
+  integration_tests:
    runs-on: ubuntu-latest
    
    steps:
@@ -50,4 +59,4 @@ jobs:
      run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API --connection ${{secrets.ConnectionString}}
      
    - name: Test
-     run: dotnet test --no-build --verbosity normal
+     run: dotnet test Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj --no-build --verbosity normal
