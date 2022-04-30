@@ -36,14 +36,10 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}", workTime);
+            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}/workTime", workTime);
 
             // assert
             response.EnsureSuccessStatusCode();
-
-            var workTimeErrors = await response.Content.ReadFromJsonAsync<string[]>();
-
-            Assert.NotEqual(Array.Empty<string>(), workTimeErrors);
         }
 
         [Fact]

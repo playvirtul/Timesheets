@@ -28,7 +28,14 @@ namespace Timesheets.IntegrationalTests
 
         public BaseControllerTests()
         {
-            var application = new WebApplicationFactory<Program>();
+            var application = new WebApplicationFactory<Program>()
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureAppConfiguration((context, configurationBuilder) =>
+                    {
+                        configurationBuilder.AddUserSecrets<BaseControllerTests>();
+                    });
+                });
 
             var configuration = application.Server.Services.GetRequiredService<IConfiguration>();
 

@@ -25,7 +25,6 @@
                     return Chief.Create(firstName, lastName);
 
                 case Position.StuffEmployee:
-                    var a = StuffEmployee.Create(firstName, lastName).Result;
                     return StuffEmployee.Create(firstName, lastName);
 
                 case Position.Manager:
