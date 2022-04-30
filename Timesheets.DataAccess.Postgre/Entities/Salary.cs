@@ -1,15 +1,17 @@
+using Timesheets.Domain;
+
 namespace Timesheets.DataAccess.Postgre.Entities
 {
     public class Salary
     {
-        public int Position { get; set; }
-
-        public int MonthSalary { get; set; }
-
-        public int MonthBonus { get; set; }
-
-        public int SalaryPerHour { get; set; }
-
-        public Employee Employee { get; set; } = null!;
+        public int Id { get; set; }
+        
+        public Employee Employee { get; set; }
+        
+        public int EmployeeId { get; set; }
+        
+        public decimal Amount { get; set; }
+        
+        public SalaryType SalaryType { get; set; }
     }
 }

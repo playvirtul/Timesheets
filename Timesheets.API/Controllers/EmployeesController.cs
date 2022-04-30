@@ -56,8 +56,6 @@ namespace Timesheets.API.Controllers
 
             var (employee, errors) = chief.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
 
-            await _salariesService.SetupSalary(employee);
-
             if (errors.Any())
             {
                 _logger.LogError("{errors}", errors);

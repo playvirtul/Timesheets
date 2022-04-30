@@ -8,13 +8,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
     {
         public void Configure(EntityTypeBuilder<Salary> builder)
         {
-            builder.HasKey(s => s.Position);
-
-            builder.Property(s => s.MonthSalary).IsRequired();
-
-            builder.Property(s => s.MonthBonus).IsRequired();
-
-            builder.Property(s => s.SalaryPerHour).IsRequired();
+            
         }
     }
 }

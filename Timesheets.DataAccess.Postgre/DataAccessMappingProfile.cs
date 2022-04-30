@@ -17,7 +17,7 @@ namespace Timesheets.DataAccess.Postgre
 
             CreateMap<Employee, Domain.Chief>();
 
-            CreateMap<Employee, Domain.StuffEmployee>();
+            CreateMap<Employee, Domain.StaffEmployee>();
 
             CreateMap<Employee, Domain.Manager>();
 

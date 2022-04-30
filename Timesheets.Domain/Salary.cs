@@ -2,12 +2,10 @@
 {
     public record Salary
     {
-        public int Position { get; set; }
-
-        public int MonthSalary { get; init; }
-
-        public int MonthBonus { get; init; }
-
-        public int SalaryPerHour { get; init; }
+        public int EmployeeId { get; set; }
+        
+        public decimal Amount { get; set; }
+        
+        public SalaryType SalaryType { get; set; }
     }
 }

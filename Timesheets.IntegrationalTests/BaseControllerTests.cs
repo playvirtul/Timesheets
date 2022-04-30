@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Timesheets.API;
 using Timesheets.DataAccess.Postgre;
-using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;

@@ -2,6 +2,6 @@
 {
     public interface ISalariesService
     {
-        Task SetupSalary(Employee employee);
+        
     }
 }

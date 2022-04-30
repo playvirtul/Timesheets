@@ -3,7 +3,7 @@
     public record Chief : Employee
     {
         private Chief(int id, string firstName, string lastName)
-            : base(id, firstName, lastName)
+            : base(id, firstName, lastName, Position.Chief)
         {
         }
 
@@ -19,28 +19,14 @@
                 return (null, new string[] { "LastName cannot be null or empty or greater then 100 symbols." });
             }
 
-            switch (position)
+            return position switch
             {
-                case Position.Chief:
-                    return Chief.Create(firstName, lastName);
-
-                case Position.StuffEmployee:
-                    return StuffEmployee.Create(firstName, lastName);
-
-                case Position.Manager:
-                    return Manager.Create(firstName, lastName);
-
-                case Position.Freelancer:
-                    return Freelancer.Create(firstName, lastName);
-
-                default:
-                    return (null, new string[] { "Position is incorrect" });
-            }
-        }
-
-        public override decimal CalculateSalary(Project project)
-        {
-            throw new NotImplementedException();
+                Position.Chief => Chief.Create(firstName, lastName),
+                Position.StaffEmployee => StaffEmployee.Create(firstName, lastName),
+                Position.Manager => Manager.Create(firstName, lastName),
+                Position.Freelancer => Freelancer.Create(firstName, lastName),
+                _ => (null, new string[] { "Position is incorrect" })
+            };
         }
 
         public static (Chief? Result, string[] Errors) Create(string firstName, string lastName)

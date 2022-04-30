@@ -53,6 +53,9 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Employees", (string)null);
@@ -74,25 +77,6 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects", (string)null);
-                });
-
-            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Salary", b =>
-                {
-                    b.Property<int>("Position")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MonthBonus")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MonthSalary")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SalaryPerHour")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Position");
-
-                    b.ToTable("Salaries", (string)null);
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.WorkTime", b =>
@@ -134,29 +118,12 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Salary", b =>
-                {
-                    b.HasOne("Timesheets.DataAccess.Postgre.Entities.Employee", "Employee")
-                        .WithOne("Salary")
-                        .HasForeignKey("Timesheets.DataAccess.Postgre.Entities.Salary", "Position")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.WorkTime", b =>
                 {
                     b.HasOne("Timesheets.DataAccess.Postgre.Entities.Project", null)
                         .WithMany("WorkTimes")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Employee", b =>
-                {
-                    b.Navigation("Salary")
                         .IsRequired();
                 });
 

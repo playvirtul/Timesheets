@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -20,43 +21,20 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
         public async Task<Domain.Employee[]> Get()
         {
-            var employees = new List<Domain.Employee>();
-
             var employeeEntities = await _context.Employees
-                .Include(e => e.Salary)
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            foreach (var item in employeeEntities)
+            var employees = employeeEntities.Select(employee => (Domain.Employee)(employee.Position switch
             {
-                Domain.Employee? employee = null;
+                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employee),
+                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employee),
+                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employee),
+                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employee),
+                _ => throw new ArgumentOutOfRangeException()
+            })).ToArray();
 
-                switch (item.Salary.Position)
-                {
-                    case (int)Domain.Position.Chief:
-                        employee = _mapper.Map<Employee, Domain.Chief>(item);
-                        break;
-
-                    case (int)Domain.Position.StuffEmployee:
-                        employee = _mapper.Map<Employee, Domain.StuffEmployee>(item);
-                        break;
-
-                    case (int)Domain.Position.Manager:
-                        employee = _mapper.Map<Employee, Domain.Manager>(item);
-                        break;
-
-                    case (int)Domain.Position.Freelancer:
-                        employee = _mapper.Map<Employee, Domain.Freelancer>(item);
-                        break;
-                }
-
-                if (employee != null)
-                {
-                    employees.Add(employee);
-                }
-            }
-
-            return employees.ToArray();
+            return employees;
         }
 
         public async Task<Domain.Employee?> Get(int employeeId)
