@@ -8,38 +8,38 @@ namespace Timesheets.UnitTests
 {
     public class WorkTimeTests
     {
-        [Fact]
-        public void Create_ShouldCreateValidWorkTime()
-        {
-            // arrange
-            var fixture = new Fixture();
+        //[Fact]
+        //public void Create_ShouldCreateValidWorkTime()
+        //{
+        //    // arrange
+        //    var fixture = new Fixture();
 
-            var projectId = fixture.Create<int>();
+        //    var projectId = fixture.Create<int>();
 
-            var hours = new Random().Next(1, 25);
+        //    var hours = new Random().Next(1, 25);
 
-            // act
-            var (workTime, errors) = WorkTime.Create(projectId, hours, DateTime.Now);
+        //    // act
+        //    var (workTime, errors) = WorkTime.Create(projectId, hours, DateTime.Now);
 
-            // assert
-            Assert.NotNull(workTime);
-            Assert.Empty(errors);
-        }
+        //    // assert
+        //    Assert.NotNull(workTime);
+        //    Assert.Empty(errors);
+        //}
 
-        [Theory]
-        [MemberData(nameof(GenerateInvalidTitle))]
-        public void Create_InvalidParametres_ShouldReturnErrors(int projectId, int hours, int daysCount)
-        {
-            // arrange
-            var date = DateTime.Now.AddDays(daysCount);
+        //[Theory]
+        //[MemberData(nameof(GenerateInvalidTitle))]
+        //public void Create_InvalidParametres_ShouldReturnErrors(int projectId, int hours, int daysCount)
+        //{
+        //    // arrange
+        //    var date = DateTime.Now.AddDays(daysCount);
 
-            // act
-            var (workTime, errors) = WorkTime.Create(projectId, hours, date);
+        //    // act
+        //    var (workTime, errors) = WorkTime.Create(projectId, hours, date);
 
-            // assert
-            Assert.Null(workTime);
-            Assert.NotEmpty(errors);
-        }
+        //    // assert
+        //    Assert.Null(workTime);
+        //    Assert.NotEmpty(errors);
+        //}
 
         public static IEnumerable<object[]> GenerateInvalidTitle()
         {

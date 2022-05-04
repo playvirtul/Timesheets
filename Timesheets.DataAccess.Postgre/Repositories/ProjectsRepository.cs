@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -19,9 +20,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
         public async Task<Domain.Project?> Get(int projectId)
         {
-            // ошибка связанная с include
             var projectEntity = await _context.Projects
-                .Include(p => p.WorkTimes)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == projectId);
 
@@ -38,7 +37,6 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         public async Task<Domain.Project[]> Get()
         {
             var projectEntities = await _context.Projects
-                .Include(p => p.WorkTimes)
                 .AsNoTracking()
                 .ToArrayAsync();
 
@@ -56,6 +54,22 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             await _context.SaveChangesAsync();
 
             return project.Id;
+        }
+
+        public async Task AddEmployeeToProject(int projectId, int employeeId)
+        {
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
+
+            if (project == null || employee == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            project.Employees.Add(employee);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> Delete(int projectId)

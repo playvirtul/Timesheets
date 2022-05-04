@@ -61,11 +61,13 @@ namespace Timesheets.API
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<ISalariesService, SalariesService>();
+            services.AddScoped<IWorkTimesService, WorkTimesService>();
 
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
             services.AddScoped<ISalariesRepository, SalariesRepository>();
+            services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)

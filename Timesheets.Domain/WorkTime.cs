@@ -5,12 +5,15 @@
         public const int MIN_WORKING_HOURS_PER_DAY = 1;
         public const int MAX_WORKING_HOURS_PER_DAY = 24;
 
-        private WorkTime(int projectId, int hours, DateTime date)
+        private WorkTime(int employeeId, int projectId, int hours, DateTime date)
         {
+            EmployeeId = employeeId;
             ProjectId = projectId;
             Hours = hours;
             Date = date;
         }
+
+        public int EmployeeId { get; }
 
         public int ProjectId { get; }
 
@@ -18,7 +21,7 @@
 
         public DateTime Date { get;  }
 
-        public static (WorkTime? Result, string[] Errors) Create(int projectId, int hours, DateTime date)
+        public static (WorkTime? Result, string[] Errors) Create(int employeeId, int projectId, int hours, DateTime date)
         {
             if (projectId < MIN_WORKING_HOURS_PER_DAY)
             {
@@ -36,7 +39,7 @@
             }
 
             return (
-                new WorkTime(projectId, hours, date),
+                new WorkTime(employeeId, projectId, hours, date),
                 Array.Empty<string>());
         }
     }

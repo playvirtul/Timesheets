@@ -45,7 +45,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             if (employeeEntity == null)
             {
-                return null;
+                throw new ArgumentOutOfRangeException();
             }
 
             var employee = _mapper.Map<Employee, Domain.Employee>(employeeEntity);

@@ -2,6 +2,8 @@
 {
     public interface ISalariesRepository
     {
-        Task<Salary[]> Get();
+        Task<Salary> Get(int employeeId);
+
+        Task Add(Salary salary);
     }
 }

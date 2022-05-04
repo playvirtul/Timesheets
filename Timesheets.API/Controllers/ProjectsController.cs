@@ -71,6 +71,14 @@ namespace Timesheets.API.Controllers
             return Ok(projectId);
         }
 
+        [HttpPost("addEmployeeToProject")]
+        public async Task<IActionResult> AddEmployeeToProject(int projectId, int employeeId)
+        {
+            await _projectsService.AddEmployeeToProject(projectId, employeeId);
+
+            return Ok();
+        }
+
         /// <summary>
         /// Delete project.
         /// </summary>
@@ -82,28 +90,6 @@ namespace Timesheets.API.Controllers
             var deletedProjectId = await _projectsService.Delete(projectId);
 
             return Ok(deletedProjectId);
-        }
-
-        /// <summary>
-        /// AddWorkTime.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="newWorkTime"></param>
-        /// <returns></returns>
-        [HttpPost("{projectId:int}/workTime")]
-        public async Task<IActionResult> AddWorkTime(int projectId, [FromBody]NewWorkTime newWorkTime)
-        {
-            var (workTime, errors) = WorkTime.Create(projectId, newWorkTime.Hours, newWorkTime.Date);
-
-            if (errors.Any())
-            {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
-            }
-
-            var result = await _projectsService.AddWorkTime(workTime);
-
-            return Ok(result);
         }
     }
 }

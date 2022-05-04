@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
@@ -10,18 +11,14 @@ namespace Timesheets.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiversion}/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
         private readonly ISalariesService _salariesService;
         private readonly ILogger _logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeesController"/> class.
-        /// </summary>
-        /// <param name="employeesService"></param>
-        /// <param name="salariesService"></param>
-        /// <param name="logger"></param>
         public EmployeesController(
             IEmployeesService employeesService,
             ISalariesService salariesService,
@@ -63,6 +60,10 @@ namespace Timesheets.API.Controllers
             }
 
             var employeeId = await _employeesService.Create(employee);
+
+            var employeeSalary = Salary.Create(employeeId, newEmployee.SalaryType);
+
+            await _salariesService.SetupSalary(employeeSalary);
 
             return Ok(employeeId);
         }

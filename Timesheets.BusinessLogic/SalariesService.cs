@@ -1,4 +1,6 @@
-﻿using Timesheets.Domain.Interfaces;
+﻿using System.Threading.Tasks;
+using Timesheets.Domain;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.BusinessLogic
 {
@@ -9,6 +11,11 @@ namespace Timesheets.BusinessLogic
         public SalariesService(ISalariesRepository salariesRepository)
         {
             _salariesRepository = salariesRepository;
+        }
+
+        public async Task SetupSalary(Salary salary)
+        {
+            await _salariesRepository.Add(salary);
         }
     }
 }

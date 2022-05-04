@@ -79,6 +79,31 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                     b.ToTable("Projects", (string)null);
                 });
 
+            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Salary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SalaryType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
+                    b.ToTable("Salaries", (string)null);
+                });
+
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.WorkTime", b =>
                 {
                     b.Property<int>("Id")
@@ -90,6 +115,9 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Hours")
                         .HasColumnType("integer");
 
@@ -97,6 +125,8 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ProjectId");
 
@@ -118,13 +148,39 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Salary", b =>
+                {
+                    b.HasOne("Timesheets.DataAccess.Postgre.Entities.Employee", "Employee")
+                        .WithOne()
+                        .HasForeignKey("Timesheets.DataAccess.Postgre.Entities.Salary", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.WorkTime", b =>
                 {
-                    b.HasOne("Timesheets.DataAccess.Postgre.Entities.Project", null)
+                    b.HasOne("Timesheets.DataAccess.Postgre.Entities.Employee", "Employee")
+                        .WithMany("WorkTimes")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Timesheets.DataAccess.Postgre.Entities.Project", "Project")
                         .WithMany("WorkTimes")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Employee", b =>
+                {
+                    b.Navigation("WorkTimes");
                 });
 
             modelBuilder.Entity("Timesheets.DataAccess.Postgre.Entities.Project", b =>

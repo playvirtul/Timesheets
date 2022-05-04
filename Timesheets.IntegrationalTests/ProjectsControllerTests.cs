@@ -27,7 +27,7 @@ namespace Timesheets.IntegrationalTests
         {
             // arrange
             var fixture = new Fixture();
-            var projectId = 1;
+            var projectId = 4;
 
             var workTime = new NewWorkTime
             {

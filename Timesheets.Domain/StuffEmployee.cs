@@ -3,13 +3,8 @@
     public record StuffEmployee : Employee
     {
         private StuffEmployee(int id, string firstName, string lastName)
-            : base(id, firstName, lastName)
+            : base(id, firstName, lastName, Position.StaffEmployee)
         {
-        }
-
-        public override decimal CalculateSalary(Project project)
-        {
-            throw new NotImplementedException();
         }
 
         public static (StuffEmployee? Result, string[] Errors) Create(string firstName, string lastName)
