@@ -15,8 +15,5 @@ namespace Timesheets.API.Contracts
 
         [Required]
         public Position Position { get; set; }
-
-        [Required]
-        public SalaryType SalaryType { get; set; }
     }
 }

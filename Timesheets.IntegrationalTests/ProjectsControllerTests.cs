@@ -27,16 +27,16 @@ namespace Timesheets.IntegrationalTests
         {
             // arrange
             var fixture = new Fixture();
-            var projectId = 4;
+            var projectId = 1;
 
             var workTime = new NewWorkTime
             {
-                Hours = fixture.Create<int>(),
+                Hours = 1,
                 Date = fixture.Create<DateTime>()
             };
 
             // act
-            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}/workTime", workTime);
+            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}/workTime?employeeId=1", workTime);
 
             // assert
             response.EnsureSuccessStatusCode();

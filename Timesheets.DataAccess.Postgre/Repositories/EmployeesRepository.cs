@@ -19,19 +19,20 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
+        // for check
         public async Task<Domain.Employee[]> Get()
         {
             var employeeEntities = await _context.Employees
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var employees = employeeEntities.Select(employee => (Domain.Employee)(employee.Position switch
+            var employees = employeeEntities.Select(employeeEntity => (Domain.Employee)(employeeEntity.Position switch
             {
-                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employee),
-                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employee),
-                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employee),
-                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employee),
-                _ => throw new ArgumentOutOfRangeException()
+                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
+                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
+                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
+                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
+                _ => throw new Exception("Incorrect employee role")
             })).ToArray();
 
             return employees;
@@ -45,10 +46,17 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             if (employeeEntity == null)
             {
-                throw new ArgumentOutOfRangeException();
+                return null;
             }
 
-            var employee = _mapper.Map<Employee, Domain.Employee>(employeeEntity);
+            var employee = (Domain.Employee)(employeeEntity.Position switch
+            {
+                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
+                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
+                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
+                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
+                _ => throw new Exception("Incorrect employee role")
+            });
 
             return employee;
         }

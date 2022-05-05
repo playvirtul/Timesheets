@@ -2,9 +2,10 @@
 {
     public record Salary
     {
-        private Salary(int employeeId, SalaryType salaryType)
+        private Salary(int employeeId, decimal amount, SalaryType salaryType)
         {
             EmployeeId = employeeId;
+            Amount = amount;
             SalaryType = salaryType;
         }
 
@@ -19,9 +20,14 @@
             return 0;
         }
 
-        public static Salary Create(int employeeId, SalaryType salaryType)
+        public static (Salary? Result, string[] Errors) Create(int employeeId, decimal amount, SalaryType salaryType)
         {
-            return new Salary(employeeId, salaryType);
+            if (amount <= 0)
+            {
+                return (null, new string[] { "Amount cannot be less than zero" });
+            }
+
+            return (new Salary(employeeId, amount, salaryType), Array.Empty<string>());
         }
     }
 }

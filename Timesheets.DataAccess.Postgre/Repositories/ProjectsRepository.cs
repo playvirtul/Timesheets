@@ -62,9 +62,14 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
 
-            if (project == null || employee == null)
+            if (project == null)
             {
-                throw new NullReferenceException();
+                throw new Exception("Project is null");
+            }
+
+            if(employee == null)
+            {
+                throw new Exception("Employee is null");
             }
 
             project.Employees.Add(employee);

@@ -13,9 +13,14 @@ namespace Timesheets.BusinessLogic
             _salariesRepository = salariesRepository;
         }
 
-        public async Task SetupSalary(Salary salary)
+        public async Task<Salary> Get(int employeeId)
         {
-            await _salariesRepository.Add(salary);
+            return await _salariesRepository.Get(employeeId);
+        }
+
+        public async Task Upsert(Salary salary)
+        {
+            await _salariesRepository.Upsert(salary);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newEmployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]NewEmployee newEmployee)
+        public async Task<IActionResult> Create([FromBody] NewEmployee newEmployee)
         {
             var chief = Chief.Create("name", "lastname").Result;
 
@@ -61,11 +61,42 @@ namespace Timesheets.API.Controllers
 
             var employeeId = await _employeesService.Create(employee);
 
-            var employeeSalary = Salary.Create(employeeId, newEmployee.SalaryType);
-
-            await _salariesService.SetupSalary(employeeSalary);
-
             return Ok(employeeId);
+        }
+
+        /// <summary>
+        /// Get salaries.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/salary")]
+        public async Task<IActionResult> Get(int employeeId)
+        {
+            var salary = await _salariesService.Get(employeeId);
+
+            return Ok(salary);
+        }
+
+        /// <summary>
+        /// Create or update salary.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="newSalary"></param>
+        /// <returns></returns>
+        [HttpPost("{employeeId:int}/salary")]
+        public async Task<IActionResult> Upsert([FromRoute]int employeeId, [FromBody]NewSalary newSalary)
+        {
+            var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.SalaryType);
+
+            if (errors.Any())
+            {
+                _logger.LogError("{errors}", errors);
+                return BadRequest(errors);
+            }
+
+            await _salariesService.Upsert(salary);
+
+            return Ok(salary);
         }
     }
 }

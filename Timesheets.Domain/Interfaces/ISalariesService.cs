@@ -2,6 +2,8 @@
 {
     public interface ISalariesService
     {
-        Task SetupSalary(Salary salary);
+        Task Upsert(Salary salary);
+
+        Task<Salary> Get(int employeeId);
     }
 }

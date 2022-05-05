@@ -34,11 +34,11 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return salary;
         }
 
-        public async Task Add(Domain.Salary salary)
+        public async Task Upsert(Domain.Salary salary)
         {
             var entitySalary = _mapper.Map<Domain.Salary, Salary>(salary);
 
-            _context.Salaries.Add(entitySalary);
+            _context.Salaries.Update(entitySalary);
 
             await _context.SaveChangesAsync();
         }
