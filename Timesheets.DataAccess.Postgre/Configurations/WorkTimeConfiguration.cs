@@ -14,7 +14,9 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(w => w.Hours).IsRequired();
 
-            builder.Property(w => w.Date).IsRequired();
+            builder.Property(w => w.Date)
+                .HasConversion(x => x.ToUniversalTime(), x => x)
+                .IsRequired();
 
             builder.HasOne(w => w.Employee)
                  .WithMany(e => e.WorkTimes)

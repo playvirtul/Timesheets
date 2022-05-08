@@ -19,21 +19,15 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        // for check
         public async Task<Domain.Employee[]> Get()
         {
             var employeeEntities = await _context.Employees
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var employees = employeeEntities.Select(employeeEntity => (Domain.Employee)(employeeEntity.Position switch
-            {
-                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
-                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
-                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
-                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
-                _ => throw new Exception("Incorrect employee role")
-            })).ToArray();
+            var employees = employeeEntities
+                .Select(employeeEntity => EmployeeMapping(employeeEntity))
+                .ToArray();
 
             return employees;
         }
@@ -49,14 +43,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 return null;
             }
 
-            var employee = (Domain.Employee)(employeeEntity.Position switch
-            {
-                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
-                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
-                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
-                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
-                _ => throw new Exception("Incorrect employee role")
-            });
+            var employee = EmployeeMapping(employeeEntity);
 
             return employee;
         }
@@ -79,6 +66,18 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        private Domain.Employee EmployeeMapping(Employee employeeEntity)
+        {
+            return employeeEntity.Position switch
+            {
+                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
+                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
+                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
+                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
+                _ => throw new Exception("Incorrect employee role")
+            };
         }
     }
 }

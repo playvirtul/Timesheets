@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Respawn;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Timesheets.API;
 using Timesheets.DataAccess.Postgre;
-using Npgsql;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Timesheets.IntegrationalTests
-{
+{   
     public abstract class BaseControllerTests : IAsyncLifetime
     {
         private static readonly Checkpoint _checkpoint = new Checkpoint()
@@ -25,9 +26,9 @@ namespace Timesheets.IntegrationalTests
 
         private readonly string _connectionString;
 
-        public BaseControllerTests()
+        public BaseControllerTests(ITestOutputHelper outputHelper)
         {
-            var application = new WebApplicationFactory<Program>()
+            Application = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureAppConfiguration((context, configurationBuilder) =>
@@ -36,7 +37,7 @@ namespace Timesheets.IntegrationalTests
                     });
                 });
 
-            var configuration = application.Server.Services.GetRequiredService<IConfiguration>();
+            var configuration = Application.Server.Services.GetRequiredService<IConfiguration>();
 
             var connectionString = configuration.GetConnectionString(nameof(TimesheetsDbContext));
 
@@ -47,10 +48,12 @@ namespace Timesheets.IntegrationalTests
 
             _connectionString = connectionString;
 
-            Client = application.CreateClient();
+            Client = Application.CreateDefaultClient(new LoggingHandler(outputHelper));
         }
 
         protected HttpClient Client { get; }
+
+        protected WebApplicationFactory<Program> Application { get; }
 
         public Task InitializeAsync()
         {

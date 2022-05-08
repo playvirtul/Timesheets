@@ -1,25 +1,19 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Timesheets.API;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Timesheets.IntegrationalTests
 {
-    public class EmployeesControllerTests
+    public class EmployeesControllerTests : BaseControllerTests
     {
-        private HttpClient _client;
-
-        public EmployeesControllerTests()
+        public EmployeesControllerTests(ITestOutputHelper outputHelper)
+            : base(outputHelper)
         {
-            var application = new WebApplicationFactory<Program>();
-
-            _client = application.CreateClient();
         }
 
         [Fact]
@@ -28,7 +22,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
 
             // act
-            var response = await _client.GetAsync("api/v1/employees");
+            var response = await Client.GetAsync("api/v1/employees");
 
             // assert
             response.EnsureSuccessStatusCode();
@@ -48,7 +42,7 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var response = await _client.PostAsJsonAsync("api/v1/employees", employee);
+            var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
 
             // assert
             response.EnsureSuccessStatusCode();
@@ -76,7 +70,7 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var response = await _client.PostAsJsonAsync("api/v1/employees", employee);
+            var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

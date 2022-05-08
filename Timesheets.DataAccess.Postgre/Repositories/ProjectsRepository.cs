@@ -56,7 +56,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return project.Id;
         }
 
-        public async Task AddEmployeeToProject(int projectId, int employeeId)
+        public async Task<string> AddEmployeeToProject(int projectId, int employeeId)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
 
@@ -64,17 +64,19 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             if (project == null)
             {
-                throw new Exception("Project is null");
+                return "Project is null";
             }
 
-            if(employee == null)
+            if (employee == null)
             {
-                throw new Exception("Employee is null");
+                return "Employee is null";
             }
 
             project.Employees.Add(employee);
 
             await _context.SaveChangesAsync();
+
+            return string.Empty;
         }
 
         public async Task<bool> Delete(int projectId)

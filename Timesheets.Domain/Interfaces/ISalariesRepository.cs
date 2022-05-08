@@ -2,7 +2,7 @@
 {
     public interface ISalariesRepository
     {
-        Task<Salary> Get(int employeeId);
+        Task<Salary?> Get(int employeeId);
 
         Task Upsert(Salary salary);
     }

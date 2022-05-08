@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -18,7 +17,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task<Domain.Salary> Get(int employeeId)
+        public async Task<Domain.Salary?> Get(int employeeId)
         {
             var salaryEntity = await _context.Salaries
                 .AsNoTracking()
@@ -26,7 +25,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             if (salaryEntity == null)
             {
-                throw new ArgumentOutOfRangeException();
+                return null;
             }
 
             var salary = _mapper.Map<Salary, Domain.Salary>(salaryEntity);
