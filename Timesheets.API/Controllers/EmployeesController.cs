@@ -86,7 +86,7 @@ namespace Timesheets.API.Controllers
         [HttpPost("{employeeId:int}/salary")]
         public async Task<IActionResult> Upsert([FromRoute]int employeeId, [FromBody]NewSalary newSalary)
         {
-            var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.SalaryType);
+            var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
 
             if (errors.Any())
             {
@@ -94,9 +94,23 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            await _salariesService.Upsert(salary);
+            var salaryId = await _salariesService.Upsert(salary);
 
-            return Ok(salary);
+            return Ok(salaryId);
+        }
+
+        /// <summary>
+        /// Calculate salary for time period.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/month")]
+        public async Task<IActionResult> CalculateSalaryForTimePeriod([FromRoute]int employeeId, [FromQuery]int month)
+        {
+            var amountSalary = await _salariesService.CalculateSalaryForTimePeriod(employeeId, month);
+
+            return Ok(amountSalary);
         }
     }
 }

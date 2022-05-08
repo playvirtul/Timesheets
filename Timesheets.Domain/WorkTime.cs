@@ -3,7 +3,9 @@
     public record WorkTime
     {
         public const int MIN_WORKING_HOURS_PER_DAY = 1;
-        public const int MAX_WORKING_HOURS_PER_DAY = 24;
+        public const int MAX_WORKING_HOURS_PER_DAY = 8;
+        public const int MAX_OVERTIME_HOURS_PER_DAY = 24;
+        public const int MAX_WORKING_HOURS_PER_MONTH = 160;
 
         private WorkTime(int employeeId, int projectId, int hours, DateTime date)
         {
@@ -28,7 +30,7 @@
                 return (null, new string[] { "Id cannot be less then 1." });
             }
 
-            if (hours < MIN_WORKING_HOURS_PER_DAY || hours > MAX_WORKING_HOURS_PER_DAY)
+            if (hours < MIN_WORKING_HOURS_PER_DAY || hours > MAX_OVERTIME_HOURS_PER_DAY)
             {
                 return (null, new string[] { "Hours should be between 0 and 24." });
             }

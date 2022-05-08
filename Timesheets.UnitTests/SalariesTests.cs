@@ -18,9 +18,10 @@ namespace Timesheets.UnitTests
 
             var employeeId = fixture.Create<int>();
             var amount = fixture.Create<decimal>();
+            var bonus = fixture.Create<decimal>();
 
             // act
-            var (salary, errors) = Salary.Create(employeeId, amount, salaryType);
+            var (salary, errors) = Salary.Create(employeeId, amount, bonus, salaryType);
 
             // assert
             Assert.NotNull(salary);
@@ -29,10 +30,10 @@ namespace Timesheets.UnitTests
 
         [Theory]
         [MemberData(nameof(GenerateInvalidParametres))]
-        public void Create_ShouldCreateInValidSalary(int employeeId, decimal amount, SalaryType salaryType)
+        public void Create_ShouldCreateInValidSalary(int employeeId, decimal amount, decimal bonus, SalaryType salaryType)
         {
             // act
-            var (salary, errors) = Salary.Create(employeeId, amount, salaryType);
+            var (salary, errors) = Salary.Create(employeeId, amount, bonus, salaryType);
 
             // assert
             Assert.Null(salary);
@@ -47,9 +48,11 @@ namespace Timesheets.UnitTests
 
             var incorrectAmount = random.Next(-1000, 1);
 
+            var incorrectBonus = random.Next(-1000, 1);
+
             var incorrectRole = random.Next(10, 1000);
 
-            yield return new object[] { incorrectId, incorrectAmount, incorrectRole };
+            yield return new object[] { incorrectId, incorrectAmount, incorrectBonus, incorrectRole };
         }
     }
 }

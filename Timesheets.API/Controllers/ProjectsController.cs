@@ -21,7 +21,7 @@ namespace Timesheets.API.Controllers
         private readonly ILogger<ProjectsController> _logger;
 
         public ProjectsController(
-            IProjectsService projectsService, 
+            IProjectsService projectsService,
             IWorkTimesService workTimeService,
             ILogger<ProjectsController> logger)
         {

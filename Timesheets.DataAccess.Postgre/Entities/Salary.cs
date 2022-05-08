@@ -12,6 +12,8 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public decimal Amount { get; set; }
 
+        public decimal Bonus { get; set; }
+
         public SalaryType SalaryType { get; set; }
     }
 }

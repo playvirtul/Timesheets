@@ -22,18 +22,18 @@ namespace Timesheets.BusinessLogic
             return workTimes;
         }
 
-        public async Task<string[]> Create(WorkTime workTime)
+        public async Task<string> Create(WorkTime workTime)
         {
             var workTimes = await _workTimesRepository.Get(workTime.EmployeeId);
+            var errors = Project.CreateWorkTime(workTime, workTimes);
 
-            if (workTimes.Sum(w => w.Hours) + workTime.Hours > WorkTime.MAX_WORKING_HOURS_PER_DAY)
+            if (string.IsNullOrEmpty(errors))
             {
-                return new string[] { "Can not add more than 24 hours on the same date." };
+                await _workTimesRepository.Add(workTime);
+                return string.Empty;
             }
 
-            await _workTimesRepository.Add(workTime);
-
-            return Array.Empty<string>();
+            return errors;
         }
     }
 }

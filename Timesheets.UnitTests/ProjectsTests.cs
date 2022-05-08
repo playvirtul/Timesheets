@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoFixture;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Timesheets.Domain;
@@ -31,6 +32,51 @@ namespace Timesheets.UnitTests
 
             // assert
             Assert.Null(project);
+            Assert.NotEmpty(errors);
+        }
+
+        [Fact]
+        public void CreateWorkTime_ShouldReturnEmptyErrors()
+        {
+            // arrange
+            var fixture = new Fixture();
+
+            var employeeId = fixture.Create<int>();
+
+            var projectId = fixture.Create<int>();
+
+            var hours = new Random().Next(1, 25);
+
+            var workTime = WorkTime.Create(employeeId, projectId, hours, DateTime.Now).Result;
+
+            // act
+            var errors = Project.CreateWorkTime(workTime, Array.Empty<WorkTime>());
+
+            // assert
+            Assert.Empty(errors);
+        }
+
+        [Fact]
+        public void CreateWorkTime_ShouldReturnErrors()
+        {
+            // arrange
+            var fixture = new Fixture();
+
+            var employeeId = fixture.Create<int>();
+
+            var projectId = fixture.Create<int>();
+
+            var hours = new Random().Next(1, 25);
+
+            var workTime = WorkTime.Create(employeeId, projectId, hours, DateTime.Now).Result;
+
+            var workTimeInArray = WorkTime
+                .Create(employeeId, projectId, WorkTime.MAX_OVERTIME_HOURS_PER_DAY, DateTime.Now).Result;
+
+            // act
+            var errors = Project.CreateWorkTime(workTime, new WorkTime[] { workTimeInArray });
+
+            // assert
             Assert.NotEmpty(errors);
         }
 

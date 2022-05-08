@@ -118,5 +118,45 @@ namespace Timesheets.IntegrationalTests
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async Task AddEmployeeToProject_ValidEmployeeIdAndProjectId_ShouldAddEmployeeToProject()
+        {
+            var fixture = new Fixture();
+            var projectId = 0;
+            var employeeId = 0;
+
+            // arrange
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var project = dbContext.Projects
+                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                await dbContext.SaveChangesAsync();
+
+                projectId = project.Entity.Id;
+                employeeId = employee.Entity.Id;
+            }
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}/employee", employeeId);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+
+            var errors = await response.Content.ReadFromJsonAsync<string>();
+
+            Assert.Empty(errors);
+        }
     }
 }

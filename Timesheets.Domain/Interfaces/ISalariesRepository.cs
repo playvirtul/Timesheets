@@ -4,6 +4,6 @@
     {
         Task<Salary?> Get(int employeeId);
 
-        Task Upsert(Salary salary);
+        Task<int> Upsert(Salary salary);
     }
 }

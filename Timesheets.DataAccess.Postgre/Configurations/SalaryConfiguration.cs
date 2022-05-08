@@ -14,6 +14,8 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(s => s.Amount).IsRequired();
 
+            builder.Property(s => s.Bonus).IsRequired();
+
             builder.Property(s => s.SalaryType).IsRequired();
 
             builder.HasOne(s => s.Employee)

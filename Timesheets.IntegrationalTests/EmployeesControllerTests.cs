@@ -1,11 +1,14 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
+using Timesheets.DataAccess.Postgre;
 using Timesheets.Domain;
 using Xunit;
 using Xunit.Abstractions;
+using Entities = Timesheets.DataAccess.Postgre.Entities;
 
 namespace Timesheets.IntegrationalTests
 {
@@ -74,6 +77,49 @@ namespace Timesheets.IntegrationalTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Create_ShouldCreateSalary()
+        {
+            // arrange
+            var fixture = new Fixture();
+
+            var salary = new NewSalary
+            {
+                Amount = fixture.Create<decimal>(),
+                Bonus = fixture.Create<decimal>(),
+                SalaryType = fixture.Create<SalaryType>()
+            };
+
+            var employeeId = 0;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                await dbContext.SaveChangesAsync();
+
+                employeeId = employee.Entity.Id;
+            }
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+
+            var salaryId = await response.Content.ReadFromJsonAsync<int>();
+
+            Assert.NotEqual(default(int), salaryId);
         }
     }
 }

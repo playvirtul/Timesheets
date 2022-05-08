@@ -4,7 +4,7 @@
     {
         Task<Project[]> Get();
 
-        Task<Project> Get(int projectId);
+        Task<Project?> Get(int projectId);
 
         Task<int> Create(Project newProject);
 

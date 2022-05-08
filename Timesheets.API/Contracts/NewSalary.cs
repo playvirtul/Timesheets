@@ -10,5 +10,8 @@ namespace Timesheets.API.Contracts
 
         [Required]
         public decimal Amount { get; set; }
+
+        [Required]
+        public decimal Bonus { get; set; }
     }
 }

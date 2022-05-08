@@ -12,7 +12,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 namespace Timesheets.IntegrationalTests
-{   
+{
     public abstract class BaseControllerTests : IAsyncLifetime
     {
         private static readonly Checkpoint _checkpoint = new Checkpoint()
