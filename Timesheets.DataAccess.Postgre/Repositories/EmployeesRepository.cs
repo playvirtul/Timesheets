@@ -25,14 +25,9 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var employees = employeeEntities.Select(employee => (Domain.Employee)(employee.Position switch
-            {
-                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employee),
-                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employee),
-                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employee),
-                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employee),
-                _ => throw new ArgumentOutOfRangeException()
-            })).ToArray();
+            var employees = employeeEntities
+                .Select(employeeEntity => EmployeeMapping(employeeEntity))
+                .ToArray();
 
             return employees;
         }
@@ -48,7 +43,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 return null;
             }
 
-            var employee = _mapper.Map<Employee, Domain.Employee>(employeeEntity);
+            var employee = EmployeeMapping(employeeEntity);
 
             return employee;
         }
@@ -71,6 +66,18 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        private Domain.Employee EmployeeMapping(Employee employeeEntity)
+        {
+            return employeeEntity.Position switch
+            {
+                Domain.Position.Chief => _mapper.Map<Employee, Domain.Chief>(employeeEntity),
+                Domain.Position.StaffEmployee => _mapper.Map<Employee, Domain.StaffEmployee>(employeeEntity),
+                Domain.Position.Manager => _mapper.Map<Employee, Domain.Manager>(employeeEntity),
+                Domain.Position.Freelancer => _mapper.Map<Employee, Domain.Freelancer>(employeeEntity),
+                _ => throw new Exception("Incorrect employee role")
+            };
         }
     }
 }

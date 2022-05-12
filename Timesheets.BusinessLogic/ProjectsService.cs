@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -8,12 +7,10 @@ namespace Timesheets.BusinessLogic
     public class ProjectsService : IProjectsService
     {
         private readonly IProjectsRepository _projectsRepository;
-        private readonly IWorkTimesRepository _workTimesRepository;
 
-        public ProjectsService(IProjectsRepository projectsRepository, IWorkTimesRepository workTimesRepository)
+        public ProjectsService(IProjectsRepository projectsRepository)
         {
             _projectsRepository = projectsRepository;
-            _workTimesRepository = workTimesRepository;
         }
 
         public async Task<Project?> Get(int projectId)
@@ -31,33 +28,14 @@ namespace Timesheets.BusinessLogic
             return await _projectsRepository.Add(newProject);
         }
 
+        public async Task<string> AddEmployeeToProject(int projectId, int employeeId)
+        {
+            return await _projectsRepository.AddEmployeeToProject(projectId, employeeId);
+        }
+
         public async Task<bool> Delete(int projectId)
         {
             return await _projectsRepository.Delete(projectId);
-        }
-
-        // for check
-        public async Task<string[]> AddWorkTime(WorkTime workTime)
-        {
-            var project = await _projectsRepository.Get(workTime.ProjectId);
-
-            if (project == null)
-            {
-                return new string[] { "Project is null" };
-            }
-
-            var errors = project.CheckAddingWorkTime(workTime);
-
-            if (errors.Length != 0)
-            {
-                return errors;
-            }
-            else
-            {
-                await _workTimesRepository.Add(workTime);
-
-                return Array.Empty<string>();
-            }
         }
     }
 }

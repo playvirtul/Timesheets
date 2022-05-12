@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Timesheets.UnitTests
 {
-    public class EmployeeTests
+    public class EmployeesTests
     {
         [Theory]
         [InlineData(Position.Chief)]
@@ -30,7 +30,7 @@ namespace Timesheets.UnitTests
         }
 
         [Theory]
-        [MemberData(nameof(GenerateInvalidTitle))]
+        [MemberData(nameof(GenerateInvalidParametres))]
         public void Create_InvalidTitle_ShouldReturnErrors(string firstName, string lastName, Position position)
         {
             // act
@@ -45,18 +45,18 @@ namespace Timesheets.UnitTests
             Assert.NotEmpty(errors);
         }
 
-        public static IEnumerable<object[]> GenerateInvalidTitle()
+        public static IEnumerable<object[]> GenerateInvalidParametres()
         {
-            var randomRole = new Random();
+            var incorrectRole = new Random();
 
             for (int i = 0; i < 10; i++)
             {
-                yield return new object[] { " ", " ",  randomRole.Next(10, 100) };
-                yield return new object[] { string.Empty, string.Empty, randomRole.Next(10, 100) };
-                yield return new object[] { null, null, randomRole.Next(10, 100) };
-                var invalidString = Enumerable.Range(0, 100 + 50);
+                yield return new object[] { " ", " ",  incorrectRole.Next(10, 100) };
+                yield return new object[] { string.Empty, string.Empty, incorrectRole.Next(10, 100) };
+                yield return new object[] { null, null, incorrectRole.Next(10, 100) };
+                var invalidString = Enumerable.Range(0, Employee.MAX_FIRSTNAME_LENGTH + 50);
                 var incorrectString = string.Join(string.Empty, invalidString);
-                yield return new object[] { incorrectString, incorrectString, randomRole.Next(10, 100) };
+                yield return new object[] { incorrectString, incorrectString, incorrectRole.Next(10, 100) };
             }
         }
     }

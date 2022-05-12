@@ -17,15 +17,31 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task<Domain.Salary[]> Get()
+        public async Task<Domain.Salary?> Get(int employeeId)
         {
-            var salaryEntities = await _context.Salaries
+            var salaryEntity = await _context.Salaries
                 .AsNoTracking()
-                .ToArrayAsync();
+                .FirstOrDefaultAsync(s => s.EmployeeId == employeeId);
 
-            var salaries = _mapper.Map<Salary[], Domain.Salary[]>(salaryEntities);
+            if (salaryEntity == null)
+            {
+                return null;
+            }
 
-            return salaries;
+            var salary = _mapper.Map<Salary, Domain.Salary>(salaryEntity);
+
+            return salary;
+        }
+
+        public async Task<int> Upsert(Domain.Salary salary)
+        {
+            var entitySalary = _mapper.Map<Domain.Salary, Salary>(salary);
+
+            _context.Salaries.Update(entitySalary);
+
+            await _context.SaveChangesAsync();
+
+            return entitySalary.Id;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
     public class Employee
     {
         public int Id { get; set; }
-        
+
         public Position Position { get; set; }
 
         public string? FirstName { get; set; }
@@ -14,5 +14,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
         public string? LastName { get; set; }
 
         public List<Project> Projects { get; set; } = new();
+
+        public List<WorkTime> WorkTimes { get; set; } = new();
     }
 }

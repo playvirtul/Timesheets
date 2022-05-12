@@ -21,7 +21,5 @@
         public string LastName { get; }
 
         public Position Position { get; }
-
-        // public List<Project> Projects { get; }
     }
 }

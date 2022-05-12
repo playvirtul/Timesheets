@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
@@ -10,18 +11,14 @@ namespace Timesheets.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiversion}/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _employeesService;
         private readonly ISalariesService _salariesService;
         private readonly ILogger _logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeesController"/> class.
-        /// </summary>
-        /// <param name="employeesService"></param>
-        /// <param name="salariesService"></param>
-        /// <param name="logger"></param>
         public EmployeesController(
             IEmployeesService employeesService,
             ISalariesService salariesService,
@@ -50,7 +47,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newEmployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]NewEmployee newEmployee)
+        public async Task<IActionResult> Create([FromBody] NewEmployee newEmployee)
         {
             var chief = Chief.Create("name", "lastname").Result;
 
@@ -65,6 +62,55 @@ namespace Timesheets.API.Controllers
             var employeeId = await _employeesService.Create(employee);
 
             return Ok(employeeId);
+        }
+
+        /// <summary>
+        /// Get salaries.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/salary")]
+        public async Task<IActionResult> Get(int employeeId)
+        {
+            var salary = await _salariesService.Get(employeeId);
+
+            return Ok(salary);
+        }
+
+        /// <summary>
+        /// Create or update salary.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="newSalary"></param>
+        /// <returns></returns>
+        [HttpPost("{employeeId:int}/salary")]
+        public async Task<IActionResult> Upsert([FromRoute]int employeeId, [FromBody]NewSalary newSalary)
+        {
+            var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
+
+            if (errors.Any())
+            {
+                _logger.LogError("{errors}", errors);
+                return BadRequest(errors);
+            }
+
+            var salaryId = await _salariesService.Upsert(salary);
+
+            return Ok(salaryId);
+        }
+
+        /// <summary>
+        /// Calculate salary for time period.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/month")]
+        public async Task<IActionResult> CalculateSalaryForTimePeriod([FromRoute]int employeeId, [FromQuery]int month)
+        {
+            var amountSalary = await _salariesService.CalculateSalaryForTimePeriod(employeeId, month);
+
+            return Ok(amountSalary);
         }
     }
 }

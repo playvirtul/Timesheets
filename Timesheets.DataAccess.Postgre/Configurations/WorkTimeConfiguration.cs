@@ -8,7 +8,23 @@ namespace Timesheets.DataAccess.Postgre.Configurations
     {
         public void Configure(EntityTypeBuilder<WorkTime> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(w => w.Id);
+
+            builder.Property(w => w.EmployeeId).IsRequired();
+
+            builder.Property(w => w.Hours).IsRequired();
+
+            builder.Property(w => w.Date)
+                .HasConversion(x => x.ToUniversalTime(), x => x)
+                .IsRequired();
+
+            builder.HasOne(w => w.Employee)
+                 .WithMany(e => e.WorkTimes)
+                 .HasForeignKey(w => w.EmployeeId);
+
+            builder.HasOne(w => w.Project)
+                 .WithMany(p => p.WorkTimes)
+                 .HasForeignKey(w => w.ProjectId);
         }
     }
 }

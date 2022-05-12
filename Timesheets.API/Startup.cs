@@ -26,13 +26,16 @@ namespace Timesheets.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TimesheetsDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString(nameof(TimesheetsDbContext))));
+            services.AddDbContext<TimesheetsDbContext>(
+                options =>
+                {
+                    options.UseNpgsql(Configuration.GetConnectionString(nameof(TimesheetsDbContext)));
+                });
 
             services.AddAutoMapper(cfg =>
-            {
-                cfg.AddProfile<DataAccessMappingProfile>();
-            });
+                {
+                    cfg.AddProfile<DataAccessMappingProfile>();
+                });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -61,11 +64,13 @@ namespace Timesheets.API
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<ISalariesService, SalariesService>();
+            services.AddScoped<IWorkTimesService, WorkTimesService>();
 
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
             services.AddScoped<ISalariesRepository, SalariesRepository>();
+            services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)

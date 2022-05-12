@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Timesheets.DataAccess.Postgre;
@@ -11,9 +12,11 @@ using Timesheets.DataAccess.Postgre;
 namespace Timesheets.DataAccess.Postgre.Migrations
 {
     [DbContext(typeof(TimesheetsDbContext))]
-    partial class TimesheetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220502151652_SalaryAndRelations")]
+    partial class SalaryAndRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,9 +91,6 @@ namespace Timesheets.DataAccess.Postgre.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("Bonus")
                         .HasColumnType("numeric");
 
                     b.Property<int>("EmployeeId")

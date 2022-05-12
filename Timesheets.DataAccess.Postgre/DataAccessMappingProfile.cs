@@ -9,7 +9,7 @@ namespace Timesheets.DataAccess.Postgre
         {
             CreateMap<Project, Domain.Project>().ReverseMap();
 
-            CreateMap<Domain.Salary, Salary>().ReverseMap();
+            CreateMap<Salary, Domain.Salary>().ReverseMap();
 
             CreateMap<WorkTime, Domain.WorkTime>().ReverseMap();
 

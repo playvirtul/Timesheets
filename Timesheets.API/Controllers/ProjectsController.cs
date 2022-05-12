@@ -17,11 +17,16 @@ namespace Timesheets.API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectsService _projectsService;
+        private readonly IWorkTimesService _workTimesService;
         private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectsController(IProjectsService projectsService, ILogger<ProjectsController> logger)
+        public ProjectsController(
+            IProjectsService projectsService,
+            IWorkTimesService workTimeService,
+            ILogger<ProjectsController> logger)
         {
             _projectsService = projectsService;
+            _workTimesService = workTimeService;
             _logger = logger;
         }
 
@@ -72,6 +77,44 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
+        /// AddEmployeeToProject.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpPost("{projectId:int}/employee")]
+        public async Task<IActionResult> AddEmployeeToProject([FromRoute]int projectId, [FromBody]int employeeId)
+        {
+            var error = await _projectsService.AddEmployeeToProject(projectId, employeeId);
+
+            if (error != string.Empty)
+            {
+                _logger.LogError("{error}", error);
+            }
+
+            return Ok(error);
+        }
+
+        [HttpPost("{projectId:int}/workTime")]
+        public async Task<IActionResult> CreateWorkTime(
+            [FromQuery]int employeeId,
+            [FromRoute]int projectId,
+            [FromBody] NewWorkTime newWorkTime)
+        {
+            var (workTime, errors) = WorkTime.Create(employeeId, projectId, newWorkTime.Hours, newWorkTime.Date);
+
+            if (errors.Any())
+            {
+                _logger.LogError("{errors}", errors);
+                return BadRequest(errors);
+            }
+
+            var result = await _workTimesService.Create(workTime);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Delete project.
         /// </summary>
         /// <param name="projectId"></param>
@@ -82,28 +125,6 @@ namespace Timesheets.API.Controllers
             var deletedProjectId = await _projectsService.Delete(projectId);
 
             return Ok(deletedProjectId);
-        }
-
-        /// <summary>
-        /// AddWorkTime.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="newWorkTime"></param>
-        /// <returns></returns>
-        [HttpPost("{projectId:int}/workTime")]
-        public async Task<IActionResult> AddWorkTime(int projectId, [FromBody]NewWorkTime newWorkTime)
-        {
-            var (workTime, errors) = WorkTime.Create(projectId, newWorkTime.Hours, newWorkTime.Date);
-
-            if (errors.Any())
-            {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
-            }
-
-            var result = await _projectsService.AddWorkTime(workTime);
-
-            return Ok(result);
         }
     }
 }

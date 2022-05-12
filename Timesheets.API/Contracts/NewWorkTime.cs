@@ -7,7 +7,7 @@ namespace Timesheets.API.Contracts
     public class NewWorkTime
     {
         [Required]
-        [Range(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_WORKING_HOURS_PER_DAY)]
+        [Range(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY)]
         public int Hours { get; set; }
 
         [Required]

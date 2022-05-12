@@ -10,8 +10,6 @@ namespace Timesheets.DataAccess.Postgre.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasMany(x => x.WorkTimes);
-
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(1000);

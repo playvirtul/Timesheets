@@ -18,22 +18,11 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task<Domain.WorkTime[]> Get()
+        public async Task<Domain.WorkTime[]> Get(int employeeId)
         {
             var workTimesEntities = await _context.WorkTimes
                 .AsNoTracking()
-                .ToArrayAsync();
-
-            var workTimes = _mapper.Map<Domain.WorkTime[]>(workTimesEntities);
-
-            return workTimes;
-        }
-
-        public async Task<Domain.WorkTime[]> Get(int projectId)
-        {
-            var workTimesEntities = await _context.WorkTimes
-                .AsNoTracking()
-                .Where(x => x.ProjectId == projectId)
+                .Where(x => x.EmployeeId == employeeId)
                 .ToArrayAsync();
 
             var workTimes = _mapper.Map<WorkTime[], Domain.WorkTime[]>(workTimesEntities);

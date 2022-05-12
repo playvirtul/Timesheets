@@ -14,6 +14,8 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(e => e.LastName).IsRequired();
 
+            builder.Property(e => e.Position).IsRequired();
+
             builder.HasMany(e => e.Projects)
                 .WithMany(p => p.Employees);
         }
