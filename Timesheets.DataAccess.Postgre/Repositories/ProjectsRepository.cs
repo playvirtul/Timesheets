@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
 using Timesheets.Domain.Interfaces;
@@ -56,7 +55,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return project.Id;
         }
 
-        public async Task<string> AddEmployeeToProject(int projectId, int employeeId)
+        public async Task<string> AddProjectToEmployee(int projectId, int employeeId)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
 
@@ -72,7 +71,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 return "Employee is null";
             }
 
-            project.Employees.Add(employee);
+            employee.Projects.Add(project);
 
             await _context.SaveChangesAsync();
 

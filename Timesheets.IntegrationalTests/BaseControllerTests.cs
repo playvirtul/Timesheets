@@ -39,19 +39,17 @@ namespace Timesheets.IntegrationalTests
                     });
                     builder.ConfigureServices((context, services) =>
                     {
-                        var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(TimesheetsDbContext));
-                        var descriptors = services.Where(x => x.ServiceType == typeof(DbContextOptions)).ToArray();
+                        var descriptor = services.SingleOrDefault(
+                            x => x.ServiceType == typeof(DbContextOptions<TimesheetsDbContext>));
+
                         services.Remove(descriptor);
-                        foreach (var item in descriptors)
-                        {
-                            services.Remove(item);
-                        }
 
                         services.AddDbContext<TimesheetsDbContext>(
                             options =>
                             {
                                 outputHelper.WriteLine("text");
-                                options.UseNpgsql(context.Configuration.GetConnectionString(nameof(TimesheetsDbContext)));
+                                var connection = context.Configuration.GetConnectionString(nameof(TimesheetsDbContext));
+                                options.UseNpgsql(connection);
                                 options.EnableSensitiveDataLogging();
                                 options.EnableDetailedErrors();
                             });

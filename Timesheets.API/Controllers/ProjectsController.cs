@@ -83,9 +83,9 @@ namespace Timesheets.API.Controllers
         /// <param name="employeeId"></param>
         /// <returns></returns>
         [HttpPost("{projectId:int}/employee")]
-        public async Task<IActionResult> AddEmployeeToProject([FromRoute]int projectId, [FromBody]int employeeId)
+        public async Task<IActionResult> AddProjectToEmployee([FromRoute]int projectId, [FromBody]int employeeId)
         {
-            var error = await _projectsService.AddEmployeeToProject(projectId, employeeId);
+            var error = await _projectsService.AddProjectToEmployee(projectId, employeeId);
 
             if (error != string.Empty)
             {
@@ -95,8 +95,15 @@ namespace Timesheets.API.Controllers
             return Ok(error);
         }
 
+        /// <summary>
+        /// Add work time.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="projectId"></param>
+        /// <param name="newWorkTime"></param>
+        /// <returns></returns>
         [HttpPost("{projectId:int}/workTime")]
-        public async Task<IActionResult> CreateWorkTime(
+        public async Task<IActionResult> AddWorkTime(
             [FromQuery]int employeeId,
             [FromRoute]int projectId,
             [FromBody] NewWorkTime newWorkTime)
@@ -109,7 +116,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            var result = await _workTimesService.Create(workTime);
+            var result = await _workTimesService.Add(workTime);
 
             return Ok(result);
         }

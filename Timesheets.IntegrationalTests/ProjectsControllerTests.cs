@@ -120,7 +120,7 @@ namespace Timesheets.IntegrationalTests
         }
 
         [Fact]
-        public async Task AddEmployeeToProject_ValidEmployeeIdAndProjectId_ShouldAddEmployeeToProject()
+        public async Task AddProjectToEmployee_ValidEmployeeIdAndProjectId_ShouldAddProjectToEmployee()
         {
             var fixture = new Fixture();
             var projectId = 0;
@@ -153,10 +153,6 @@ namespace Timesheets.IntegrationalTests
 
             // assert
             response.EnsureSuccessStatusCode();
-
-            var errors = await response.Content.ReadFromJsonAsync<string>();
-
-            Assert.Empty(errors);
         }
     }
 }

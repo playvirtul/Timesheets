@@ -22,6 +22,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         public async Task<Domain.Employee[]> Get()
         {
             var employeeEntities = await _context.Employees
+                .Include(e => e.Projects)
                 .AsNoTracking()
                 .ToArrayAsync();
 
@@ -35,6 +36,8 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         public async Task<Domain.Employee?> Get(int employeeId)
         {
             var employeeEntity = await _context.Employees
+                .Include(e => e.Projects)
+                .ThenInclude(p => p.WorkTimes)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == employeeId);
 

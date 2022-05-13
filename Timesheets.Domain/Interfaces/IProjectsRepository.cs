@@ -10,6 +10,6 @@
 
         Task<bool> Delete(int projectId);
 
-        Task<string> AddEmployeeToProject(int projectId, int employeeId);
+        Task<string> AddProjectToEmployee(int projectId, int employeeId);
     }
 }

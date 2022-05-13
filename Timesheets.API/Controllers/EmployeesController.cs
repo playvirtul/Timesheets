@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -42,6 +43,19 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
+        /// Get salaries.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/salary")]
+        public async Task<IActionResult> Get(int employeeId)
+        {
+            var salary = await _salariesService.Get(employeeId);
+
+            return Ok(salary);
+        }
+
+        /// <summary>
         /// Add employee.
         /// </summary>
         /// <param name="newEmployee"></param>
@@ -62,19 +76,6 @@ namespace Timesheets.API.Controllers
             var employeeId = await _employeesService.Create(employee);
 
             return Ok(employeeId);
-        }
-
-        /// <summary>
-        /// Get salaries.
-        /// </summary>
-        /// <param name="employeeId"></param>
-        /// <returns></returns>
-        [HttpGet("{employeeId:int}/salary")]
-        public async Task<IActionResult> Get(int employeeId)
-        {
-            var salary = await _salariesService.Get(employeeId);
-
-            return Ok(salary);
         }
 
         /// <summary>
@@ -105,8 +106,10 @@ namespace Timesheets.API.Controllers
         /// <param name="employeeId"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        [HttpGet("{employeeId:int}/month")]
-        public async Task<IActionResult> CalculateSalaryForTimePeriod([FromRoute]int employeeId, [FromQuery]int month)
+        [HttpGet("{employeeId:int}/calculate-salary")]
+        public async Task<IActionResult> CalculateSalaryForTimePeriod(
+            [FromRoute] int employeeId,
+            [FromQuery, Range(1, 12)] int month)
         {
             var amountSalary = await _salariesService.CalculateSalaryForTimePeriod(employeeId, month);
 

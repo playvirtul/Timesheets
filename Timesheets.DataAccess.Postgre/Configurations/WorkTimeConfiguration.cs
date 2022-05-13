@@ -12,7 +12,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(w => w.EmployeeId).IsRequired();
 
-            builder.Property(w => w.Hours).IsRequired();
+            builder.Property(w => w.Hours).IsRequired(); // не нашёл способа задать ограничения, только через Data Annociation
 
             builder.Property(w => w.Date)
                 .HasConversion(x => x.ToUniversalTime(), x => x)
