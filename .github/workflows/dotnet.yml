@@ -21,6 +21,9 @@ jobs:
       run: dotnet restore Timesheets.sln
     - name: Build
       run: dotnet build Timesheets.sln --no-restore 
+      
+    - name: Test
+      run: echo ${{secrets.CONNECTIONSTRING}}
     
 #     - name: Cache
 #       id: api
