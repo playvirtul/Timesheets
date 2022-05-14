@@ -59,7 +59,7 @@ jobs:
      run: dotnet tool restore
      
    - name: Update database
-     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API --connection ${{secrets.CONNECTIONSTRING}}
+     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API --connection "User ID=postgres;Password=pwd;Host=db;Port=5432;Database=TimesheetsDb;"
      
    - name: Test
      run: dotnet test Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj --no-build --verbosity normal
