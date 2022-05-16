@@ -80,7 +80,7 @@ namespace Timesheets.IntegrationalTests
         }
 
         [Fact]
-        public async Task Create_ShouldCreateSalary()
+        public async Task Save_ShouldCreateSalary()
         {
             // arrange
             var fixture = new Fixture();
@@ -105,6 +105,57 @@ namespace Timesheets.IntegrationalTests
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>()
                     });
+
+                await dbContext.SaveChangesAsync();
+
+                employeeId = employee.Entity.Id;
+            }
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+
+            var salaryId = await response.Content.ReadFromJsonAsync<int>();
+
+            Assert.NotEqual(default(int), salaryId);
+        }
+
+        [Fact]
+        public async Task Save_ShouldUpdateSalary()
+        {
+            // arrange
+            var fixture = new Fixture();
+
+            var salary = new NewSalary
+            {
+                Amount = fixture.Create<decimal>(),
+                Bonus = fixture.Create<decimal>(),
+                SalaryType = fixture.Create<SalaryType>()
+            };
+
+            var employeeId = 0;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                dbContext.Salaries.Add(new Entities.Salary
+                {
+                    Amount = fixture.Create<decimal>(),
+                    Bonus = 0,
+                    SalaryType = fixture.Create<SalaryType>(),
+                    Employee = employee.Entity
+                });
 
                 await dbContext.SaveChangesAsync();
 

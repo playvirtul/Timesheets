@@ -35,13 +35,24 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
         public async Task<int> Upsert(Domain.Salary salary)
         {
-            var entitySalary = _mapper.Map<Domain.Salary, Salary>(salary);
+            var salaryEntity = await _context.Salaries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.EmployeeId == salary.EmployeeId);
 
-            _context.Salaries.Update(entitySalary);
+            var salaryToSave = _mapper.Map<Domain.Salary, Salary>(salary);
+
+            if (salaryEntity == null)
+            {
+                _context.Salaries.Add(salaryToSave);
+            }
+            else
+            {
+                _context.Salaries.Update(salaryToSave);
+            }
 
             await _context.SaveChangesAsync();
 
-            return entitySalary.Id;
+            return salaryToSave.EmployeeId;
         }
     }
 }

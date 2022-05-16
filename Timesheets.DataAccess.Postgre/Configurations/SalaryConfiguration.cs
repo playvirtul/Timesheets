@@ -8,7 +8,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
     {
         public void Configure(EntityTypeBuilder<Salary> builder)
         {
-            builder.HasKey(s => s.Id);
+            builder.HasKey(s => s.EmployeeId);
 
             builder.Property(s => s.EmployeeId).IsRequired();
 

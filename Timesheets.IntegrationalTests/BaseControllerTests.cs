@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
+using Respawn.Graph;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -22,6 +23,10 @@ namespace Timesheets.IntegrationalTests
             SchemasToInclude = new[]
             {
                 "public"
+            },
+            TablesToIgnore = new[]
+            {
+                new Table("__EFMigrationsHistory")
             },
             DbAdapter = DbAdapter.Postgres
         };
@@ -47,7 +52,6 @@ namespace Timesheets.IntegrationalTests
                         services.AddDbContext<TimesheetsDbContext>(
                             options =>
                             {
-                                outputHelper.WriteLine("text");
                                 var connection = context.Configuration.GetConnectionString(nameof(TimesheetsDbContext));
                                 options.UseNpgsql(connection);
                                 options.EnableSensitiveDataLogging();
