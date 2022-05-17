@@ -2,6 +2,8 @@
 {
     public record Project
     {
+        //private List<WorkTime> _workTimes;
+
         public const int MAX_TITLE_LENGHT = 1000;
 
         public Project(int id, string title, List<WorkTime> workTimes)
@@ -15,7 +17,7 @@
 
         public string Title { get; }
 
-        public List<WorkTime> WorkTimes { get; }
+        public IReadOnlyList<WorkTime> WorkTimes { get; }
 
         public static (Project? Result, string[] Errors) Create(string title)
         {

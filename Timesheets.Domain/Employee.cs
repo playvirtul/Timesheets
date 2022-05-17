@@ -2,6 +2,8 @@
 {
     public abstract record Employee
     {
+        //private List<Project> _projects;
+
         public const int MAX_FIRSTNAME_LENGTH = 100;
 
         public const int MAX_LASTNAME_LENGTH = 100;
@@ -28,7 +30,7 @@
 
         public Position Position { get; }
 
-        public List<Project> Projects { get; }
+        public IReadOnlyList<Project> Projects { get; }
 
         public string AddWorkTime(int projectId, WorkTime workTime)
         {
@@ -47,6 +49,16 @@
             if (workTime.Hours + hoursPerDay > WorkTime.MAX_OVERTIME_HOURS_PER_DAY)
             {
                 return new string("Can not add more than 24 hours on the same date.");
+            }
+
+            return string.Empty;
+        }
+
+        public string AddProject(int projectId)
+        {
+            if (Projects.Any(p => p.Id == projectId))
+            {
+                return new string("Employee already has a project.");
             }
 
             return string.Empty;

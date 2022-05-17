@@ -20,12 +20,12 @@ namespace Timesheets.BusinessLogic
             return await _salariesRepository.Get(employeeId);
         }
 
-        public async Task<int> Upsert(Salary salary)
+        public async Task<int> Save(Salary salary)
         {
-            return await _salariesRepository.Upsert(salary);
+            return await _salariesRepository.Save(salary);
         }
 
-        public async Task<decimal> CalculateSalaryForTimePeriod(int employeeId, int month)
+        public async Task<decimal> SalaryCalculation(int employeeId, int month, int year)
         {
             if (month < 1 || month > 12)
             {
@@ -39,9 +39,9 @@ namespace Timesheets.BusinessLogic
                 return default;
             }
 
-            var workTimesPerMonth = await _workTimesRepository.Get(employeeId, month);
+            var workTimesPerMonth = await _workTimesRepository.Get(employeeId, month, year);
 
-            return salary.CalculateSalaryAmount(workTimesPerMonth);
+            return salary.SalaryCalculation(workTimesPerMonth);
         }
     }
 }

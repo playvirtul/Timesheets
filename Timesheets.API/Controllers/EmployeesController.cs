@@ -43,7 +43,7 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Get salaries.
+        /// Get salary by employeeId.
         /// </summary>
         /// <param name="employeeId"></param>
         /// <returns></returns>
@@ -79,13 +79,32 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
+        /// Add employee to project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpPost("{employeeId:int}/project")]
+        public async Task<IActionResult> BindProject([FromRoute] int employeeId, [FromQuery] int projectId)
+        {
+            var error = await _employeesService.BindProject(employeeId, projectId);
+
+            if (error != string.Empty)
+            {
+                _logger.LogError("{error}", error);
+            }
+
+            return Ok(error);
+        }
+
+        /// <summary>
         /// Create or update salary.
         /// </summary>
         /// <param name="employeeId"></param>
         /// <param name="newSalary"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/salary")]
-        public async Task<IActionResult> Upsert([FromRoute]int employeeId, [FromBody]NewSalary newSalary)
+        public async Task<IActionResult> Upsert([FromRoute] int employeeId, [FromBody] NewSalary newSalary)
         {
             var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
 
@@ -95,7 +114,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            var salaryId = await _salariesService.Upsert(salary);
+            var salaryId = await _salariesService.Save(salary);
 
             return Ok(salaryId);
         }
@@ -106,12 +125,13 @@ namespace Timesheets.API.Controllers
         /// <param name="employeeId"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        [HttpGet("{employeeId:int}/calculate-salary")]
-        public async Task<IActionResult> CalculateSalaryForTimePeriod(
+        [HttpGet("{employeeId:int}/salary-calculation")]
+        public async Task<IActionResult> SalaryCalculation(
             [FromRoute] int employeeId,
-            [FromQuery, Range(1, 12)] int month)
+            [FromQuery, Range(1, 12)] int month,
+            [FromQuery] int year)
         {
-            var amountSalary = await _salariesService.CalculateSalaryForTimePeriod(employeeId, month);
+            var amountSalary = await _salariesService.SalaryCalculation(employeeId, month, year);
 
             return Ok(amountSalary);
         }

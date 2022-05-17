@@ -6,6 +6,6 @@
 
         Task<WorkTime[]> Get(int projectId);
 
-        Task<Domain.WorkTime[]> Get(int employeeId, int month);
+        Task<WorkTime[]> Get(int employeeId, int month, int year);
     }
 }

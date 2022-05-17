@@ -28,7 +28,7 @@ namespace Timesheets.BusinessLogic
 
             if (employee == null)
             {
-                return new string("Employee is null");
+                return new string("Employee not found with this id.");
             }
 
             var errors = employee.AddWorkTime(workTime.ProjectId, workTime);
@@ -41,19 +41,5 @@ namespace Timesheets.BusinessLogic
             await _workTimesRepository.Add(workTime);
             return string.Empty;
         }
-
-        //public async Task<string> Add(WorkTime workTime)
-        //{
-        //    var workTimes = await _workTimesRepository.Get(workTime.EmployeeId);
-        //    var errors = Project.CreateWorkTime(workTime, workTimes);
-
-        //    if (string.IsNullOrEmpty(errors))
-        //    {
-        //        await _workTimesRepository.Add(workTime);
-        //        return string.Empty;
-        //    }
-
-        //    return errors;
-        //}
     }
 }

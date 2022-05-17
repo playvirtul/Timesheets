@@ -32,7 +32,7 @@
             return (new Salary(employeeId, amount, bonus, salaryType), Array.Empty<string>());
         }
 
-        public decimal CalculateSalaryAmount(WorkTime[] workTimes)
+        public decimal SalaryCalculation(WorkTime[] workTimes)
         {
             decimal salaryAmount = 0;
 

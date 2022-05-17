@@ -92,7 +92,7 @@ namespace Timesheets.IntegrationalTests
                 await _checkpoint.Reset(conn);
             }
 
-            await Task.Delay(100);
+            await Task.Delay(200);
         }
     }
 }

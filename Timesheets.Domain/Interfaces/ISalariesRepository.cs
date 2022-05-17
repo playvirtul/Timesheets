@@ -4,6 +4,6 @@
     {
         Task<Salary?> Get(int employeeId);
 
-        Task<int> Upsert(Salary salary);
+        Task<int> Save(Salary salary);
     }
 }

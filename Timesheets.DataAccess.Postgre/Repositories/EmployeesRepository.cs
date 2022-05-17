@@ -62,6 +62,29 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return employee.Id;
         }
 
+        public async Task<string> AddProjectToEmployee(int employeeId, int projectId)
+        {
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
+
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+
+            if (project == null)
+            {
+                return new string("Project not found with this id.");
+            }
+
+            if (employee == null)
+            {
+                return new string("Employee not found with this id.");
+            }
+
+            employee.Projects.Add(project);
+
+            await _context.SaveChangesAsync();
+
+            return string.Empty;
+        }
+
         public async Task<bool> Delete(int employeeId)
         {
             _context.Employees.Remove(new Employee { Id = employeeId });

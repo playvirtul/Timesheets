@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
@@ -30,11 +31,12 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return workTimes;
         }
 
-        public async Task<Domain.WorkTime[]> Get(int employeeId, int month)
+        public async Task<Domain.WorkTime[]> Get(int employeeId, int month, int year)
         {
             var workTimesEntities = await _context.WorkTimes
                 .AsNoTracking()
                 .Where(w => w.EmployeeId == employeeId)
+                .Where(w => w.Date.Year == year)
                 .Where(w => w.Date.Month == month)
                 .ToArrayAsync();
 

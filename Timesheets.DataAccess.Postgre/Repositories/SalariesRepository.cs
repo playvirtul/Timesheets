@@ -33,7 +33,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return salary;
         }
 
-        public async Task<int> Upsert(Domain.Salary salary)
+        public async Task<int> Save(Domain.Salary salary)
         {
             var salaryEntity = await _context.Salaries
                 .AsNoTracking()
