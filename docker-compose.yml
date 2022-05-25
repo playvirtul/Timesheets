@@ -14,9 +14,21 @@ services:
     - db-data:/var/lib/postgresql/data
     restart: always
     environment:
-      POSTGRES_PASSWORD: pwd
+      - POSTGRES_PASSWORD=pwd
     ports:
       - 5434:5432
+
+  seq:
+    container_name: seq
+    restart: unless-stopped
+    image: datalust/seq:latest
+    volumes:
+    - /seq-data:/data
+    ports:
+      - 15341:80
+      - 5341:5341
+    environment:
+      - ACCEPT_EULA=Y
 
 volumes: 
   db-data:

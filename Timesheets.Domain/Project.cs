@@ -2,11 +2,11 @@
 {
     public record Project
     {
-        //private List<WorkTime> _workTimes;
+        private List<WorkTime> _workTimes;
 
         public const int MAX_TITLE_LENGHT = 1000;
 
-        public Project(int id, string title, List<WorkTime> workTimes)
+        public Project(int id, string title, WorkTime[] workTimes)
         {
             Id = id;
             Title = title;
@@ -17,7 +17,18 @@
 
         public string Title { get; }
 
-        public IReadOnlyList<WorkTime> WorkTimes { get; }
+        public WorkTime[] WorkTimes
+        {
+            get
+            {
+                return _workTimes.ToArray();
+            }
+
+            private set
+            {
+                _workTimes = value.ToList();
+            }
+        }
 
         public static (Project? Result, string[] Errors) Create(string title)
         {
@@ -31,7 +42,7 @@
                 return (null, new string[] { "Title cannot contains more then 1000 symbols." });
             }
 
-            return (new Project(default, title, new List<WorkTime>()),
+            return (new Project(default, title, Array.Empty<WorkTime>()),
                     Array.Empty<string>());
         }
     }

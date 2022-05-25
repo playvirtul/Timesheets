@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
@@ -28,6 +29,12 @@ namespace Timesheets.API.Controllers
             _employeesService = employeesService;
             _salariesService = salariesService;
             _logger = logger;
+        }
+
+        [HttpGet("exception")]
+        public async Task<IActionResult> Exception()
+        {
+            throw new Exception(Guid.NewGuid().ToString());
         }
 
         /// <summary>
