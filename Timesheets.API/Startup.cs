@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.IO;
 using Timesheets.BusinessLogic;
 using Timesheets.DataAccess.Postgre;
@@ -26,6 +29,8 @@ namespace Timesheets.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            const string serviceName = "Timesheets.API";
+
             services.AddDbContext<TimesheetsDbContext>(
                 options =>
                 {
@@ -37,12 +42,23 @@ namespace Timesheets.API
                     cfg.AddProfile<DataAccessMappingProfile>();
                 });
 
+            services.AddOpenTelemetryTracing((builder) => builder
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddNpgsql()
+                .AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
+                .AddJaegerExporter(options => options.AgentHost = "jaeger")
+                .AddSource(serviceName)
+                .SetResourceBuilder(
+                    ResourceBuilder.CreateDefault()
+                        .AddService(serviceName)));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.OperationFilter<ApiVersionOperationFilter>();
                 c.DocumentFilter<ApiVersionDocumentFilter>();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Timesheets.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = serviceName, Version = "v1" });
                 var filePath = Path.Combine(System.AppContext.BaseDirectory, "Timesheets.API.xml");
                 c.IncludeXmlComments(filePath);
             });

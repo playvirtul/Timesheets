@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Enrichers.Span;
 
 namespace Timesheets.API
 {
@@ -16,9 +17,16 @@ namespace Timesheets.API
                 .UseSerilog((context, services, configuration) =>
                 {
                     configuration
+                        .Enrich.WithSpan()
                         .ReadFrom.Configuration(context.Configuration)
                         .ReadFrom.Services(services);
                 })
+                //.ConfigureLogging(configuration =>
+                //{
+                //logging.AddOpenTelemetry(options =>
+                //{
+                //    options.AddProcessor(new SimpleExportProcessor<LogRecord>(new ConsoleExporter<LogRecord>(new ConsoleExporterOptions()
+                //})
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
