@@ -62,14 +62,20 @@ jobs:
    - name: Tool restore
      run: dotnet tool restore
     
-   - name: Update database
-     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API --connection $Connection_String
-     
    - name: Init user secrets
-     run: dotnet user-secrets init
+     run: dotnet user-secrets init -p Timesheets.API/Timesheets.API.csproj
      
    - name: Set user secrets
-     run: dotnet user-secrets set $Connection_String
+     run: dotnet user-secrets set $Connection_String -p Timesheets.API/Timesheets.API.csproj
+    
+   - name: Update database
+     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API
+     
+   - name: Init user secrets
+     run: dotnet user-secrets init -p Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj
+     
+   - name: Set user secrets
+     run: dotnet user-secrets set $Connection_String -p Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj
      
    - name: Test
      run: dotnet test Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj --no-build --verbosity normal
