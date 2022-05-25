@@ -61,7 +61,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newProject"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]NewProject newProject)
+        public async Task<IActionResult> Create([FromBody] NewProject newProject)
         {
             var (project, errors) = Project.Create(newProject.Title);
 
@@ -77,28 +77,16 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// AddEmployeeToProject.
+        /// Add work time.
         /// </summary>
-        /// <param name="projectId"></param>
         /// <param name="employeeId"></param>
+        /// <param name="projectId"></param>
+        /// <param name="newWorkTime"></param>
         /// <returns></returns>
-        [HttpPost("{projectId:int}/employee")]
-        public async Task<IActionResult> AddEmployeeToProject([FromRoute]int projectId, [FromBody]int employeeId)
-        {
-            var error = await _projectsService.AddEmployeeToProject(projectId, employeeId);
-
-            if (error != string.Empty)
-            {
-                _logger.LogError("{error}", error);
-            }
-
-            return Ok(error);
-        }
-
         [HttpPost("{projectId:int}/workTime")]
-        public async Task<IActionResult> CreateWorkTime(
-            [FromQuery]int employeeId,
-            [FromRoute]int projectId,
+        public async Task<IActionResult> AddWorkTime(
+            [FromQuery] int employeeId,
+            [FromRoute] int projectId,
             [FromBody] NewWorkTime newWorkTime)
         {
             var (workTime, errors) = WorkTime.Create(employeeId, projectId, newWorkTime.Hours, newWorkTime.Date);
@@ -109,7 +97,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            var result = await _workTimesService.Create(workTime);
+            var result = await _workTimesService.Add(workTime);
 
             return Ok(result);
         }

@@ -2,12 +2,14 @@
 {
     public interface IEmployeesRepository
     {
-        Task<int> Add(Employee newEmployee);
-
-        Task<bool> Delete(int employeeId);
-
         Task<Employee[]> Get();
 
         Task<Employee?> Get(int employeeId);
+
+        Task<int> Add(Employee newEmployee);
+
+        Task<string> AddProjectToEmployee(int employeeId, int projectId);
+
+        Task<bool> Delete(int employeeId);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -9,10 +7,12 @@ namespace Timesheets.BusinessLogic
     public class WorkTimesService : IWorkTimesService
     {
         private readonly IWorkTimesRepository _workTimesRepository;
+        private readonly IEmployeesRepository _employeesRepository;
 
-        public WorkTimesService(IWorkTimesRepository workTimesRepository)
+        public WorkTimesService(IWorkTimesRepository workTimesRepository, IEmployeesRepository employeesRepository)
         {
             _workTimesRepository = workTimesRepository;
+            _employeesRepository = employeesRepository;
         }
 
         public async Task<WorkTime[]> Get(int employeeId)
@@ -22,18 +22,24 @@ namespace Timesheets.BusinessLogic
             return workTimes;
         }
 
-        public async Task<string> Create(WorkTime workTime)
+        public async Task<string> Add(WorkTime workTime)
         {
-            var workTimes = await _workTimesRepository.Get(workTime.EmployeeId);
-            var errors = Project.CreateWorkTime(workTime, workTimes);
+            var employee = await _employeesRepository.Get(workTime.EmployeeId);
 
-            if (string.IsNullOrEmpty(errors))
+            if (employee == null)
             {
-                await _workTimesRepository.Add(workTime);
-                return string.Empty;
+                return new string("Employee not found with this id.");
             }
 
-            return errors;
+            var errors = employee.AddWorkTime(workTime.ProjectId, workTime);
+
+            if (!string.IsNullOrEmpty(errors))
+            {
+                return errors;
+            }
+
+            await _workTimesRepository.Add(workTime);
+            return string.Empty;
         }
     }
 }

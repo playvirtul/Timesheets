@@ -9,7 +9,5 @@
         Task<int> Create(Project newProject);
 
         Task<bool> Delete(int projectId);
-
-        Task<string> AddEmployeeToProject(int projectId, int employeeId);
     }
 }

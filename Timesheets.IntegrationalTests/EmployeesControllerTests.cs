@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace Timesheets.IntegrationalTests
         }
 
         [Fact]
-        public async Task Create_ShouldCreateSalary()
+        public async Task Save_ShouldCreateSalary()
         {
             // arrange
             var fixture = new Fixture();
@@ -120,6 +121,137 @@ namespace Timesheets.IntegrationalTests
             var salaryId = await response.Content.ReadFromJsonAsync<int>();
 
             Assert.NotEqual(default(int), salaryId);
+        }
+
+        [Fact]
+        public async Task Save_ShouldUpdateSalary()
+        {
+            // arrange
+            var fixture = new Fixture();
+
+            var salary = new NewSalary
+            {
+                Amount = fixture.Create<decimal>(),
+                Bonus = fixture.Create<decimal>(),
+                SalaryType = fixture.Create<SalaryType>()
+            };
+
+            var employeeId = 0;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                dbContext.Salaries.Add(new Entities.Salary
+                {
+                    Amount = fixture.Create<decimal>(),
+                    Bonus = 0,
+                    SalaryType = fixture.Create<SalaryType>(),
+                    Employee = employee.Entity
+                });
+
+                await dbContext.SaveChangesAsync();
+
+                employeeId = employee.Entity.Id;
+            }
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+
+            var salaryId = await response.Content.ReadFromJsonAsync<int>();
+
+            Assert.NotEqual(default(int), salaryId);
+        }
+
+        [Fact]
+        public async Task SalaryCalculation_ShouldReturnAmount()
+        {
+            // arrange
+            var fixture = new Fixture();
+            var random = new Random();
+
+            var employeeId = 0;
+            var month = random.Next(1, 13);
+            var year = DateTime.Now.Year;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                dbContext.Salaries.Add(new Entities.Salary
+                {
+                    Amount = fixture.Create<decimal>(),
+                    Bonus = 0,
+                    SalaryType = fixture.Create<SalaryType>(),
+                    Employee = employee.Entity
+                });
+
+                await dbContext.SaveChangesAsync();
+
+                employeeId = employee.Entity.Id;
+            }
+
+            var url = $"api/v1/employees/{employeeId}/salary-calculation?{month}=1&{year}=1";
+
+            // act
+            var responese = await Client.GetAsync(url);
+
+            // assert
+        }
+
+        [Fact]
+        public async Task BindProject_ValidEmployeeIdAndProjectId_ShouldBindProjectWithEmployee()
+        {
+            var fixture = new Fixture();
+            var employeeId = 0;
+            var projectId = 0;
+
+            // arrange
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var project = dbContext.Projects
+                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                await dbContext.SaveChangesAsync();
+
+                employeeId = employee.Entity.Id;
+                projectId = project.Entity.Id;
+            }
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/project", projectId);
+
+            // assert
+            response.EnsureSuccessStatusCode();
         }
     }
 }

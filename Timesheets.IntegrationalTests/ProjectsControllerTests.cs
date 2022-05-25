@@ -56,6 +56,8 @@ namespace Timesheets.IntegrationalTests
                         Position = fixture.Create<Position>()
                     });
 
+                employee.Entity.Projects.Add(project.Entity);
+
                 await dbContext.SaveChangesAsync();
 
                 projectId = project.Entity.Id;
@@ -64,7 +66,7 @@ namespace Timesheets.IntegrationalTests
 
             var workTime = new NewWorkTime
             {
-                Hours = random.Next(1, 25),
+                Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
                 Date = DateTime.Now.AddDays(random.Next(-7, 0))
             };
 
@@ -74,7 +76,101 @@ namespace Timesheets.IntegrationalTests
             var response = await Client.PostAsJsonAsync(url, workTime);
 
             // assert
+            var errors = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(errors, string.Empty);
+
             response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task Create_InvalidHours_ShouldReturnBadRequest()
+        {
+            // arrange
+            var fixture = new Fixture();
+            var random = new Random();
+            var projectId = 0;
+            var employeeId = 0;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var project = dbContext.Projects
+                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                await dbContext.SaveChangesAsync();
+
+                projectId = project.Entity.Id;
+                employeeId = employee.Entity.Id;
+            }
+
+            var workTime = new NewWorkTime
+            {
+                Hours = random.Next(WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1, 1000),
+                Date = DateTime.Now.AddDays(random.Next(-7, 0))
+            };
+
+            var url = $"api/v1/projects/{projectId}/workTime?employeeId={employeeId}";
+
+            // act
+            var response = await Client.PostAsJsonAsync(url, workTime);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Create_InvalidDate_ShouldReturnBadRequest()
+        {
+            // arrange
+            var fixture = new Fixture();
+            var random = new Random();
+            var projectId = 0;
+            var employeeId = 0;
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                var project = dbContext.Projects
+                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+
+                var employee = dbContext.Employees
+                    .Add(new Entities.Employee
+                    {
+                        FirstName = fixture.Create<string>(),
+                        LastName = fixture.Create<string>(),
+                        Position = fixture.Create<Position>()
+                    });
+
+                await dbContext.SaveChangesAsync();
+
+                projectId = project.Entity.Id;
+                employeeId = employee.Entity.Id;
+            }
+
+            var workTime = new NewWorkTime
+            {
+                Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
+                Date = DateTime.Now.AddDays(1)
+            };
+
+            var url = $"api/v1/projects/{projectId}/workTime?employeeId={employeeId}";
+
+            // act
+            var response = await Client.PostAsJsonAsync(url, workTime);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
@@ -117,46 +213,6 @@ namespace Timesheets.IntegrationalTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task AddEmployeeToProject_ValidEmployeeIdAndProjectId_ShouldAddEmployeeToProject()
-        {
-            var fixture = new Fixture();
-            var projectId = 0;
-            var employeeId = 0;
-
-            // arrange
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
-
-                var project = dbContext.Projects
-                    .Add(new Entities.Project { Title = fixture.Create<string>() });
-
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
-
-                await dbContext.SaveChangesAsync();
-
-                projectId = project.Entity.Id;
-                employeeId = employee.Entity.Id;
-            }
-
-            // act
-            var response = await Client.PostAsJsonAsync($"api/v1/projects/{projectId}/employee", employeeId);
-
-            // assert
-            response.EnsureSuccessStatusCode();
-
-            var errors = await response.Content.ReadFromJsonAsync<string>();
-
-            Assert.Empty(errors);
         }
     }
 }

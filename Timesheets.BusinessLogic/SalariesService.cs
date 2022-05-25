@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -21,13 +20,18 @@ namespace Timesheets.BusinessLogic
             return await _salariesRepository.Get(employeeId);
         }
 
-        public async Task<int> Upsert(Salary salary)
+        public async Task<int> Save(Salary salary)
         {
-            return await _salariesRepository.Upsert(salary);
+            return await _salariesRepository.Save(salary);
         }
 
-        public async Task<decimal> CalculateSalaryForTimePeriod(int employeeId, int month)
+        public async Task<decimal> SalaryCalculation(int employeeId, int month, int year)
         {
+            if (month < 1 || month > 12)
+            {
+                return default(decimal);
+            }
+
             var salary = await _salariesRepository.Get(employeeId);
 
             if (salary == null)
@@ -35,13 +39,9 @@ namespace Timesheets.BusinessLogic
                 return default;
             }
 
-            var workTimes = await _workTimesRepository.Get(employeeId);
+            var workTimesPerMonth = await _workTimesRepository.Get(employeeId, month, year);
 
-            var workTimesPerMonth = workTimes
-                .Where(w => w.Date.Month == month)
-                .ToArray();
-
-            return Salary.CalculateSalaryAmount(salary, workTimesPerMonth);
+            return salary.SalaryCalculation(workTimesPerMonth);
         }
     }
 }

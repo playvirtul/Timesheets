@@ -28,11 +28,6 @@ namespace Timesheets.BusinessLogic
             return await _projectsRepository.Add(newProject);
         }
 
-        public async Task<string> AddEmployeeToProject(int projectId, int employeeId)
-        {
-            return await _projectsRepository.AddEmployeeToProject(projectId, employeeId);
-        }
-
         public async Task<bool> Delete(int projectId)
         {
             return await _projectsRepository.Delete(projectId);

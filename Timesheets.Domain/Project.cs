@@ -2,31 +2,22 @@
 {
     public record Project
     {
+        //private List<WorkTime> _workTimes;
+
         public const int MAX_TITLE_LENGHT = 1000;
 
-        public Project(int id, string title)
+        public Project(int id, string title, List<WorkTime> workTimes)
         {
             Id = id;
             Title = title;
+            WorkTimes = workTimes;
         }
 
         public int Id { get; }
 
         public string Title { get; }
 
-        public static string CreateWorkTime(WorkTime workTime, WorkTime[] workTimes)
-        {
-            var hourPerDay = workTimes
-                .Where(w => w.Date.ToShortDateString() == workTime.Date.ToShortDateString())
-                .Sum(w => w.Hours);
-
-            if (hourPerDay + workTime.Hours > WorkTime.MAX_OVERTIME_HOURS_PER_DAY)
-            {
-                return new string("Can not add more than 24 hours on the same date.");
-            }
-
-            return string.Empty;
-        }
+        public IReadOnlyList<WorkTime> WorkTimes { get; }
 
         public static (Project? Result, string[] Errors) Create(string title)
         {
@@ -40,7 +31,7 @@
                 return (null, new string[] { "Title cannot contains more then 1000 symbols." });
             }
 
-            return (new Project(default, title),
+            return (new Project(default, title, new List<WorkTime>()),
                     Array.Empty<string>());
         }
     }

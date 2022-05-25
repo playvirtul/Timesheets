@@ -32,14 +32,14 @@
             return (new Salary(employeeId, amount, bonus, salaryType), Array.Empty<string>());
         }
 
-        public static decimal CalculateSalaryAmount(Salary salary, WorkTime[] workTimes)
+        public decimal SalaryCalculation(WorkTime[] workTimes)
         {
             decimal salaryAmount = 0;
 
-            switch (salary.SalaryType)
+            switch (SalaryType)
             {
                 case SalaryType.Hourly:
-                    salaryAmount = salary.Amount * workTimes.Sum(w => w.Hours);
+                    salaryAmount = Amount * workTimes.Sum(w => w.Hours);
                     return salaryAmount;
 
                 case SalaryType.Monthly:
@@ -55,13 +55,13 @@
                         {
                             var overTimeHours = hoursByDay - WorkTime.MAX_WORKING_HOURS_PER_DAY;
 
-                            salaryAmount += FormulaCalculation(overTimeHours, salary.Bonus);
+                            salaryAmount += FormulaCalculation(overTimeHours, Bonus);
 
-                            salaryAmount += FormulaCalculation(WorkTime.MAX_WORKING_HOURS_PER_DAY, salary.Amount);
+                            salaryAmount += FormulaCalculation(WorkTime.MAX_WORKING_HOURS_PER_DAY, Amount);
                         }
                         else
                         {
-                            salaryAmount += FormulaCalculation(hoursByDay, salary.Amount);
+                            salaryAmount += FormulaCalculation(hoursByDay, Amount);
                         }
                     }
 

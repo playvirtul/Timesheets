@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
@@ -14,6 +15,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public int ProjectId { get; set; }
 
+        [Range(Domain.WorkTime.MIN_WORKING_HOURS_PER_DAY, Domain.WorkTime.MAX_OVERTIME_HOURS_PER_DAY)]
         public int Hours { get; set; }
 
         public DateTime Date { get; set; }

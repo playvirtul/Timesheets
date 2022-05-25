@@ -19,6 +19,8 @@ namespace Timesheets.IntegrationalTests
 
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            PrintRequest(request);
+
             PrintContent(request.Content);
 
             var response = base.Send(request, cancellationToken);
@@ -30,6 +32,8 @@ namespace Timesheets.IntegrationalTests
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            PrintRequest(request);
+
             if (request.Content != null)
             {
                 var requestJson = await request.Content.ReadAsStringAsync();
@@ -74,6 +78,14 @@ namespace Timesheets.IntegrationalTests
                 {
                     _outputHelper.WriteLine(json);
                 }
+            }
+        }
+
+        private void PrintRequest(HttpRequestMessage request)
+        {
+            if (request.RequestUri != null)
+            {
+                _outputHelper.WriteLine(request.RequestUri.ToString());
             }
         }
     }

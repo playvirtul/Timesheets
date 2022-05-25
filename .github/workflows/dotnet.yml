@@ -21,6 +21,9 @@ jobs:
       run: dotnet restore Timesheets.sln
     - name: Build
       run: dotnet build Timesheets.sln --no-restore 
+      
+    - name: Test
+      run: echo ${{secrets.CONNECTIONSTRING}}
     
 #     - name: Cache
 #       id: api
@@ -54,9 +57,13 @@ jobs:
        
    - name: Tool restore
      run: dotnet tool restore
-     
+    
+   - name: Setup
+     run: export ConnectionStrings__TimesheetsDbContext="User ID=postgres;Password=pwd;Host=db;Port=5432;Database=TimesheetsDb;"
+    
    - name: Update database
-     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API --connection ${{secrets.ConnectionString}}
+     run: dotnet ef database update -p Timesheets.DataAccess.Postgre -s Timesheets.API 
+     #--connection "User ID=postgres;Password=pwd;Host=db;Port=5432;Database=TimesheetsDb;"
      
    - name: Test
      run: dotnet test Timesheets.IntegrationalTests/Timesheets.IntegrationalTests.csproj --no-build --verbosity normal

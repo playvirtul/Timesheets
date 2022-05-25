@@ -2,10 +2,10 @@
 {
     public interface ISalariesService
     {
-        Task<int> Upsert(Salary salary);
+        Task<int> Save(Salary salary);
 
         Task<Salary?> Get(int employeeId);
 
-        Task<decimal> CalculateSalaryForTimePeriod(int employeeId, int month);
+        Task<decimal> SalaryCalculation(int employeeId, int month, int year);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -42,6 +43,19 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
+        /// Get salary by employeeId.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("{employeeId:int}/salary")]
+        public async Task<IActionResult> Get(int employeeId)
+        {
+            var salary = await _salariesService.Get(employeeId);
+
+            return Ok(salary);
+        }
+
+        /// <summary>
         /// Add employee.
         /// </summary>
         /// <param name="newEmployee"></param>
@@ -65,16 +79,22 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Get salaries.
+        /// Add employee to project.
         /// </summary>
+        /// <param name="projectId"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        [HttpGet("{employeeId:int}/salary")]
-        public async Task<IActionResult> Get(int employeeId)
+        [HttpPost("{employeeId:int}/project")]
+        public async Task<IActionResult> BindProject([FromRoute] int employeeId, [FromQuery] int projectId)
         {
-            var salary = await _salariesService.Get(employeeId);
+            var error = await _employeesService.BindProject(employeeId, projectId);
 
-            return Ok(salary);
+            if (error != string.Empty)
+            {
+                _logger.LogError("{error}", error);
+            }
+
+            return Ok(error);
         }
 
         /// <summary>
@@ -84,7 +104,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newSalary"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/salary")]
-        public async Task<IActionResult> Upsert([FromRoute]int employeeId, [FromBody]NewSalary newSalary)
+        public async Task<IActionResult> Upsert([FromRoute] int employeeId, [FromBody] NewSalary newSalary)
         {
             var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
 
@@ -94,7 +114,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            var salaryId = await _salariesService.Upsert(salary);
+            var salaryId = await _salariesService.Save(salary);
 
             return Ok(salaryId);
         }
@@ -105,10 +125,13 @@ namespace Timesheets.API.Controllers
         /// <param name="employeeId"></param>
         /// <param name="month"></param>
         /// <returns></returns>
-        [HttpGet("{employeeId:int}/month")]
-        public async Task<IActionResult> CalculateSalaryForTimePeriod([FromRoute]int employeeId, [FromQuery]int month)
+        [HttpGet("{employeeId:int}/salary-calculation")]
+        public async Task<IActionResult> SalaryCalculation(
+            [FromRoute] int employeeId,
+            [FromQuery, Range(1, 12)] int month,
+            [FromQuery] int year)
         {
-            var amountSalary = await _salariesService.CalculateSalaryForTimePeriod(employeeId, month);
+            var amountSalary = await _salariesService.SalaryCalculation(employeeId, month, year);
 
             return Ok(amountSalary);
         }
