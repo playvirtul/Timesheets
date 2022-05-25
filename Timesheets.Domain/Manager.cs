@@ -3,7 +3,7 @@
     public record Manager : Employee
     {
         public Manager(int id, string firstName, string lastName)
-            : base(id, firstName, lastName, Position.Manager, new List<Project>())
+            : base(id, firstName, lastName, Position.Manager, Array.Empty<Project>())
         {
         }
 

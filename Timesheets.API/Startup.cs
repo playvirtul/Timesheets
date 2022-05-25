@@ -93,6 +93,12 @@ namespace Timesheets.API
 
             app.UseRouting();
 
+            app.UseCors(x =>
+            {
+                x.WithHeaders().AllowAnyHeader();
+                x.WithOrigins("http://localhost:3000");
+            });
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -59,7 +59,6 @@ namespace Timesheets.UnitTests
         //    var chief = Chief.Create(firstName, lastName).Result;
         //    var project = Project.Create(title).Result;
 
-        //    chief.Projects.Add(project);
         //    var newWorkTime = WorkTime.Create(chief.Id, project.Id, hours, DateTime.Now).Result;
 
         //    // act

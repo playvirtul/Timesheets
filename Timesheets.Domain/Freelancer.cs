@@ -3,7 +3,7 @@
     public record Freelancer : Employee
     {
         public Freelancer(int id, string firstName, string lastName)
-            : base(id, firstName, lastName, Position.Freelancer, new List<Project>())
+            : base(id, firstName, lastName, Position.Freelancer, Array.Empty<Project>())
         {
         }
 

@@ -2,7 +2,7 @@
 {
     public abstract record Employee
     {
-        //private List<Project> _projects;
+        private List<Project> _projects;
 
         public const int MAX_FIRSTNAME_LENGTH = 100;
 
@@ -13,7 +13,7 @@
             string firstName,
             string lastName,
             Position position,
-            List<Project> projects)
+            Project[] projects)
         {
             Id = id;
             FirstName = firstName;
@@ -30,16 +30,27 @@
 
         public Position Position { get; }
 
-        public IReadOnlyList<Project> Projects { get; }
+        public Project[] Projects
+        {
+            get
+            {
+                return _projects.ToArray();
+            }
+
+            private set
+            {
+                _projects = value.ToList();
+            }
+        }
 
         public string AddWorkTime(int projectId, WorkTime workTime)
         {
-            if (Projects.Any(p => p.Id == projectId) == false)
+            if (_projects.Any(p => p.Id == projectId) == false)
             {
                 return new string("Employee is not part of the project");
             }
 
-            var workTimes = Projects
+            var workTimes = _projects
                 .Select(p => p.WorkTimes.Where(w => w.EmployeeId == Id));
 
             var hoursPerDay = workTimes

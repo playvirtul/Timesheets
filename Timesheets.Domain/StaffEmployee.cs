@@ -3,7 +3,7 @@
     public record StaffEmployee : Employee
     {
         private StaffEmployee(int id, string firstName, string lastName)
-            : base(id, firstName, lastName, Position.StaffEmployee, new List<Project>())
+            : base(id, firstName, lastName, Position.StaffEmployee, Array.Empty<Project>())
         {
         }
 

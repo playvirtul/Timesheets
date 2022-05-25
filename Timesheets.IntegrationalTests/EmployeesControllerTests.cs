@@ -210,12 +210,15 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var url = $"api/v1/employees/{employeeId}/salary-calculation?{month}=1&{year}=1";
+            var url = $"api/v1/employees/{employeeId}/salary-calculation?month={month}&year={year}";
 
             // act
-            var responese = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url);
+
+            var amount = await response.Content.ReadFromJsonAsync<decimal>();
 
             // assert
+            response.EnsureSuccessStatusCode();
         }
 
         [Fact]
