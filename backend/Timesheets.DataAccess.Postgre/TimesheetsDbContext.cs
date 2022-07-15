@@ -11,6 +11,8 @@ namespace Timesheets.DataAccess.Postgre
         {
         }
 
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Project> Projects { get; set; }
 
         public DbSet<WorkTime> WorkTimes { get; set; }
@@ -25,6 +27,7 @@ namespace Timesheets.DataAccess.Postgre
             modelBuilder.ApplyConfiguration(new WorkTimeConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new SalaryConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
