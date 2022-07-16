@@ -18,6 +18,10 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.HasMany(e => e.Projects)
                 .WithMany(p => p.Employees);
+
+            builder.HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<Employee>(e => e.Id);
         }
     }
 }
