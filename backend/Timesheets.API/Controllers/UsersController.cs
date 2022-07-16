@@ -17,6 +17,7 @@ namespace Timesheets.API.Controllers
             // найти приглашение в базе
             // вернуть данные сотрудника
 
+
             return Ok();
         }
 
