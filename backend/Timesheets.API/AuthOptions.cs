@@ -5,9 +5,9 @@ namespace Timesheets.API
 {
     public static class AuthOptions
     {
-        public const string ISSUER = "authServer";
+        //public const string ISSUER = "authServer";
 
-        public const string AUDIENCE = "resourceServer";
+        //public const string AUDIENCE = "resourceServer";
 
         public const string KEY = "GaLVW99Cyp5FH65e";
 

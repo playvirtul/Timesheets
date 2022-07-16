@@ -16,9 +16,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(u => u.HashPassword).IsRequired();
 
-            builder.HasOne(u => u.Employee)
-                .WithOne()
-                .HasForeignKey<User>(u => u.EmployeeId);
+            
         }
     }
 }

@@ -44,15 +44,16 @@ namespace Timesheets.API
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = AuthOptions.ISSUER,
-                        ValidAudience = AuthOptions.AUDIENCE,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
                     };
                 });
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddScheme<CustomBearerAuthOptions, CustomBearerAuthHandler>();
 
             services.AddAutoMapper(cfg =>
                 {
@@ -71,6 +72,7 @@ namespace Timesheets.API
                         .AddService(serviceName)));
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.OperationFilter<ApiVersionOperationFilter>();
@@ -78,6 +80,26 @@ namespace Timesheets.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = serviceName, Version = "v1" });
                 var filePath = Path.Combine(System.AppContext.BaseDirectory, "Timesheets.API.xml");
                 c.IncludeXmlComments(filePath);
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                   {
+                     new OpenApiSecurityScheme
+                     {
+                       Reference = new OpenApiReference
+                       {
+                         Type = ReferenceType.SecurityScheme,
+                         Id = "Bearer"
+                       }
+                      },
+                      new string[] { }
+                    }
+                  });
             });
 
             services.AddVersionedApiExplorer(

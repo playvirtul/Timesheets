@@ -13,6 +13,7 @@ namespace Timesheets.API.Contracts
         public string Password { get; set; }
 
         [Required]
-        public Position Position { get; set; }
+        [Compare(nameof(Password))]
+        public string ConfirmPassword { get; set; }
     }
 }

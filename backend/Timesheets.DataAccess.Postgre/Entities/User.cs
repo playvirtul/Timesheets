@@ -7,9 +7,5 @@
         public string Email { get; set; }
 
         public string HashPassword { get; set; }
-
-        public Employee Employee { get; set; }
-
-        public int EmployeeId { get; set; }
     }
 }

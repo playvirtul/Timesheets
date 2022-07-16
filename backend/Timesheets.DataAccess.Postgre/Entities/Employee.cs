@@ -16,5 +16,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
         public List<Project> Projects { get; set; } = new();
 
         public List<WorkTime> WorkTimes { get; set; } = new();
+
+        public User User { get; set; }
     }
 }

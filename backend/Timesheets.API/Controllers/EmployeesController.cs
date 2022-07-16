@@ -82,6 +82,9 @@ namespace Timesheets.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] NewEmployee newEmployee)
         {
+            // отправить приглашение с данными сотрудника
+            // сотрудник регистрируется
+            // создается user и сотрудник
             var chief = Chief.Create("name", "lastname").Result;
 
             var (employee, errors) = chief.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
