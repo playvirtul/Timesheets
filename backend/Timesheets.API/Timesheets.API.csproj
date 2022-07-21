@@ -48,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Timesheets.TelegramApiClient\Timesheets.TelegramApiClient.csproj" />
     <ProjectReference Include="..\Timesheets.BusinessLogic\Timesheets.BusinessLogic.csproj" />
     <ProjectReference Include="..\Timesheets.DataAccess.Postgre\Timesheets.DataAccess.Postgre.csproj" />
   </ItemGroup>

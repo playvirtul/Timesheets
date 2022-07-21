@@ -21,12 +21,6 @@ namespace Timesheets.API
                         .ReadFrom.Configuration(context.Configuration)
                         .ReadFrom.Services(services);
                 })
-                //.ConfigureLogging(configuration =>
-                //{
-                //logging.AddOpenTelemetry(options =>
-                //{
-                //    options.AddProcessor(new SimpleExportProcessor<LogRecord>(new ConsoleExporter<LogRecord>(new ConsoleExporterOptions()
-                //})
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

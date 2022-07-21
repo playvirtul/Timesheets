@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.DataAccess.Postgre;
 using Timesheets.Domain;
+using Timesheets.Domain.Auth;
 using Xunit;
 using Xunit.Abstractions;
 using Entities = Timesheets.DataAccess.Postgre.Entities;
@@ -33,52 +33,74 @@ namespace Timesheets.IntegrationalTests
         }
 
         [Fact]
-        public async Task Create_ShouldCreateEmployee()
+        public async Task SendTelegramInvite_ShouldSendTelegramInvite()
         {
             // arrange
             var fixture = new Fixture();
 
-            var employee = new NewEmployee
+            var telegramEmployeeDetails = new TelegramEmlpoyeeDetails
             {
+                TelegramUserName = "testUser",
                 FirstName = fixture.Create<string>(),
                 LastName = fixture.Create<string>(),
                 Position = fixture.Create<Position>()
             };
 
             // act
-            var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
+            var responce = await Client
+                .PostAsJsonAsync("api/v1/employees/telegramInvitation/employeeDetails", telegramEmployeeDetails);
 
             // assert
-            response.EnsureSuccessStatusCode();
-
-            var employeeId = await response.Content.ReadFromJsonAsync<int>();
-
-            Assert.NotEqual(default(int), employeeId);
+            responce.EnsureSuccessStatusCode();
         }
 
-        [Theory]
-        [InlineData("", "")]
-        [InlineData(" ", " ")]
-        [InlineData("     ", "     ")]
-        [InlineData(null, null)]
-        public async Task Create_InvalidEmployeeName_ShouldReturnBadRequest(string invalidFirstName, string invalidLastName)
-        {
-            var fixture = new Fixture();
+        //[Fact]
+        //public async Task Create_ShouldCreateEmployee()
+        //{
+        //    // arrange
+        //    var fixture = new Fixture();
 
-            // arrange
-            var employee = new NewEmployee
-            {
-                FirstName = invalidFirstName,
-                LastName = invalidLastName,
-                Position = fixture.Create<Position>()
-            };
+        //    var employee = new TelegramEmlpoyeeDetails
+        //    {
+        //        FirstName = fixture.Create<string>(),
+        //        LastName = fixture.Create<string>(),
+        //        Position = fixture.Create<Position>()
+        //    };
 
-            // act
-            var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
+        //    // act
+        //    var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
 
-            // assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
+        //    // assert
+        //    response.EnsureSuccessStatusCode();
+
+        //    var employeeId = await response.Content.ReadFromJsonAsync<int>();
+
+        //    Assert.NotEqual(default(int), employeeId);
+        //}
+
+        //[Theory]
+        //[InlineData("", "")]
+        //[InlineData(" ", " ")]
+        //[InlineData("     ", "     ")]
+        //[InlineData(null, null)]
+        //public async Task Create_InvalidEmployeeName_ShouldReturnBadRequest(string invalidFirstName, string invalidLastName)
+        //{
+        //    var fixture = new Fixture();
+
+        //    // arrange
+        //    var employee = new TelegramEmlpoyeeDetails
+        //    {
+        //        FirstName = invalidFirstName,
+        //        LastName = invalidLastName,
+        //        Position = fixture.Create<Position>()
+        //    };
+
+        //    // act
+        //    var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
+
+        //    // assert
+        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        //}
 
         [Fact]
         public async Task Save_ShouldCreateSalary()
@@ -99,9 +121,19 @@ namespace Timesheets.IntegrationalTests
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
 
+                var user = dbContext.Users
+                    .Add(new Entities.User
+                    {
+                        Id = fixture.Create<int>(),
+                        Email = fixture.Create<string>() + "@gmail.com",
+                        PasswordHash = fixture.Create<string>(),
+                        Role = fixture.Create<Role>()
+                    });
+
                 var employee = dbContext.Employees
                     .Add(new Entities.Employee
                     {
+                        Id = user.Entity.Id,
                         FirstName = fixture.Create<string>(),
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>()
@@ -142,9 +174,19 @@ namespace Timesheets.IntegrationalTests
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
 
+                var user = dbContext.Users
+                   .Add(new Entities.User
+                   {
+                       Id = fixture.Create<int>(),
+                       Email = fixture.Create<string>() + "@gmail.com",
+                       PasswordHash = fixture.Create<string>(),
+                       Role = fixture.Create<Role>()
+                   });
+
                 var employee = dbContext.Employees
                     .Add(new Entities.Employee
                     {
+                        Id = user.Entity.Id,
                         FirstName = fixture.Create<string>(),
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>()
@@ -189,9 +231,19 @@ namespace Timesheets.IntegrationalTests
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
 
+                var user = dbContext.Users
+                   .Add(new Entities.User
+                   {
+                       Id = fixture.Create<int>(),
+                       Email = fixture.Create<string>() + "@gmail.com",
+                       PasswordHash = fixture.Create<string>(),
+                       Role = fixture.Create<Role>()
+                   });
+
                 var employee = dbContext.Employees
                     .Add(new Entities.Employee
                     {
+                        Id = user.Entity.Id,
                         FirstName = fixture.Create<string>(),
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>()
@@ -215,8 +267,6 @@ namespace Timesheets.IntegrationalTests
             // act
             var response = await Client.GetAsync(url);
 
-            var amount = await response.Content.ReadFromJsonAsync<decimal>();
-
             // assert
             response.EnsureSuccessStatusCode();
         }
@@ -236,9 +286,19 @@ namespace Timesheets.IntegrationalTests
                 var project = dbContext.Projects
                     .Add(new Entities.Project { Title = fixture.Create<string>() });
 
+                var user = dbContext.Users
+                    .Add(new Entities.User
+                    {
+                        Id = fixture.Create<int>(),
+                        Email = fixture.Create<string>() + "@gmail.com",
+                        PasswordHash = fixture.Create<string>(),
+                        Role = fixture.Create<Role>()
+                    });
+
                 var employee = dbContext.Employees
                     .Add(new Entities.Employee
                     {
+                        Id = user.Entity.Id,
                         FirstName = fixture.Create<string>(),
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>()

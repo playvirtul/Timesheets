@@ -3,8 +3,13 @@ using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-    public class NewEmployee
+    public class TelegramEmlpoyeeDetails
     {
+        [Required]
+        [MinLength(TelegramInvitation.MIN_USERNAME_LENGTH)]
+        [MaxLength(TelegramInvitation.MAX_USERNAME_LENGTH)]
+        public string TelegramUserName { get; set; }
+
         [Required]
         [StringLength(Employee.MAX_FIRSTNAME_LENGTH)]
         public string FirstName { get; set; }

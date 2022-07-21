@@ -11,10 +11,7 @@ namespace Timesheets.API.Controllers
     /// <summary>
     /// ProjectsController.
     /// </summary>
-    [ApiVersion("1.0")]
-    [ApiController]
-    [Route("api/v{version:apiversion}/[controller]")]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : BaseController
     {
         private readonly IProjectsService _projectsService;
         private readonly IWorkTimesService _workTimesService;

@@ -51,15 +51,13 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return employee;
         }
 
-        public async Task<int> Add(Domain.Employee newEmployee)
+        public async Task Add(Domain.Employee newEmployee)
         {
             var employee = _mapper.Map<Domain.Employee, Employee>(newEmployee);
 
             _context.Employees.Add(employee);
 
             await _context.SaveChangesAsync();
-
-            return employee.Id;
         }
 
         public async Task<string> AddProjectToEmployee(int employeeId, int projectId)

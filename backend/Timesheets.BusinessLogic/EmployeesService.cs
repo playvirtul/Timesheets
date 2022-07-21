@@ -1,21 +1,29 @@
 ﻿using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
+using Timesheets.Domain.Telegram;
 
 namespace Timesheets.BusinessLogic
 {
     public class EmployeesService : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository;
+        private readonly ITelegramApiClient _telegramApiClient;
 
-        public EmployeesService(IEmployeesRepository employeesRepository)
+        public EmployeesService(IEmployeesRepository employeesRepository, ITelegramApiClient telegramApiClient)
         {
             _employeesRepository = employeesRepository;
+            _telegramApiClient = telegramApiClient;
         }
 
-        public async Task<int> Create(Employee employee)
+        public async Task Create(Employee employee)
         {
-            return await _employeesRepository.Add(employee);
+            await _employeesRepository.Add(employee);
+        }
+
+        public async Task<bool> SendTelegramInvite(TelegramInvitation invitation)
+        {
+            return await _telegramApiClient.SendTelegramInvite(invitation);
         }
 
         public async Task<Employee[]> Get()
@@ -37,11 +45,11 @@ namespace Timesheets.BusinessLogic
                 return new string("Employee not found with this id.");
             }
 
-            var errors = employee.AddProject(projectId);
+            var error = employee.AddProject(projectId);
 
-            if (!string.IsNullOrEmpty(errors))
+            if (!string.IsNullOrEmpty(error))
             {
-                return errors;
+                return error;
             }
 
             return await _employeesRepository.AddProjectToEmployee(employeeId, projectId);

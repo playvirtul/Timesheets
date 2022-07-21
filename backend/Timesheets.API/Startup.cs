@@ -17,6 +17,7 @@ using Timesheets.BusinessLogic;
 using Timesheets.DataAccess.Postgre;
 using Timesheets.DataAccess.Postgre.Repositories;
 using Timesheets.Domain.Interfaces;
+using Timesheets.Domain.Telegram;
 
 namespace Timesheets.API
 {
@@ -52,9 +53,6 @@ namespace Timesheets.API
                     };
                 });
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddScheme<CustomBearerAuthOptions, CustomBearerAuthHandler>();
-
             services.AddAutoMapper(cfg =>
                 {
                     cfg.AddProfile<DataAccessMappingProfile>();
@@ -87,19 +85,20 @@ namespace Timesheets.API
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                   {
-                     new OpenApiSecurityScheme
-                     {
-                       Reference = new OpenApiReference
-                       {
-                         Type = ReferenceType.SecurityScheme,
-                         Id = "Bearer"
-                       }
-                      },
-                      new string[] { }
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                        },
+                        new string[] { }
                     }
-                  });
+                });
             });
 
             services.AddVersionedApiExplorer(
@@ -116,11 +115,22 @@ namespace Timesheets.API
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
 
+            services.AddScoped<ITelegramApiClient, TelegramApiClient.TelegramApiClient>(x =>
+            {
+                var token = Configuration.GetSection("TelegramToken").Value;
+
+                return new TelegramApiClient.TelegramApiClient(token);
+            });
+
+            services.AddScoped<IInvitationService, InvitationService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<ISalariesService, SalariesService>();
             services.AddScoped<IWorkTimesService, WorkTimesService>();
 
+            services.AddScoped<IInvitationRepository, InvitationRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();

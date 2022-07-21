@@ -17,13 +17,14 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task Add(Domain.User newUser)
+        public async Task<int> Add(Domain.User newUser)
         {
             var user = _mapper.Map<Domain.User, User>(newUser);
 
             _context.Users.Add(user);
-
             await _context.SaveChangesAsync();
+
+            return user.Id;
         }
 
         public async Task<Domain.User[]> Get()
@@ -37,11 +38,11 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return users;
         }
 
-        public async Task<Domain.User?> Get(int userId)
+        public async Task<Domain.User?> Get(string email)
         {
             var userEntity = await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(u => u.Email == email);
 
             if (userEntity == null)
             {

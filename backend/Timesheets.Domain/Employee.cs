@@ -2,7 +2,7 @@
 {
     public abstract record Employee
     {
-        private List<Project> _projects;
+        private List<Project> _projects = new();
 
         public const int MAX_FIRSTNAME_LENGTH = 100;
 
@@ -43,6 +43,18 @@
             }
         }
 
+        public static (Employee? Result, string[] Errors) Create(int userId, string firstName, string lastName, Position position)
+        {
+            return position switch
+            {
+                Position.Chief => Chief.Create(userId, firstName, lastName),
+                Position.StaffEmployee => StaffEmployee.Create(userId, firstName, lastName),
+                Position.Manager => Manager.Create(userId, firstName, lastName),
+                Position.Freelancer => Freelancer.Create(userId, firstName, lastName),
+                _ => (null, new string[] { "Position is incorrect" })
+            };
+        }
+
         public string AddWorkTime(int projectId, WorkTime workTime)
         {
             if (_projects.Any(p => p.Id == projectId) == false)
@@ -59,7 +71,7 @@
 
             if (workTime.Hours + hoursPerDay > WorkTime.MAX_OVERTIME_HOURS_PER_DAY)
             {
-                return new string("Can not add more than 24 hours on the same date.");
+                return new string($"Can not add more than {WorkTime.MAX_OVERTIME_HOURS_PER_DAY} hours on the same date.");
             }
 
             return string.Empty;
@@ -67,12 +79,29 @@
 
         public string AddProject(int projectId)
         {
-            if (Projects.Any(p => p.Id == projectId))
+            if (_projects.Any(p => p.Id == projectId))
             {
                 return new string("Employee already has a project.");
             }
 
             return string.Empty;
+        }
+
+        protected static string[] ValidationErrors(string firstName, string lastName)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_FIRSTNAME_LENGTH)
+            {
+                errors.Add(new string($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols."));
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_LASTNAME_LENGTH)
+            {
+                errors.Add(new string($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols."));
+            }
+
+            return errors.ToArray();
         }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -12,47 +11,31 @@ using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API.Controllers
 {
-    [ApiController]
-    [Route("api/v{version:apiversion}/[controller]")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [Consumes(MediaTypeNames.Application.Json)]
-    public class EmployeesController : ControllerBase
+    /// <summary>
+    /// Employee controller.
+    /// </summary>
+    public class EmployeesController : BaseController
     {
         private readonly IEmployeesService _employeesService;
         private readonly ISalariesService _salariesService;
+        private readonly IInvitationService _invitationService;
         private readonly ILogger _logger;
 
         public EmployeesController(
             IEmployeesService employeesService,
             ISalariesService salariesService,
+            IInvitationService invitationService,
             ILogger<EmployeesController> logger)
         {
             _employeesService = employeesService;
             _salariesService = salariesService;
+            _invitationService = invitationService;
             _logger = logger;
-        }
-
-        [HttpGet("exception")]
-        public async Task<IActionResult> Exception()
-        {
-            Test();
-
-            throw new Exception(Guid.NewGuid().ToString());
-        }
-
-        public void Test()
-        {
-            var source = new ActivitySource("Timesheets.API");
-            using (var activity = source.StartActivity("start-expeption"))
-            {
-                activity.SetTag("test", 100);
-            }
         }
 
         /// <summary>
         /// Get employees.
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -75,19 +58,18 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Add employee.
+        /// Invite employee.
         /// </summary>
-        /// <param name="newEmployee"></param>
+        /// <param name="employeeDetails"></param>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] NewEmployee newEmployee)
+        [HttpPost("telegramInvitation/employeeDetails")]
+        public async Task<IActionResult> SendTelegramInvite([FromBody] TelegramEmlpoyeeDetails employeeDetails)
         {
-            // отправить приглашение с данными сотрудника
-            // сотрудник регистрируется
-            // создается user и сотрудник
-            var chief = Chief.Create("name", "lastname").Result;
-
-            var (employee, errors) = chief.Create(newEmployee.FirstName, newEmployee.LastName, newEmployee.Position);
+            var (telergamInvitation, errors) = TelegramInvitation.Create(
+                employeeDetails.TelegramUserName,
+                employeeDetails.FirstName,
+                employeeDetails.LastName,
+                employeeDetails.Position);
 
             if (errors.Any())
             {
@@ -95,16 +77,23 @@ namespace Timesheets.API.Controllers
                 return BadRequest(errors);
             }
 
-            var employeeId = await _employeesService.Create(employee);
+            var result = await _employeesService.SendTelegramInvite(telergamInvitation);
 
-            return Ok(employeeId);
+            if (result == false)
+            {
+                return BadRequest();
+            }
+
+            await _invitationService.Create(telergamInvitation);
+
+            return Ok();
         }
 
         /// <summary>
         /// Add employee to project.
         /// </summary>
-        /// <param name="projectId"></param>
         /// <param name="employeeId"></param>
+        /// <param name="projectId"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/project")]
         public async Task<IActionResult> BindProject([FromRoute] int employeeId, [FromQuery] int projectId)
@@ -126,7 +115,7 @@ namespace Timesheets.API.Controllers
         /// <param name="newSalary"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/salary")]
-        public async Task<IActionResult> Upsert([FromRoute] int employeeId, [FromBody] NewSalary newSalary)
+        public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] NewSalary newSalary)
         {
             var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
 
@@ -146,6 +135,7 @@ namespace Timesheets.API.Controllers
         /// </summary>
         /// <param name="employeeId"></param>
         /// <param name="month"></param>
+        /// <param name="year"></param>
         /// <returns></returns>
         [HttpGet("{employeeId:int}/salary-calculation")]
         public async Task<IActionResult> SalaryCalculation(
