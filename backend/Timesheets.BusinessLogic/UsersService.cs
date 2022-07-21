@@ -19,10 +19,10 @@ namespace Timesheets.BusinessLogic
 
         public async Task<User?> AuthenticateUser(string email, string password)
         {
-            var hashPassword = new Password(password).Hash();
+            var passwordHash = new Password(password).Hash();
 
-            var users = await _usersRepository.Get();
-            var user = users.FirstOrDefault(u => u.Email == email && u.PasswordHash == hashPassword);
+            var allUsers = await _usersRepository.Get();
+            var user = allUsers.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
 
             return user;
         }

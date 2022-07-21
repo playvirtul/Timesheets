@@ -40,7 +40,7 @@ namespace Timesheets.API.Controllers
         //    return Ok(invitation);
         //}
 
-        [HttpPost]
+        [HttpPost("registrate")]
         public async Task<IActionResult> CreateUser(NewUser newUser, [FromQuery]string code)
         {
             var invitation = await _invitationService.Get(code);
@@ -78,25 +78,30 @@ namespace Timesheets.API.Controllers
 
             await _employeesService.Create(employee);
 
-            var token = JwtBuilder.Create()
-                      .WithAlgorithm(new HMACSHA256Algorithm())
-                      .WithSecret(AuthOptions.KEY)
-                      .ExpirationTime(DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
-                      .AddClaim(ClaimTypes.NameIdentifier, userId)
-                      .WithVerifySignature(true)
-                      .Encode();
+            var token = GenerateJWT(user);
 
             return Ok(token);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Login loginInfo)
+        {
+            var user = await _usersService.AuthenticateUser(loginInfo.Email, loginInfo.Password);
+
+            if (user != null)
+            {
+                var token = GenerateJWT(user);
+
+                return Ok(token);
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet("validation")]
         public async Task<IActionResult> Validate(string token)
         {
-            var json = JwtBuilder.Create()
-                      .WithAlgorithm(new HMACSHA256Algorithm())
-                      .WithSecret(AuthOptions.KEY)
-                      .MustVerifySignature()
-                      .Decode(token);
+            var json = DecodeJWT(token);
 
             return Ok(json);
         }
@@ -105,13 +110,35 @@ namespace Timesheets.API.Controllers
         [HttpGet("validation2")]
         public async Task<IActionResult> Validate2(string token)
         {
+            var json = DecodeJWT(token);
+
+            return Ok(json);
+        }
+
+        public string GenerateJWT(User user)
+        {
+            var token = JwtBuilder.Create()
+                      .WithAlgorithm(new HMACSHA256Algorithm())
+                      .WithSecret(AuthOptions.KEY)
+                      .ExpirationTime(DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
+                      .AddClaim(ClaimTypes.NameIdentifier, user.Id)
+                      .AddClaim(ClaimTypes.Email, user.Email)
+                      .AddClaim(ClaimTypes.Role, user.Role)
+                      .WithVerifySignature(true)
+                      .Encode();
+
+            return token;
+        }
+
+        public string DecodeJWT(string token)
+        {
             var json = JwtBuilder.Create()
                       .WithAlgorithm(new HMACSHA256Algorithm())
                       .WithSecret(AuthOptions.KEY)
                       .MustVerifySignature()
                       .Decode(token);
 
-            return Ok(json);
+            return json;
         }
     }
 }

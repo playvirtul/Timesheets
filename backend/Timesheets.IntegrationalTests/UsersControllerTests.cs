@@ -53,7 +53,44 @@ namespace Timesheets.IntegrationalTests
             }
 
             // act
-            var response = await Client.PostAsJsonAsync($"api/v1/users?code={code}", newUser);
+            var response = await Client.PostAsJsonAsync($"api/v1/users/registrate?code={code}", newUser);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task LoginUser_ShouldLoginUser()
+        {
+            // arrange
+            var fixture = new Fixture();
+            var email = fixture.Create<string>() + "@gmail.com";
+            var password = fixture.Create<string>();
+            var passwordHash = new Password(password).Hash();
+
+            using (var scope = Application.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+
+                dbContext.Users
+                    .Add(new Entities.User
+                    {
+                        Id = fixture.Create<int>(),
+                        Email = email,
+                        PasswordHash = passwordHash
+                    });
+
+                await dbContext.SaveChangesAsync();
+            }
+
+            var loginInfo = new Login
+            {
+                Email = email,
+                Password = password
+            };
+
+            // act
+            var response = await Client.PostAsJsonAsync($"api/v1/users/login", loginInfo);
 
             // assert
             response.EnsureSuccessStatusCode();
