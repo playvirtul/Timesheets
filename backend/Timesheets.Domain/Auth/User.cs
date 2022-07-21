@@ -4,24 +4,28 @@ namespace Timesheets.Domain
 {
     public class User
     {
+        public int Id { get; }
+
         public string Email { get; }
 
         public string PasswordHash { get; }
 
         public Role Role { get; }
 
-        private User(string email, string passwordHash, Role role)
+        private User(int id, string email, string passwordHash, Role role)
         {
+            Id = id;
             Email = email;
-            PasswordHash = new Password(passwordHash).Hash();
+            PasswordHash = passwordHash;
             Role = role;
         }
 
         public static (User Result, string[] Errors) Create(string email, string password, Role role)
         {
             //валидация пароля и email
+            var passwordHash = new Password(password).Hash();
 
-            return (new User(email, password, role), Array.Empty<string>());
+            return (new User(default, email, passwordHash, role), Array.Empty<string>());
         }
     }
 }
