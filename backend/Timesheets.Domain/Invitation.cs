@@ -1,17 +1,26 @@
 ﻿namespace Timesheets.Domain
 {
-    public record Invitation
+    public abstract record Invitation
     {
-        public string Code { get; set; }
-    }
+        public string Code { get; }
 
-    public record EmailInvitation : Invitation
-    {
-        public string Email { get; set; }
-    }
+        public string FirstName { get; }
 
-    public record TelegramInvitation : Invitation
-    {
-        public string UserName { get; set; }
+        public string LastName { get; }
+
+        public Position Position { get; }
+
+        public Invitation(string firstName, string lastName, Position position)
+        {
+            Code = GenerateCode();
+            FirstName = firstName;
+            LastName = lastName;
+            Position = position;
+        }
+
+        protected string GenerateCode()
+        {
+            return Guid.NewGuid().ToString();
+        }
     }
 }

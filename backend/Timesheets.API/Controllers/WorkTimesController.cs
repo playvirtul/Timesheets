@@ -5,9 +5,7 @@ using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API.Controllers
 {
-    [ApiController]
-    [Route("api/v{version:apiversion}/[controller]")]
-    public class WorkTimesController : ControllerBase
+    public class WorkTimesController : BaseController
     {
         private readonly IWorkTimesService _workTimesService;
         private readonly ILogger _logger;

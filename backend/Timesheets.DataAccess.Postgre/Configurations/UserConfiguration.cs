@@ -10,13 +10,13 @@ namespace Timesheets.DataAccess.Postgre.Configurations
         {
             builder.HasKey(u => u.Id);
 
+            builder.HasIndex(u => u.Email).IsUnique();
+
             builder.Property(u => u.Email).IsRequired();
 
-            builder.Property(u => u.HashPassword).IsRequired();
+            builder.Property(u => u.PasswordHash).IsRequired();
 
-            builder.Property(u => u.HashPassword).IsRequired();
-
-            
+            builder.Property(u => u.PasswordHash).IsRequired();
         }
     }
 }

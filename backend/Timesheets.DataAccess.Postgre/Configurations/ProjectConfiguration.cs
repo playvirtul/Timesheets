@@ -8,9 +8,9 @@ namespace Timesheets.DataAccess.Postgre.Configurations
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(p => p.Id);
 
-            builder.Property(x => x.Title)
+            builder.Property(p => p.Title)
                 .IsRequired()
                 .HasMaxLength(1000);
         }

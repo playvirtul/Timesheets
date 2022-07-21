@@ -4,6 +4,8 @@
     {
         Task<User?> AuthenticateUser(string email, string password);
 
-        Task Register(string email, string password);
+        Task<int> Create(User newUser, string code);
+
+        Task<User?> Get(string email);
     }
 }

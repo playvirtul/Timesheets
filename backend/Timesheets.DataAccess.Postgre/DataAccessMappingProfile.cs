@@ -9,6 +9,10 @@ namespace Timesheets.DataAccess.Postgre
         {
             CreateMap<User, Domain.User>().ReverseMap();
 
+            CreateMap<Domain.Invitation, Invitation>();
+
+            CreateMap<Invitation, Domain.TelegramInvitation>();
+
             CreateMap<Project, Domain.Project>().ReverseMap();
 
             CreateMap<Salary, Domain.Salary>().ReverseMap();

@@ -6,7 +6,7 @@
 
         public const int MAX_TITLE_LENGHT = 1000;
 
-        public Project(int id, string title, WorkTime[] workTimes)
+        private Project(int id, string title, WorkTime[] workTimes)
         {
             Id = id;
             Title = title;
@@ -39,7 +39,7 @@
 
             if (title.Length > MAX_TITLE_LENGHT)
             {
-                return (null, new string[] { "Title cannot contains more then 1000 symbols." });
+                return (null, new string[] {$"Title cannot contains more then {MAX_TITLE_LENGHT} symbols."});
             }
 
             return (new Project(default, title, Array.Empty<WorkTime>()),

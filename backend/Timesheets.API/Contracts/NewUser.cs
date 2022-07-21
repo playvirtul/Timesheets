@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Timesheets.Domain;
+using Timesheets.Domain.Auth;
 
 namespace Timesheets.API.Contracts
 {
@@ -15,5 +15,8 @@ namespace Timesheets.API.Contracts
         [Required]
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }

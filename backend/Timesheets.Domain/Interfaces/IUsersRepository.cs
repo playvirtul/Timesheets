@@ -4,8 +4,8 @@
     {
         Task<User[]> Get();
 
-        Task<User?> Get(int userId);
+        Task<User?> Get(string email);
 
-        Task Add(User user);
+        Task<int> Add(User user);
     }
 }

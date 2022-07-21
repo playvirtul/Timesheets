@@ -2,7 +2,9 @@
 {
     public interface IEmployeesService
     {
-        Task<int> Create(Employee employee);
+        Task<bool> SendTelegramInvite(TelegramInvitation invitation);
+
+        Task Create(Employee employee);
 
         Task<Employee[]> Get();
 
