@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public abstract record Employee
     {
@@ -43,15 +45,27 @@
             }
         }
 
-        public static (Employee? Result, string[] Errors) Create(int userId, string firstName, string lastName, Position position)
+        public static Result<Employee> Create(int userId, string firstName, string lastName, Position position)
         {
+            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_FIRSTNAME_LENGTH)
+            {
+                return Result
+                    .Failure<Employee>($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols.");
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_LASTNAME_LENGTH)
+            {
+                return Result
+                    .Failure<Employee>($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols.");
+            }
+
             return position switch
             {
                 Position.Chief => Chief.Create(userId, firstName, lastName),
                 Position.StaffEmployee => StaffEmployee.Create(userId, firstName, lastName),
                 Position.Manager => Manager.Create(userId, firstName, lastName),
                 Position.Freelancer => Freelancer.Create(userId, firstName, lastName),
-                _ => (null, new string[] { "Position is incorrect" })
+                _ => Result.Failure<Employee>("Position is incorrect")
             };
         }
 
@@ -87,21 +101,19 @@
             return string.Empty;
         }
 
-        protected static string[] ValidationErrors(string firstName, string lastName)
+        protected static string ValidationErrors(string firstName, string lastName)
         {
-            var errors = new List<string>();
-
             if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_FIRSTNAME_LENGTH)
             {
-                errors.Add(new string($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols."));
+                return new string($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols.");
             }
 
             if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_LASTNAME_LENGTH)
             {
-                errors.Add(new string($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols."));
+                return new string($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols.");
             }
 
-            return errors.ToArray();
+            return string.Empty;
         }
     }
 }

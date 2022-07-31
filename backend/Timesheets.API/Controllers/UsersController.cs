@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
@@ -32,70 +31,66 @@ namespace Timesheets.API.Controllers
             _logger = logger;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetInvitation([FromQuery]string code)
-        //{
-        //    var invitation = await _invitationService.Get(code);
-
-        //    return Ok(invitation);
-        //}
-
         [HttpPost("registrate")]
-        public async Task<IActionResult> CreateUser(NewUser newUser, [FromQuery]string code)
+        public async Task<IActionResult> CreateUser(UserRequest userRequest, [FromQuery]string code)
         {
             var invitation = await _invitationService.Get(code);
 
-            if (invitation == null)
+            if (invitation.IsFailure)
             {
-                return BadRequest("Приглашение не найдено");
+                _logger.LogError("{error}", invitation.Error);
+                return BadRequest(invitation.Error);
             }
 
-            var (user, userErrors) = Domain.User.Create(newUser.Email, newUser.Password, newUser.Role);
+            var userToCreate = Domain.User.Create(userRequest.Email, userRequest.Password, invitation.Value.Role);
 
-            if (userErrors.Any())
+            if (userToCreate.IsFailure)
             {
-                _logger.LogError("{errors}", userErrors);
-                return BadRequest(userErrors);
+                _logger.LogError("{errors}", userToCreate.Error);
+                return BadRequest(userToCreate.Error);
             }
 
-            var existingUser = await _usersService.Get(newUser.Email);
+            var userId = await _usersService.Create(userToCreate.Value, code);
 
-            if (existingUser != null)
+            if (userId.IsFailure)
             {
-                return BadRequest("Пользователь с такой учетной записью уже существует");
+                _logger.LogError("{errors}", userId.Error);
+
+                return BadRequest(userId.Error);
             }
 
-            var userId = await _usersService.Create(user, code);
+            var employee = Employee.Create(
+                userId.Value,
+                invitation.Value.FirstName,
+                invitation.Value.LastName,
+                invitation.Value.Position);
 
-            var (employee, employeeErrors) = Employee
-                .Create(userId, invitation.FirstName, invitation.LastName, invitation.Position);
-
-            if (employeeErrors.Any())
+            if (employee.IsFailure)
             {
-                _logger.LogError("{errors}", userErrors);
-                return BadRequest(userErrors);
+                _logger.LogError("{error}", employee.Error);
+                return BadRequest(employee.Error);
             }
 
-            await _employeesService.Create(employee);
+            await _employeesService.Create(employee.Value);
 
-            var token = GenerateJWT(user);
+            var token = GenerateJWT(userToCreate.Value);
 
             return Ok(token);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login loginInfo)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginInfo)
         {
             var user = await _usersService.AuthenticateUser(loginInfo.Email, loginInfo.Password);
 
-            if (user != null)
+            if (user.IsFailure)
             {
-                var token = GenerateJWT(user);
-
-                return Ok(token);
+                _logger.LogError("{error}", user.Error);
+                return Unauthorized();
             }
 
-            return Unauthorized();
+            var token = GenerateJWT(user.Value);
+            return Ok(token);
         }
 
         [HttpGet("validation")]

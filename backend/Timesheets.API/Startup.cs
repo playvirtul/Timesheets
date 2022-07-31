@@ -56,6 +56,7 @@ namespace Timesheets.API
             services.AddAutoMapper(cfg =>
                 {
                     cfg.AddProfile<DataAccessMappingProfile>();
+                    cfg.AddProfile<ApiMappingProfile>();
                 });
 
             services.AddOpenTelemetryTracing((builder) => builder

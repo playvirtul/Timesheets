@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 using Timesheets.Domain.Telegram;
@@ -16,9 +17,9 @@ namespace Timesheets.BusinessLogic
             _telegramApiClient = telegramApiClient;
         }
 
-        public async Task Create(Employee employee)
+        public async Task<int> Create(Employee employee)
         {
-            await _employeesRepository.Add(employee);
+            return await _employeesRepository.Add(employee);
         }
 
         public async Task<bool> SendTelegramInvite(TelegramInvitation invitation)
@@ -31,9 +32,16 @@ namespace Timesheets.BusinessLogic
             return await _employeesRepository.Get();
         }
 
-        public async Task<Employee?> Get(int employeeId)
+        public async Task<Result<Employee>> Get(int employeeId)
         {
-            return await _employeesRepository.Get(employeeId);
+            var employee = await _employeesRepository.Get(employeeId);
+
+            if (employee == null)
+            {
+                return Result.Failure<Employee>("The entered id does not exist");
+            }
+
+            return employee;
         }
 
         public async Task<string> BindProject(int employeeId, int projectId)
@@ -42,7 +50,7 @@ namespace Timesheets.BusinessLogic
 
             if (employee == null)
             {
-                return new string("Employee not found with this id.");
+                return new string("The entered id does not exist");
             }
 
             var error = employee.AddProject(projectId);

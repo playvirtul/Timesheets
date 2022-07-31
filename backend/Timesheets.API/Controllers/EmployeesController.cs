@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
@@ -20,17 +19,20 @@ namespace Timesheets.API.Controllers
         private readonly ISalariesService _salariesService;
         private readonly IInvitationService _invitationService;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
         public EmployeesController(
             IEmployeesService employeesService,
             ISalariesService salariesService,
             IInvitationService invitationService,
-            ILogger<EmployeesController> logger)
+            ILogger<EmployeesController> logger,
+            IMapper mapper)
         {
             _employeesService = employeesService;
             _salariesService = salariesService;
             _invitationService = invitationService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -41,7 +43,9 @@ namespace Timesheets.API.Controllers
         {
             var employees = await _employeesService.Get();
 
-            return Ok(employees);
+            var response = _mapper.Map<Employee[], EmployeeResponse[]>(employees);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -54,37 +58,46 @@ namespace Timesheets.API.Controllers
         {
             var salary = await _salariesService.Get(employeeId);
 
-            return Ok(salary);
+            if (salary.IsFailure)
+            {
+                _logger.LogError("{error}", salary.Error);
+                return BadRequest(salary.Error);
+            }
+
+            var response = _mapper.Map<Salary, SalaryResponse>(salary.Value);
+
+            return Ok(response);
         }
 
         /// <summary>
         /// Invite employee.
         /// </summary>
-        /// <param name="employeeDetails"></param>
+        /// <param name="emlpoyeeDetailsRequest"></param>
         /// <returns></returns>
         [HttpPost("telegramInvitation/employeeDetails")]
-        public async Task<IActionResult> SendTelegramInvite([FromBody] TelegramEmlpoyeeDetails employeeDetails)
+        public async Task<IActionResult> SendTelegramInvite([FromBody] EmlpoyeeDetailsRequest emlpoyeeDetailsRequest)
         {
-            var (telergamInvitation, errors) = TelegramInvitation.Create(
-                employeeDetails.TelegramUserName,
-                employeeDetails.FirstName,
-                employeeDetails.LastName,
-                employeeDetails.Position);
+            var telergamInvitation = TelegramInvitation.Create(
+                emlpoyeeDetailsRequest.TelegramUserName,
+                emlpoyeeDetailsRequest.FirstName,
+                emlpoyeeDetailsRequest.LastName,
+                emlpoyeeDetailsRequest.Position,
+                emlpoyeeDetailsRequest.Role);
 
-            if (errors.Any())
+            if (telergamInvitation.IsFailure)
             {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
+                _logger.LogError("{errors}", telergamInvitation.Error);
+                return BadRequest(telergamInvitation.Error);
             }
 
-            var result = await _employeesService.SendTelegramInvite(telergamInvitation);
+            var result = await _employeesService.SendTelegramInvite(telergamInvitation.Value);
 
             if (result == false)
             {
                 return BadRequest();
             }
 
-            await _invitationService.Create(telergamInvitation);
+            await _invitationService.Create(telergamInvitation.Value);
 
             return Ok();
         }
@@ -112,20 +125,20 @@ namespace Timesheets.API.Controllers
         /// Create or update salary.
         /// </summary>
         /// <param name="employeeId"></param>
-        /// <param name="newSalary"></param>
+        /// <param name="salaryRequest"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/salary")]
-        public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] NewSalary newSalary)
+        public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] SalaryRequest salaryRequest)
         {
-            var (salary, errors) = Salary.Create(employeeId, newSalary.Amount, newSalary.Bonus, newSalary.SalaryType);
+            var salary = Salary.Create(employeeId, salaryRequest.Amount, salaryRequest.Bonus, salaryRequest.SalaryType);
 
-            if (errors.Any())
+            if (salary.IsFailure)
             {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
+                _logger.LogError("{errors}", salary.Error);
+                return BadRequest(salary.Error);
             }
 
-            var salaryId = await _salariesService.Save(salary);
+            var salaryId = await _salariesService.Save(salary.Value);
 
             return Ok(salaryId);
         }

@@ -38,12 +38,13 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var telegramEmployeeDetails = new TelegramEmlpoyeeDetails
+            var telegramEmployeeDetails = new EmlpoyeeDetailsRequest
             {
                 TelegramUserName = "testUser",
                 FirstName = fixture.Create<string>(),
                 LastName = fixture.Create<string>(),
-                Position = fixture.Create<Position>()
+                Position = fixture.Create<Position>(),
+                Role = fixture.Create<Role>()
             };
 
             // act
@@ -108,7 +109,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var salary = new NewSalary
+            var salary = new SalaryRequest
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = fixture.Create<decimal>(),
@@ -161,7 +162,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var salary = new NewSalary
+            var salary = new SalaryRequest
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = fixture.Create<decimal>(),

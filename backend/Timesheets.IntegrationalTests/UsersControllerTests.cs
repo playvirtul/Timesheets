@@ -27,12 +27,11 @@ namespace Timesheets.IntegrationalTests
             var password = fixture.Create<string>();
             var code = fixture.Create<string>();
 
-            var newUser = new NewUser
+            var newUser = new UserRequest
             {
                 Email = fixture.Create<string>() + "@gmail.com",
                 Password = password,
-                ConfirmPassword = password,
-                Role = fixture.Create<Role>()
+                ConfirmPassword = password
             };
 
             using (var scope = Application.Services.CreateScope())
@@ -46,6 +45,7 @@ namespace Timesheets.IntegrationalTests
                         FirstName = fixture.Create<string>(),
                         LastName = fixture.Create<string>(),
                         Position = fixture.Create<Position>(),
+                        Role = fixture.Create<Role>(),
                         Code = code
                     });
 
@@ -83,7 +83,7 @@ namespace Timesheets.IntegrationalTests
                 await dbContext.SaveChangesAsync();
             }
 
-            var loginInfo = new Login
+            var loginInfo = new LoginRequest
             {
                 Email = email,
                 Password = password

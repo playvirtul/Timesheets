@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Timesheets.Domain;
+using Timesheets.Domain.Auth;
 
 namespace Timesheets.API.Contracts
 {
-    public class TelegramEmlpoyeeDetails
+    public class EmlpoyeeDetailsRequest
     {
         [Required]
         [MinLength(TelegramInvitation.MIN_USERNAME_LENGTH)]
@@ -20,5 +21,8 @@ namespace Timesheets.API.Contracts
 
         [Required]
         public Position Position { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }

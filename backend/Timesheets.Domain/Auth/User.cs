@@ -1,4 +1,5 @@
-﻿using Timesheets.Domain.Auth;
+﻿using CSharpFunctionalExtensions;
+using Timesheets.Domain.Auth;
 
 namespace Timesheets.Domain
 {
@@ -20,12 +21,12 @@ namespace Timesheets.Domain
             Role = role;
         }
 
-        public static (User Result, string[] Errors) Create(string email, string password, Role role)
+        public static Result<User> Create(string email, string password, Role role)
         {
             //валидация пароля и email
             var passwordHash = new Password(password).Hash();
 
-            return (new User(default, email, passwordHash, role), Array.Empty<string>());
+            return new User(default, email, passwordHash, role);
         }
     }
 }

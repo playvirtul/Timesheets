@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,15 +17,18 @@ namespace Timesheets.API.Controllers
         private readonly IProjectsService _projectsService;
         private readonly IWorkTimesService _workTimesService;
         private readonly ILogger<ProjectsController> _logger;
+        private readonly IMapper _mapper;
 
         public ProjectsController(
             IProjectsService projectsService,
             IWorkTimesService workTimeService,
-            ILogger<ProjectsController> logger)
+            ILogger<ProjectsController> logger,
+            IMapper mapper)
         {
             _projectsService = projectsService;
             _workTimesService = workTimeService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -35,8 +39,9 @@ namespace Timesheets.API.Controllers
         public async Task<IActionResult> Get()
         {
             var projects = await _projectsService.Get();
+            var response = _mapper.Map<Project[], ProjectResponse[]>(projects);
 
-            return Ok(projects);
+            return Ok(response);
         }
 
         /// <summary>
@@ -49,26 +54,34 @@ namespace Timesheets.API.Controllers
         {
             var project = await _projectsService.Get(projectId);
 
-            return Ok(project);
+            if (project.IsFailure)
+            {
+                _logger.LogError("{errors}", project.Error);
+                return BadRequest(project.Error);
+            }
+
+            var response = _mapper.Map<Project, ProjectResponse>(project.Value);
+
+            return Ok(response);
         }
 
         /// <summary>
         /// Creates new project.
         /// </summary>
-        /// <param name="newProject"></param>
+        /// <param name="projectRequest"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] NewProject newProject)
+        public async Task<IActionResult> Create([FromBody] ProjectRequest projectRequest)
         {
-            var (project, errors) = Project.Create(newProject.Title);
+            var project = Project.Create(projectRequest.Title);
 
-            if (errors.Any())
+            if (project.IsFailure)
             {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
+                _logger.LogError("{errors}", project.Error);
+                return BadRequest(project.Error);
             }
 
-            var projectId = await _projectsService.Create(project);
+            var projectId = await _projectsService.Create(project.Value);
 
             return Ok(projectId);
         }
@@ -76,27 +89,32 @@ namespace Timesheets.API.Controllers
         /// <summary>
         /// Add work time.
         /// </summary>
-        /// <param name="employeeId"></param>
-        /// <param name="projectId"></param>
-        /// <param name="newWorkTime"></param>
+        /// <param name="workTimeRequest"></param>
         /// <returns></returns>
-        [HttpPost("{projectId:int}/workTime")]
-        public async Task<IActionResult> AddWorkTime(
-            [FromQuery] int employeeId,
-            [FromRoute] int projectId,
-            [FromBody] NewWorkTime newWorkTime)
+        [HttpPost("workTime")]
+        public async Task<IActionResult> AddWorkTime([FromBody] WorkTimeRequest workTimeRequest)
         {
-            var (workTime, errors) = WorkTime.Create(employeeId, projectId, newWorkTime.Hours, newWorkTime.Date);
+            var workTime = WorkTime.Create(
+                workTimeRequest.EmployeeId,
+                workTimeRequest.ProjectId,
+                workTimeRequest.Hours,
+                workTimeRequest.Date);
 
-            if (errors.Any())
+            if (workTime.IsFailure)
             {
-                _logger.LogError("{errors}", errors);
-                return BadRequest(errors);
+                _logger.LogError("{errors}", workTime.Error);
+                return BadRequest(workTime.Error);
             }
 
-            var result = await _workTimesService.Add(workTime);
+            var result = await _workTimesService.Add(workTime.Value);
 
-            return Ok(result);
+            if (result.IsFailure)
+            {
+                _logger.LogError("{error}", result.Error);
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
         }
 
         /// <summary>

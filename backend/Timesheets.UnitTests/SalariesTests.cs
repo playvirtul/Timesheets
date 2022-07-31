@@ -21,11 +21,11 @@ namespace Timesheets.UnitTests
             var bonus = fixture.Create<decimal>();
 
             // act
-            var (salary, errors) = Salary.Create(employeeId, amount, bonus, salaryType);
+            var salary = Salary.Create(employeeId, amount, bonus, salaryType);
 
             // assert
-            Assert.NotNull(salary);
-            Assert.Empty(errors);
+            Assert.True(salary.IsSuccess);
+            Assert.False(salary.IsFailure);
         }
 
         [Theory]
@@ -33,11 +33,11 @@ namespace Timesheets.UnitTests
         public void Create_ShouldCreateInValidSalary(int employeeId, decimal amount, decimal bonus, SalaryType salaryType)
         {
             // act
-            var (salary, errors) = Salary.Create(employeeId, amount, bonus, salaryType);
+            var salary = Salary.Create(employeeId, amount, bonus, salaryType);
 
             // assert
-            Assert.Null(salary);
-            Assert.NotEmpty(errors);
+            Assert.False(salary.IsSuccess);
+            Assert.True(salary.IsFailure);
         }
 
         public static IEnumerable<object[]> GenerateInvalidParametres()

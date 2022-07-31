@@ -29,9 +29,9 @@
         //    };
         //}
 
-        public static (Chief? Result, string[] Errors) Create(int userId, string firstName, string lastName)
+        public static Chief Create(int userId, string firstName, string lastName)
         {
-            return (new Chief(userId, firstName, lastName), ValidationErrors(firstName, lastName));
+            return new Chief(userId, firstName, lastName);
         }
     }
 }

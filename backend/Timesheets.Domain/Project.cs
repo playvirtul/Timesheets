@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public record Project
     {
@@ -30,20 +32,19 @@
             }
         }
 
-        public static (Project? Result, string[] Errors) Create(string title)
+        public static Result<Project> Create(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
-                return (null, new string[] { "Title cannot be null or empty." });
+                return Result.Failure<Project>("Title cannot be null or empty.");
             }
 
             if (title.Length > MAX_TITLE_LENGHT)
             {
-                return (null, new string[] {$"Title cannot contains more then {MAX_TITLE_LENGHT} symbols."});
+                return Result.Failure<Project>($"Title cannot contains more then {MAX_TITLE_LENGHT} symbols.");
             }
 
-            return (new Project(default, title, Array.Empty<WorkTime>()),
-                    Array.Empty<string>());
+            return new Project(default, title, Array.Empty<WorkTime>());
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Timesheets.Domain.Interfaces
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain.Interfaces
 {
     public interface IWorkTimesService
     {
-        Task<string> Add(WorkTime workTime);
+        Task<Result<int>> Add(WorkTime workTime);
 
         Task<WorkTime[]> Get(int employeeId);
     }

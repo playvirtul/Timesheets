@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public record WorkTime
     {
@@ -23,21 +25,19 @@
 
         public DateTime Date { get;  }
 
-        public static (WorkTime? Result, string[] Errors) Create(int employeeId, int projectId, int hours, DateTime date)
+        public static Result<WorkTime> Create(int employeeId, int projectId, int hours, DateTime date)
         {
             if (hours < MIN_WORKING_HOURS_PER_DAY || hours > MAX_OVERTIME_HOURS_PER_DAY)
             {
-                return (null, new string[] { "Hours should be between 0 and 24." });
+                return Result.Failure<WorkTime>("Hours should be between 0 and 24.");
             }
 
             if (date > DateTime.Now)
             {
-                return (null, new string[] { "You cannot select a future date." });
+                return Result.Failure<WorkTime>("You cannot select a future date.");
             }
 
-            return (
-                new WorkTime(employeeId, projectId, hours, date),
-                Array.Empty<string>());
+            return new WorkTime(employeeId, projectId, hours, date);
         }
     }
 }

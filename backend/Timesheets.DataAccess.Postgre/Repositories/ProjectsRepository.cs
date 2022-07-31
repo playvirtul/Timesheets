@@ -55,13 +55,13 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return project.Id;
         }
 
-        public async Task<bool> Delete(int projectId)
+        public async Task<int> Delete(int projectId)
         {
             _context.Projects.Remove(new Project { Id = projectId });
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return projectId;
         }
     }
 }
