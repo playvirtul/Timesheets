@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -22,24 +23,25 @@ namespace Timesheets.BusinessLogic
             return workTimes;
         }
 
-        public async Task<string> Add(WorkTime workTime)
+        public async Task<Result<int>> Add(WorkTime workTime)
         {
             var employee = await _employeesRepository.Get(workTime.EmployeeId);
 
             if (employee == null)
             {
-                return new string("Employee not found with this id.");
+                return Result.Failure<int>("Employee not found with this id.");
             }
 
             var errors = employee.AddWorkTime(workTime.ProjectId, workTime);
 
             if (!string.IsNullOrEmpty(errors))
             {
-                return errors;
+                return Result.Failure<int>(errors);
             }
 
-            await _workTimesRepository.Add(workTime);
-            return string.Empty;
+            var employeeId = await _workTimesRepository.Add(workTime);
+
+            return employeeId;
         }
     }
 }

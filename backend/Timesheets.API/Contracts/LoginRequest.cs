@@ -2,7 +2,7 @@
 
 namespace Timesheets.API.Contracts
 {
-    public class Login
+    public class LoginRequest
     {
         [Required]
         [EmailAddress]

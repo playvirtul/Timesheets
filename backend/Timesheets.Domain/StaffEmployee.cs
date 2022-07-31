@@ -7,9 +7,9 @@
         {
         }
 
-        public static (StaffEmployee? Result, string[] Errors) Create(int userId, string firstName, string lastName)
+        public static StaffEmployee Create(int userId, string firstName, string lastName)
         {
-            return (new StaffEmployee(userId, firstName, lastName), ValidationErrors(firstName, lastName));
+            return new StaffEmployee(userId, firstName, lastName);
         }
     }
 }

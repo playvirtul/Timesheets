@@ -8,6 +8,6 @@
 
         Task<Project?> Get(int projectId);
 
-        Task<bool> Delete(int projectId);
+        Task<int> Delete(int projectId);
     }
 }

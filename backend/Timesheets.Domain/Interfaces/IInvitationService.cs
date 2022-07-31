@@ -1,9 +1,11 @@
-﻿namespace Timesheets.Domain.Interfaces
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain.Interfaces
 {
     public interface IInvitationService
     {
         Task Create(Invitation invitation);
 
-        Task<Invitation?> Get(string code);
+        Task<Result<Invitation>> Get(string code);
     }
 }

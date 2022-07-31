@@ -21,11 +21,11 @@ namespace Timesheets.UnitTests
             var hours = new Random().Next(1, 25);
 
             // act
-            var (workTime, errors) = WorkTime.Create(employeeId, projectId, hours, DateTime.Now);
+            var workTime = WorkTime.Create(employeeId, projectId, hours, DateTime.Now);
 
             // assert
-            Assert.NotNull(workTime);
-            Assert.Empty(errors);
+            Assert.True(workTime.IsSuccess);
+            Assert.False(workTime.IsFailure);
         }
 
         [Theory]
@@ -36,11 +36,11 @@ namespace Timesheets.UnitTests
             var date = DateTime.Now.AddDays(daysCount);
 
             // act
-            var (workTime, errors) = WorkTime.Create(employeeId, projectId, hours, date);
+            var workTime = WorkTime.Create(employeeId, projectId, hours, date);
 
             // assert
-            Assert.Null(workTime);
-            Assert.NotEmpty(errors);
+            Assert.False(workTime.IsSuccess);
+            Assert.True(workTime.IsFailure);
         }
 
         public static IEnumerable<object[]> GenerateInvalidTitle()

@@ -6,7 +6,7 @@
 
         Task<Employee?> Get(int employeeId);
 
-        Task Add(Employee newEmployee);
+        Task<int> Add(Employee newEmployee);
 
         Task<string> AddProjectToEmployee(int employeeId, int projectId);
 

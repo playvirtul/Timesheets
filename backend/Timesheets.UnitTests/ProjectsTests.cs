@@ -15,11 +15,11 @@ namespace Timesheets.UnitTests
             var title = Guid.NewGuid().ToString();
 
             // act
-            var (project, errors) = Project.Create(title);
+            var project = Project.Create(title);
 
             // assert
-            Assert.NotNull(project);
-            Assert.Empty(errors);
+            Assert.True(project.IsSuccess);
+            Assert.False(project.IsFailure);
         }
 
         [Theory]
@@ -27,11 +27,11 @@ namespace Timesheets.UnitTests
         public void Create_InvalidTitle_ShouldReturnErrors(string title)
         {
             // act
-            var (project, errors) = Project.Create(title);
+            var project = Project.Create(title);
 
             // assert
-            Assert.Null(project);
-            Assert.NotEmpty(errors);
+            Assert.True(project.IsFailure);
+            Assert.False(project.IsSuccess);
         }
 
         public static IEnumerable<object[]> GenerateInvalidTitle()

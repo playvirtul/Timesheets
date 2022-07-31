@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using Timesheets.Domain.Auth;
+
+namespace Timesheets.Domain
 {
     public abstract record Invitation
     {
@@ -10,12 +12,15 @@
 
         public Position Position { get; }
 
-        public Invitation(string firstName, string lastName, Position position)
+        public Role Role { get;  }
+
+        public Invitation(string firstName, string lastName, Position position, Role role)
         {
             Code = GenerateCode();
             FirstName = firstName;
             LastName = lastName;
             Position = position;
+            Role = role;
         }
 
         protected string GenerateCode()

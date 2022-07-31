@@ -75,22 +75,20 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new NewWorkTime
+            var workTime = new WorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
-                Date = DateTime.Now.AddDays(random.Next(-7, 0))
+                Date = DateTime.Now.AddDays(random.Next(-7, 0)),
+                EmployeeId = employeeId,
+                ProjectId = projectId
             };
 
-            var url = $"api/v1/projects/{projectId}/workTime?employeeId={employeeId}";
+            var url = $"api/v1/projects/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);
 
             // assert
-            var errors = await response.Content.ReadAsStringAsync();
-
-            //Assert.Equal(errors, string.Empty);
-
             response.EnsureSuccessStatusCode();
         }
 
@@ -134,13 +132,15 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new NewWorkTime
+            var workTime = new WorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1, 1000),
-                Date = DateTime.Now.AddDays(random.Next(-7, 0))
+                Date = DateTime.Now.AddDays(random.Next(-7, 0)),
+                EmployeeId = employeeId,
+                ProjectId = projectId
             };
 
-            var url = $"api/v1/projects/{projectId}/workTime?employeeId={employeeId}";
+            var url = $"api/v1/projects/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);
@@ -189,13 +189,15 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new NewWorkTime
+            var workTime = new WorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
-                Date = DateTime.Now.AddDays(1)
+                Date = DateTime.Now.AddDays(1),
+                EmployeeId = employeeId,
+                ProjectId = projectId
             };
 
-            var url = $"api/v1/projects/{projectId}/workTime?employeeId={employeeId}";
+            var url = $"api/v1/projects/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);
@@ -210,7 +212,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var project = new NewProject
+            var project = new ProjectRequest
             {
                 Title = fixture.Create<string>()
             };
@@ -234,7 +236,7 @@ namespace Timesheets.IntegrationalTests
         public async Task Create_InvalidTitle_ShouldReturnBadRequest(string invalidTitle)
         {
             // arrange
-            var project = new NewProject
+            var project = new ProjectRequest
             {
                 Title = invalidTitle
             };

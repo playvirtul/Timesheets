@@ -83,7 +83,6 @@ namespace Timesheets.IntegrationalTests
             return Task.CompletedTask;
         }
 
-        // тесты падают скорее всего из-за этой проблемы
         public async Task DisposeAsync()
         {
             using (var conn = new NpgsqlConnection(_connectionString))
@@ -92,8 +91,6 @@ namespace Timesheets.IntegrationalTests
 
                 await _checkpoint.Reset(conn);
             }
-
-            await Task.Delay(200);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using CSharpFunctionalExtensions;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Auth;
@@ -17,26 +18,45 @@ namespace Timesheets.BusinessLogic
             _invitationRepository = invitationRepository;
         }
 
-        public async Task<User?> AuthenticateUser(string email, string password)
+        public async Task<Result<User>> AuthenticateUser(string email, string password)
         {
             var passwordHash = new Password(password).Hash();
 
             var allUsers = await _usersRepository.Get();
             var user = allUsers.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
 
+            if (user == null)
+            {
+                return Result.Failure<User>("Incorrect email or password");
+            }
+
             return user;
         }
 
-        public async Task<int> Create(User newUser, string code)
+        public async Task<Result<int>> Create(User userRequest, string code)
         {
+            var user = await _usersRepository.Get(userRequest.Email);
+
+            if (user != null)
+            {
+                return Result.Failure<int>("User with this email already exists");
+            }
+
             await _invitationRepository.Delete(code);
 
-            return await _usersRepository.Add(newUser);
+            return await _usersRepository.Add(userRequest);
         }
 
-        public async Task<User?> Get(string email)
+        public async Task<Result<User>> Get(string email)
         {
-            return await _usersRepository.Get(email);
+            var user = await _usersRepository.Get(email);
+
+            if (user == null)
+            {
+                return Result.Failure<User>("No user with this email");
+            }
+
+            return user;
         }
     }
 }

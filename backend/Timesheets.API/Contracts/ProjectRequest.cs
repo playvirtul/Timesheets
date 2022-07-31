@@ -3,7 +3,7 @@ using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-    public class NewProject
+    public class ProjectRequest
     {
         [Required]
         [StringLength(Project.MAX_TITLE_LENGHT)]

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -15,9 +16,16 @@ namespace Timesheets.BusinessLogic
             _workTimesRepository = workTimesRepository;
         }
 
-        public async Task<Salary?> Get(int employeeId)
+        public async Task<Result<Salary>> Get(int employeeId)
         {
-            return await _salariesRepository.Get(employeeId);
+            var salary = await _salariesRepository.Get(employeeId);
+
+            if (salary == null)
+            {
+                return Result.Failure<Salary>("The entered id does not exist");
+            }
+
+            return salary;
         }
 
         public async Task<int> Save(Salary salary)

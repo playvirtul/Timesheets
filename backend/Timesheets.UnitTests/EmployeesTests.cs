@@ -24,23 +24,23 @@ namespace Timesheets.UnitTests
             var lastName = Guid.NewGuid().ToString();
 
             // act
-            var (employee, errors) = Employee.Create(userId, firstName, lastName, position);
+            var employee = Employee.Create(userId, firstName, lastName, position);
 
             // assert
-            Assert.NotNull(employee);
-            Assert.Empty(errors);
+            Assert.False(employee.IsFailure);
+            Assert.True(employee.IsSuccess);
         }
 
         [Theory]
         [MemberData(nameof(GenerateInvalidParametres))]
-        public void Create_InvalidTitle_ShouldReturnErrors(int userId, string firstName, string lastName, Position position)
+        public void Create_InvalidParameters_ShouldReturnErrors(int userId, string firstName, string lastName, Position position)
         {
             // act
-            var (employee, errors) = Employee.Create(userId, firstName, lastName, position);
+            var employee = Employee.Create(userId, firstName, lastName, position);
 
             // assert
-            Assert.Null(employee);
-            Assert.NotEmpty(errors);
+            Assert.True(employee.IsFailure);
+            Assert.False(employee.IsSuccess);
         }
 
         [Fact]
@@ -55,15 +55,10 @@ namespace Timesheets.UnitTests
             var lastName = Guid.NewGuid().ToString();
             var position = fixture.Create<Position>();
 
-            var employee = Employee.Create(userId, firstName, lastName, position).Result;
+            var employee = Employee.Create(userId, firstName, lastName, position);
 
             // act
-            if (employee == null)
-            {
-                throw new Exception("emloyee is null");
-            }
-
-            var result = employee.AddProject(projectId);
+            var result = employee.Value.AddProject(projectId);
 
             // assert
             Assert.Equal(string.Empty, result);

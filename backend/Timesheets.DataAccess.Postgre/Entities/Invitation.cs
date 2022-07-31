@@ -1,4 +1,5 @@
 ﻿using Timesheets.Domain;
+using Timesheets.Domain.Auth;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
@@ -9,6 +10,8 @@ namespace Timesheets.DataAccess.Postgre.Entities
         public string Code { get; set; }
 
         public Position Position { get; set; }
+
+        public Role Role { get; set; }
 
         public string? FirstName { get; set; }
 

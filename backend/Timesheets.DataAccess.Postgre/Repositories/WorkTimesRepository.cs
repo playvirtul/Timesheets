@@ -44,7 +44,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return workTimes;
         }
 
-        public async Task<bool> Add(Domain.WorkTime newWorkTime)
+        public async Task<int> Add(Domain.WorkTime newWorkTime)
         {
             var workTime = _mapper.Map<WorkTime>(newWorkTime);
 
@@ -52,7 +52,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return workTime.EmployeeId;
         }
     }
 }

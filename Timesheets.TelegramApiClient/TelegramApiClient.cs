@@ -15,19 +15,11 @@ namespace Timesheets.TelegramApiClient
 
         public async Task<bool> SendTelegramInvite(TelegramInvitation invitaion)
         {
-            try
-            {
-                await _botClient.SendTextMessageAsync(
+            await _botClient.SendTextMessageAsync(
                 chatId: "312433636",
-                text: $"Здравствуйте, {invitaion.FirstName} {invitaion.LastName}!\n" +
-                $"Код для регистрации - {invitaion.Code}");
+                text: $"Здравствуйте, {invitaion.FirstName} {invitaion.LastName}!\n Код для регистрации - {invitaion.Code}");
 
-                return true;
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return true;
         }
     }
 }

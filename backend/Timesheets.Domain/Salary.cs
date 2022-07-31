@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public record Salary
     {
@@ -18,7 +20,7 @@
 
         public decimal Bonus { get; }
 
-        public static (Salary? Result, string[] Errors) Create(
+        public static Result<Salary> Create(
             int employeeId,
             decimal amount,
             decimal bonus,
@@ -26,10 +28,10 @@
         {
             if (amount <= 0)
             {
-                return (null, new string[] { "Amount cannot be less than zero" });
+                return Result.Failure<Salary>("Amount cannot be less than zero");
             }
 
-            return (new Salary(employeeId, amount, bonus, salaryType), Array.Empty<string>());
+            return new Salary(employeeId, amount, bonus, salaryType);
         }
 
         public decimal SalaryCalculation(WorkTime[] workTimes)

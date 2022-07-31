@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
 
@@ -18,9 +19,16 @@ namespace Timesheets.BusinessLogic
             await _invitationRepository.Add(invitation);
         }
 
-        public async Task<Invitation?> Get(string code)
+        public async Task<Result<Invitation>> Get(string code)
         {
-            return await _invitationRepository.Get(code);
+            var invitation = await _invitationRepository.Get(code);
+
+            if (invitation == null)
+            {
+                return Result.Failure<Invitation>("no invitation with this code");
+            }
+
+            return invitation;
         }
     }
 }
