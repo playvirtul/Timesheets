@@ -4,7 +4,7 @@ using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-    public class WorkTimeRequest
+    public class CreateWorkTimeRequest
     {
         [Required]
         [Range(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY)]
@@ -15,8 +15,5 @@ namespace Timesheets.API.Contracts
 
         [Required]
         public int EmployeeId { get; set; }
-
-        [Required]
-        public int ProjectId { get; set; }
     }
 }

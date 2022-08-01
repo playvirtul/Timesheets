@@ -43,7 +43,7 @@ namespace Timesheets.API.Controllers
         {
             var employees = await _employeesService.Get();
 
-            var response = _mapper.Map<Employee[], EmployeeResponse[]>(employees);
+            var response = _mapper.Map<Employee[], GetEmployeeResponse[]>(employees);
 
             return Ok(response);
         }
@@ -64,7 +64,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(salary.Error);
             }
 
-            var response = _mapper.Map<Salary, SalaryResponse>(salary.Value);
+            var response = _mapper.Map<Salary, GetSalaryResponse>(salary.Value);
 
             return Ok(response);
         }
@@ -75,7 +75,7 @@ namespace Timesheets.API.Controllers
         /// <param name="emlpoyeeDetailsRequest"></param>
         /// <returns></returns>
         [HttpPost("telegramInvitation/employeeDetails")]
-        public async Task<IActionResult> SendTelegramInvite([FromBody] EmlpoyeeDetailsRequest emlpoyeeDetailsRequest)
+        public async Task<IActionResult> SendTelegramInvite([FromBody] CreateInvitationRequest emlpoyeeDetailsRequest)
         {
             var telergamInvitation = TelegramInvitation.Create(
                 emlpoyeeDetailsRequest.TelegramUserName,
@@ -128,7 +128,7 @@ namespace Timesheets.API.Controllers
         /// <param name="salaryRequest"></param>
         /// <returns></returns>
         [HttpPost("{employeeId:int}/salary")]
-        public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] SalaryRequest salaryRequest)
+        public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] CreateSalaryRequest salaryRequest)
         {
             var salary = Salary.Create(employeeId, salaryRequest.Amount, salaryRequest.Bonus, salaryRequest.SalaryType);
 

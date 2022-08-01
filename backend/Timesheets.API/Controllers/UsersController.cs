@@ -1,4 +1,5 @@
-﻿using JWT.Algorithms;
+﻿using AutoMapper;
+using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,21 +19,40 @@ namespace Timesheets.API.Controllers
         private readonly IUsersService _usersService;
         private readonly IEmployeesService _employeesService;
         private readonly ILogger<UsersController> _logger;
+        private readonly IMapper _mapper;
 
         public UsersController(
             IInvitationService invitationService,
             IUsersService usersService,
             IEmployeesService employeesService,
-            ILogger<UsersController> logger)
+            ILogger<UsersController> logger,
+            IMapper mapper)
         {
             _invitationService = invitationService;
             _usersService = usersService;
             _employeesService = employeesService;
             _logger = logger;
+            _mapper = mapper;
         }
 
-        [HttpPost("registrate")]
-        public async Task<IActionResult> CreateUser(UserRequest userRequest, [FromQuery]string code)
+        [HttpGet("invitation")]
+        public async Task<IActionResult> GetInvitation([FromQuery] string code)
+        {
+            var invitation = await _invitationService.Get(code);
+
+            if (invitation.IsFailure)
+            {
+                _logger.LogError("{error}", invitation.Error);
+                return BadRequest(invitation.Error);
+            }
+
+            var response = _mapper.Map<Invitation, GetInvitationResponse>(invitation.Value);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(CreateUserRequest userRequest, [FromQuery] string code)
         {
             var invitation = await _invitationService.Get(code);
 
@@ -78,8 +98,8 @@ namespace Timesheets.API.Controllers
             return Ok(token);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginInfo)
+        [HttpPost("token")]
+        public async Task<IActionResult> Login([FromBody] CreateLoginRequest loginInfo)
         {
             var user = await _usersService.AuthenticateUser(loginInfo.Email, loginInfo.Password);
 

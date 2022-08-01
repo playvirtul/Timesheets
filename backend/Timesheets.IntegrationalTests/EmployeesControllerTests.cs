@@ -38,7 +38,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var telegramEmployeeDetails = new EmlpoyeeDetailsRequest
+            var telegramEmployeeDetails = new CreateInvitationRequest
             {
                 TelegramUserName = "testUser",
                 FirstName = fixture.Create<string>(),
@@ -109,7 +109,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var salary = new SalaryRequest
+            var salary = new CreateSalaryRequest
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = fixture.Create<decimal>(),
@@ -162,7 +162,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var salary = new SalaryRequest
+            var salary = new CreateSalaryRequest
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = fixture.Create<decimal>(),

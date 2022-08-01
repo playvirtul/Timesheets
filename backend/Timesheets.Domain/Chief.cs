@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public record Chief : Employee
     {
@@ -7,30 +9,15 @@
         {
         }
 
-        //public (Employee? Result, string[] Errors) Create(string firstName, string lastName, Position position)
-        //{
-        //    if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_FIRSTNAME_LENGTH)
-        //    {
-        //        return (null, new string[] { "FirstName cannot be null or empty or greater then 100 symbols." });
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_LASTNAME_LENGTH)
-        //    {
-        //        return (null, new string[] { "LastName cannot be null or empty or greater then 100 symbols." });
-        //    }
-
-        //    return position switch
-        //    {
-        //        Position.Chief => Create(firstName, lastName),
-        //        Position.StaffEmployee => StaffEmployee.Create(firstName, lastName),
-        //        Position.Manager => Manager.Create(firstName, lastName),
-        //        Position.Freelancer => Freelancer.Create(firstName, lastName),
-        //        _ => (null, new string[] { "Position is incorrect" })
-        //    };
-        //}
-
-        public static Chief Create(int userId, string firstName, string lastName)
+        public static Result<Chief> Create(int userId, string firstName, string lastName)
         {
+            var validationResult = ValidationErrors(firstName, lastName);
+
+            if (validationResult.IsFailure)
+            {
+                return Result.Failure<Chief>(validationResult.Error);
+            }
+
             return new Chief(userId, firstName, lastName);
         }
     }

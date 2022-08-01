@@ -53,5 +53,21 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             return user;
         }
+
+        public async Task<Domain.User?> Get(string email, string passwordHash)
+        {
+            var userEntity = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == passwordHash);
+
+            if (userEntity == null)
+            {
+                return null;
+            }
+
+            var user = _mapper.Map<User, Domain.User>(userEntity);
+
+            return user;
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace Timesheets.API.Controllers
         public async Task<IActionResult> Get()
         {
             var projects = await _projectsService.Get();
-            var response = _mapper.Map<Project[], ProjectResponse[]>(projects);
+            var response = _mapper.Map<Project[], GetProjectResponse[]>(projects);
 
             return Ok(response);
         }
@@ -60,7 +60,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(project.Error);
             }
 
-            var response = _mapper.Map<Project, ProjectResponse>(project.Value);
+            var response = _mapper.Map<Project, GetProjectResponse>(project.Value);
 
             return Ok(response);
         }
@@ -71,7 +71,7 @@ namespace Timesheets.API.Controllers
         /// <param name="projectRequest"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProjectRequest projectRequest)
+        public async Task<IActionResult> Create([FromBody] CreateProjectRequest projectRequest)
         {
             var project = Project.Create(projectRequest.Title);
 
@@ -87,16 +87,17 @@ namespace Timesheets.API.Controllers
         }
 
         /// <summary>
-        /// Add work time.
+        /// 
         /// </summary>
+        /// <param name="projectId"></param>
         /// <param name="workTimeRequest"></param>
         /// <returns></returns>
-        [HttpPost("workTime")]
-        public async Task<IActionResult> AddWorkTime([FromBody] WorkTimeRequest workTimeRequest)
+        [HttpPost("{projectId:int}/workTime")]
+        public async Task<IActionResult> AddWorkTime([FromRoute]int projectId, [FromBody] CreateWorkTimeRequest workTimeRequest)
         {
             var workTime = WorkTime.Create(
                 workTimeRequest.EmployeeId,
-                workTimeRequest.ProjectId,
+                projectId,
                 workTimeRequest.Hours,
                 workTimeRequest.Date);
 

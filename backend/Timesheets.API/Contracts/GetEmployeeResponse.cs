@@ -2,7 +2,7 @@
 
 namespace Timesheets.API.Contracts
 {
-    public class EmployeeResponse
+    public class GetEmployeeResponse
     {
         public string FirstName { get; set;  }
 
