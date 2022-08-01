@@ -75,7 +75,7 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new WorkTimeRequest
+            var workTime = new CreateWorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
                 Date = DateTime.Now.AddDays(random.Next(-7, 0)),
@@ -132,7 +132,7 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new WorkTimeRequest
+            var workTime = new CreateWorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1, 1000),
                 Date = DateTime.Now.AddDays(random.Next(-7, 0)),
@@ -189,7 +189,7 @@ namespace Timesheets.IntegrationalTests
                 employeeId = employee.Entity.Id;
             }
 
-            var workTime = new WorkTimeRequest
+            var workTime = new CreateWorkTimeRequest
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
                 Date = DateTime.Now.AddDays(1),
@@ -212,7 +212,7 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var project = new ProjectRequest
+            var project = new CreateProjectRequest
             {
                 Title = fixture.Create<string>()
             };
@@ -236,7 +236,7 @@ namespace Timesheets.IntegrationalTests
         public async Task Create_InvalidTitle_ShouldReturnBadRequest(string invalidTitle)
         {
             // arrange
-            var project = new ProjectRequest
+            var project = new CreateProjectRequest
             {
                 Title = invalidTitle
             };

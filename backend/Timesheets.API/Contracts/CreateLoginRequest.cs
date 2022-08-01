@@ -2,7 +2,7 @@
 
 namespace Timesheets.API.Contracts
 {
-    public class UserRequest
+    public class CreateLoginRequest
     {
         [Required]
         [EmailAddress]
@@ -10,9 +10,5 @@ namespace Timesheets.API.Contracts
 
         [Required]
         public string Password { get; set; }
-
-        [Required]
-        [Compare(nameof(Password))]
-        public string ConfirmPassword { get; set; }
     }
 }

@@ -15,8 +15,6 @@ namespace Timesheets.DataAccess.Postgre.Configurations
             builder.Property(u => u.Email).IsRequired();
 
             builder.Property(u => u.PasswordHash).IsRequired();
-
-            builder.Property(u => u.PasswordHash).IsRequired();
         }
     }
 }

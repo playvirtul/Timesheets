@@ -61,10 +61,10 @@ namespace Timesheets.Domain
 
             return position switch
             {
-                Position.Chief => Chief.Create(userId, firstName, lastName),
-                Position.StaffEmployee => StaffEmployee.Create(userId, firstName, lastName),
-                Position.Manager => Manager.Create(userId, firstName, lastName),
-                Position.Freelancer => Freelancer.Create(userId, firstName, lastName),
+                Position.Chief => Chief.Create(userId, firstName, lastName).Map<Chief, Employee>(c => c),
+                Position.StaffEmployee => StaffEmployee.Create(userId, firstName, lastName).Map<StaffEmployee, Employee>(c => c),
+                Position.Manager => Manager.Create(userId, firstName, lastName).Map<Manager, Employee>(c => c),
+                Position.Freelancer => Freelancer.Create(userId, firstName, lastName).Map<Freelancer, Employee>(c => c),
                 _ => Result.Failure<Employee>("Position is incorrect")
             };
         }
@@ -101,19 +101,19 @@ namespace Timesheets.Domain
             return string.Empty;
         }
 
-        protected static string ValidationErrors(string firstName, string lastName)
+        protected static Result ValidationErrors(string firstName, string lastName)
         {
             if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > MAX_FIRSTNAME_LENGTH)
             {
-                return new string($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols.");
+                return Result.Failure($"FirstName cannot be null or empty or greater then {MAX_FIRSTNAME_LENGTH} symbols.");
             }
 
             if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > MAX_LASTNAME_LENGTH)
             {
-                return new string($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols.");
+                return Result.Failure($"LastName cannot be null or empty or greater then {MAX_LASTNAME_LENGTH} symbols.");
             }
 
-            return string.Empty;
+            return Result.Success();
         }
     }
 }

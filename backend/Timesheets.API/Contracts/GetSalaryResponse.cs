@@ -1,6 +1,6 @@
 ﻿namespace Timesheets.API.Contracts
 {
-    public class SalaryResponse
+    public class GetSalaryResponse
     {
         public decimal Amount { get; set; }
 

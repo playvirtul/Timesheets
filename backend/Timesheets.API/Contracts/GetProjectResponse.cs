@@ -3,7 +3,7 @@ using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-    public class ProjectResponse
+    public class GetProjectResponse
     {
         public string Title { get; set; }
     }

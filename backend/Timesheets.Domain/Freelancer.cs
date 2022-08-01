@@ -1,4 +1,6 @@
-﻿namespace Timesheets.Domain
+﻿using CSharpFunctionalExtensions;
+
+namespace Timesheets.Domain
 {
     public record Freelancer : Employee
     {
@@ -7,8 +9,15 @@
         {
         }
 
-        public static Freelancer Create(int userId, string firstName, string lastName)
+        public static Result<Freelancer> Create(int userId, string firstName, string lastName)
         {
+            var validationResult = ValidationErrors(firstName, lastName);
+
+            if (validationResult.IsFailure)
+            {
+                return Result.Failure<Freelancer>(validationResult.Error);
+            }
+
             return new Freelancer(userId, firstName, lastName);
         }
     }

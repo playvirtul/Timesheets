@@ -22,8 +22,7 @@ namespace Timesheets.BusinessLogic
         {
             var passwordHash = new Password(password).Hash();
 
-            var allUsers = await _usersRepository.Get();
-            var user = allUsers.FirstOrDefault(u => u.Email == email && u.PasswordHash == passwordHash);
+            var user = await _usersRepository.Get(email, passwordHash);
 
             if (user == null)
             {

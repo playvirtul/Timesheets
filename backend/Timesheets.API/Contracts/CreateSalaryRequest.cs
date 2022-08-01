@@ -3,7 +3,7 @@ using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-    public class SalaryRequest
+    public class CreateSalaryRequest
     {
         [Required]
         public SalaryType SalaryType { get; set; }

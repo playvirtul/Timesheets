@@ -8,11 +8,11 @@ namespace Timesheets.API
     {
         public ApiMappingProfile()
         {
-            CreateMap<Project, ProjectResponse>();
+            CreateMap<Project, GetProjectResponse>();
 
-            CreateMap<Employee, EmployeeResponse>();
+            CreateMap<Employee, GetEmployeeResponse>();
 
-            CreateMap<Salary, SalaryResponse>();
+            CreateMap<Salary, GetSalaryResponse>();
         }
     }
 }

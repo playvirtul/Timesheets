@@ -27,7 +27,7 @@ namespace Timesheets.IntegrationalTests
             var password = fixture.Create<string>();
             var code = fixture.Create<string>();
 
-            var newUser = new UserRequest
+            var newUser = new CreateUserRequest
             {
                 Email = fixture.Create<string>() + "@gmail.com",
                 Password = password,
@@ -53,7 +53,7 @@ namespace Timesheets.IntegrationalTests
             }
 
             // act
-            var response = await Client.PostAsJsonAsync($"api/v1/users/registrate?code={code}", newUser);
+            var response = await Client.PostAsJsonAsync($"api/v1/users?code={code}", newUser);
 
             // assert
             response.EnsureSuccessStatusCode();
@@ -83,14 +83,14 @@ namespace Timesheets.IntegrationalTests
                 await dbContext.SaveChangesAsync();
             }
 
-            var loginInfo = new LoginRequest
+            var loginInfo = new CreateLoginRequest
             {
                 Email = email,
                 Password = password
             };
 
             // act
-            var response = await Client.PostAsJsonAsync($"api/v1/users/login", loginInfo);
+            var response = await Client.PostAsJsonAsync($"api/v1/users/token", loginInfo);
 
             // assert
             response.EnsureSuccessStatusCode();

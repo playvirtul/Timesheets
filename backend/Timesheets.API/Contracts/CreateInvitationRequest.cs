@@ -4,7 +4,7 @@ using Timesheets.Domain.Auth;
 
 namespace Timesheets.API.Contracts
 {
-    public class EmlpoyeeDetailsRequest
+    public class CreateInvitationRequest
     {
         [Required]
         [MinLength(TelegramInvitation.MIN_USERNAME_LENGTH)]
