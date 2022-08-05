@@ -23,6 +23,8 @@ namespace Timesheets.DataAccess.Postgre
 
         public DbSet<Salary> Salaries { get; set; }
 
+        public DbSet<TelegramUser> TelegramUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
@@ -31,6 +33,7 @@ namespace Timesheets.DataAccess.Postgre
             modelBuilder.ApplyConfiguration(new SalaryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new InvitationConfiguration());
+            modelBuilder.ApplyConfiguration(new TelegramUserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

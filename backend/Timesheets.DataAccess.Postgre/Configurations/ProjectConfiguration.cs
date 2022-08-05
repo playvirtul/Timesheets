@@ -12,7 +12,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(p => p.Title)
                 .IsRequired()
-                .HasMaxLength(1000);
+                .HasMaxLength(Domain.Project.MAX_TITLE_LENGHT);
         }
     }
 }

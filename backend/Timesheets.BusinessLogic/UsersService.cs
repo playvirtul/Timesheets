@@ -10,9 +10,9 @@ namespace Timesheets.BusinessLogic
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
-        private readonly IInvitationRepository _invitationRepository;
+        private readonly IInvitationsRepository _invitationRepository;
 
-        public UsersService(IUsersRepository usersRepository, IInvitationRepository invitationRepository)
+        public UsersService(IUsersRepository usersRepository, IInvitationsRepository invitationRepository)
         {
             _usersRepository = usersRepository;
             _invitationRepository = invitationRepository;

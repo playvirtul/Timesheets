@@ -79,8 +79,7 @@ namespace Timesheets.IntegrationalTests
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
                 Date = DateTime.Now.AddDays(random.Next(-7, 0)),
-                EmployeeId = employeeId,
-                ProjectId = projectId
+                EmployeeId = employeeId
             };
 
             var url = $"api/v1/projects/workTime";
@@ -136,8 +135,7 @@ namespace Timesheets.IntegrationalTests
             {
                 Hours = random.Next(WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1, 1000),
                 Date = DateTime.Now.AddDays(random.Next(-7, 0)),
-                EmployeeId = employeeId,
-                ProjectId = projectId
+                EmployeeId = employeeId
             };
 
             var url = $"api/v1/projects/workTime";
@@ -193,8 +191,7 @@ namespace Timesheets.IntegrationalTests
             {
                 Hours = random.Next(WorkTime.MIN_WORKING_HOURS_PER_DAY, WorkTime.MAX_OVERTIME_HOURS_PER_DAY + 1),
                 Date = DateTime.Now.AddDays(1),
-                EmployeeId = employeeId,
-                ProjectId = projectId
+                EmployeeId = employeeId
             };
 
             var url = $"api/v1/projects/workTime";

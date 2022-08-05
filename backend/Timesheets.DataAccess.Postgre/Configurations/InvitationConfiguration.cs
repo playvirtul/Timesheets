@@ -12,9 +12,9 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.HasIndex(i => i.Code).IsUnique();
 
-            builder.Property(i => i.FirstName).IsRequired();
+            builder.Property(i => i.FirstName).IsRequired().HasMaxLength(Domain.Employee.MAX_FIRSTNAME_LENGTH);
 
-            builder.Property(i => i.LastName).IsRequired();
+            builder.Property(i => i.LastName).IsRequired().HasMaxLength(Domain.Employee.MAX_LASTNAME_LENGTH);
 
             builder.Property(i => i.Position).IsRequired();
         }

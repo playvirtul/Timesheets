@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot;
 using Timesheets.Domain;
-using Timesheets.Domain.Telegram;
+using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.TelegramApiClient
 {
@@ -11,6 +11,7 @@ namespace Timesheets.TelegramApiClient
         public TelegramApiClient(string token)
         {
             _botClient = new TelegramBotClient(token);
+            _botClient.SetWebhookAsync("").Wait();
         }
 
         public async Task<bool> SendTelegramInvite(TelegramInvitation invitaion)
