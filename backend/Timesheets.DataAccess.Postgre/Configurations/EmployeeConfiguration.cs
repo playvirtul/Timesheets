@@ -10,9 +10,9 @@ namespace Timesheets.DataAccess.Postgre.Configurations
         {
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.FirstName).IsRequired();
+            builder.Property(e => e.FirstName).IsRequired().HasMaxLength(Domain.Employee.MAX_FIRSTNAME_LENGTH);
 
-            builder.Property(e => e.LastName).IsRequired();
+            builder.Property(e => e.LastName).IsRequired().HasMaxLength(Domain.Employee.MAX_LASTNAME_LENGTH);
 
             builder.Property(e => e.Position).IsRequired();
 

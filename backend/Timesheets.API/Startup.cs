@@ -13,11 +13,11 @@ using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.IO;
+using Telegram.Bot;
 using Timesheets.BusinessLogic;
 using Timesheets.DataAccess.Postgre;
 using Timesheets.DataAccess.Postgre.Repositories;
 using Timesheets.Domain.Interfaces;
-using Timesheets.Domain.Telegram;
 
 namespace Timesheets.API
 {
@@ -70,8 +70,6 @@ namespace Timesheets.API
                     ResourceBuilder.CreateDefault()
                         .AddService(serviceName)));
 
-            services.AddControllers();
-
             services.AddSwaggerGen(c =>
             {
                 c.OperationFilter<ApiVersionOperationFilter>();
@@ -116,21 +114,30 @@ namespace Timesheets.API
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
 
+            services.AddHostedService<ConfigureWebhook>();
+
+            var botConfig = Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+
+            services.AddHttpClient("tgwebhook")
+                .AddTypedClient<ITelegramBotClient>(httpClient => new TelegramBotClient(botConfig.BotToken, httpClient));
+
             services.AddScoped<ITelegramApiClient, TelegramApiClient.TelegramApiClient>(x =>
             {
-                var token = Configuration.GetSection("TelegramToken").Value;
+                var token = Configuration.GetSection("BotConfiguration").Get<BotConfiguration>().BotToken;
 
                 return new TelegramApiClient.TelegramApiClient(token);
             });
 
-            services.AddScoped<IInvitationService, InvitationService>();
+            services.AddControllers().AddNewtonsoftJson();
+
+            services.AddScoped<IInvitationService, InvitationsService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<ISalariesService, SalariesService>();
             services.AddScoped<IWorkTimesService, WorkTimesService>();
 
-            services.AddScoped<IInvitationRepository, InvitationRepository>();
+            services.AddScoped<IInvitationsRepository, InvitationsRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IWorkTimesRepository, WorkTimesRepository>();

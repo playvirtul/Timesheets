@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend\Timesheets.Domain\Timesheets.Domain.csproj" />
+    <ProjectReference Include="..\Timesheets.Domain\Timesheets.Domain.csproj" />
   </ItemGroup>
 
 </Project>
