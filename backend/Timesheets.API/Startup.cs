@@ -130,13 +130,15 @@ namespace Timesheets.API
 
             services.AddControllers().AddNewtonsoftJson();
 
-            services.AddScoped<IInvitationService, InvitationsService>();
+            services.AddScoped<ITelegramUsersService, TelegramUsersService>();
+            services.AddScoped<IInvitationsService, InvitationsService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<ISalariesService, SalariesService>();
             services.AddScoped<IWorkTimesService, WorkTimesService>();
 
+            services.AddScoped<ITelegramUsersRepository, TelegramUsersRepository>();
             services.AddScoped<IInvitationsRepository, InvitationsRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IProjectsRepository, ProjectsRepository>();

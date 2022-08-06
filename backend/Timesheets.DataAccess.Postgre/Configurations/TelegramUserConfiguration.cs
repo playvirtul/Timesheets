@@ -12,7 +12,7 @@ namespace Timesheets.DataAccess.Postgre.Configurations
 
             builder.Property(u => u.UserName).IsRequired();
 
-            builder.Property(u => u.ChatId).IsRequired();
+            builder.HasIndex(u => u.ChatId).IsUnique();
         }
     }
 }

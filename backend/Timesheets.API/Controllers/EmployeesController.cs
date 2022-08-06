@@ -17,20 +17,20 @@ namespace Timesheets.API.Controllers
     {
         private readonly IEmployeesService _employeesService;
         private readonly ISalariesService _salariesService;
-        private readonly IInvitationService _invitationService;
+        private readonly IInvitationsService _invitationsService;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
         public EmployeesController(
             IEmployeesService employeesService,
             ISalariesService salariesService,
-            IInvitationService invitationService,
+            IInvitationsService invitationService,
             ILogger<EmployeesController> logger,
             IMapper mapper)
         {
             _employeesService = employeesService;
             _salariesService = salariesService;
-            _invitationService = invitationService;
+            _invitationsService = invitationService;
             _logger = logger;
             _mapper = mapper;
         }
@@ -78,7 +78,7 @@ namespace Timesheets.API.Controllers
         public async Task<IActionResult> SendTelegramInvite([FromBody] CreateInvitationRequest emlpoyeeDetailsRequest)
         {
             var telergamInvitation = TelegramInvitation.Create(
-                emlpoyeeDetailsRequest.TelegramUserName,
+                emlpoyeeDetailsRequest.UserName,
                 emlpoyeeDetailsRequest.FirstName,
                 emlpoyeeDetailsRequest.LastName,
                 emlpoyeeDetailsRequest.Position,
@@ -92,12 +92,13 @@ namespace Timesheets.API.Controllers
 
             var result = await _employeesService.SendTelegramInvite(telergamInvitation.Value);
 
-            if (result == false)
+            if (result.IsFailure)
             {
-                return BadRequest();
+                _logger.LogError("{error}", result.Error);
+                return BadRequest(result.Error);
             }
 
-            await _invitationService.Create(telergamInvitation.Value);
+            await _invitationsService.Create(telergamInvitation.Value);
 
             return Ok();
         }

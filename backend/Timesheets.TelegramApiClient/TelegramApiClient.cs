@@ -11,14 +11,22 @@ namespace Timesheets.TelegramApiClient
         public TelegramApiClient(string token)
         {
             _botClient = new TelegramBotClient(token);
-            _botClient.SetWebhookAsync("").Wait();
         }
 
-        public async Task<bool> SendTelegramInvite(TelegramInvitation invitaion)
+        public async Task<bool> SendTelegramInvite(TelegramInvitation invitaion, long chatId)
         {
             await _botClient.SendTextMessageAsync(
-                chatId: "312433636",
+                chatId: chatId,
                 text: $"Здравствуйте, {invitaion.FirstName} {invitaion.LastName}!\n Код для регистрации - {invitaion.Code}");
+
+            return true;
+        }
+
+        public async Task<bool> SendTelegramReport(long chatId, string message)
+        {
+            await _botClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: message);
 
             return true;
         }

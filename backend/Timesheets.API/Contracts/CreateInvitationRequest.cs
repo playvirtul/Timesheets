@@ -9,7 +9,7 @@ namespace Timesheets.API.Contracts
         [Required]
         [MinLength(TelegramInvitation.MIN_USERNAME_LENGTH)]
         [MaxLength(TelegramInvitation.MAX_USERNAME_LENGTH)]
-        public string TelegramUserName { get; set; }
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(Employee.MAX_FIRSTNAME_LENGTH)]

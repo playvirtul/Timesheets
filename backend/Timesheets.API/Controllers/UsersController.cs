@@ -15,14 +15,14 @@ namespace Timesheets.API.Controllers
 {
     public class UsersController : BaseController
     {
-        private readonly IInvitationService _invitationService;
+        private readonly IInvitationsService _invitationService;
         private readonly IUsersService _usersService;
         private readonly IEmployeesService _employeesService;
         private readonly ILogger<UsersController> _logger;
         private readonly IMapper _mapper;
 
         public UsersController(
-            IInvitationService invitationService,
+            IInvitationsService invitationService,
             IUsersService usersService,
             IEmployeesService employeesService,
             ILogger<UsersController> logger,
@@ -46,7 +46,7 @@ namespace Timesheets.API.Controllers
                 return BadRequest(invitation.Error);
             }
 
-            var response = _mapper.Map<Invitation, GetInvitationResponse>(invitation.Value);
+            var response = _mapper.Map<TelegramInvitation, GetInvitationResponse>(invitation.Value);
 
             return Ok(response);
         }
@@ -62,7 +62,11 @@ namespace Timesheets.API.Controllers
                 return BadRequest(invitation.Error);
             }
 
-            var userToCreate = Domain.User.Create(userRequest.Email, userRequest.Password, invitation.Value.Role);
+            var userToCreate = Domain.User.Create(
+                userRequest.Email,
+                invitation.Value.UserName,
+                userRequest.Password,
+                invitation.Value.Role);
 
             if (userToCreate.IsFailure)
             {

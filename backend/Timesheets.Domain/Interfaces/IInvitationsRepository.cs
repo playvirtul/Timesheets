@@ -2,9 +2,9 @@
 {
     public interface IInvitationsRepository
     {
-        Task<Invitation?> Get(string code);
+        Task<TelegramInvitation?> Get(string code);
 
-        Task Add(Invitation newInvitation);
+        Task Add(TelegramInvitation newInvitation);
 
         Task Delete(string code);
     }

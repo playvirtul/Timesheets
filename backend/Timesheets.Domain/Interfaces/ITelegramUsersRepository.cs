@@ -1,12 +1,12 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Threading.Tasks;
 using Timesheets.Domain.Telegram;
 
 namespace Timesheets.Domain.Interfaces
 {
-    public interface ITelegramUsersService
+    public interface ITelegramUsersRepository
     {
         Task<int> Create(TelegramUser telegramUser);
 
-        Task<Result<TelegramUser>> Get(string username);
+        Task<TelegramUser?> Get(string userName);
     }
 }

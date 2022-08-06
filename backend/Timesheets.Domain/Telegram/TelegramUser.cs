@@ -4,17 +4,17 @@ namespace Timesheets.Domain.Telegram
 {
     public class TelegramUser
     {
-        private TelegramUser(string userName, string chatId)
+        private TelegramUser(string userName, long chatId)
         {
             UserName = userName;
             ChatId = chatId;
         }
 
-        public string UserName { get; set; }
+        public string UserName { get; }
 
-        public string ChatId { get; set; }
+        public long ChatId { get; }
 
-        public static Result<TelegramUser> Create(string userName, string chatId)
+        public static Result<TelegramUser> Create(string userName, long chatId)
         {
             return new TelegramUser(userName, chatId);
         }

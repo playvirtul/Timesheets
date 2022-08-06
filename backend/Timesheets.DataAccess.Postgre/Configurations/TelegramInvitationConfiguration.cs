@@ -4,13 +4,15 @@ using Timesheets.DataAccess.Postgre.Entities;
 
 namespace Timesheets.DataAccess.Postgre.Configurations
 {
-    public class InvitationConfiguration : IEntityTypeConfiguration<Invitation>
+    public class TelegramInvitationConfiguration : IEntityTypeConfiguration<TelegramInvitation>
     {
-        public void Configure(EntityTypeBuilder<Invitation> builder)
+        public void Configure(EntityTypeBuilder<TelegramInvitation> builder)
         {
             builder.HasKey(i => i.Id);
 
             builder.HasIndex(i => i.Code).IsUnique();
+
+            builder.Property(i => i.UserName).IsRequired();
 
             builder.Property(i => i.FirstName).IsRequired().HasMaxLength(Domain.Employee.MAX_FIRSTNAME_LENGTH);
 

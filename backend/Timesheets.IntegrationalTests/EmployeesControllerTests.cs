@@ -40,7 +40,7 @@ namespace Timesheets.IntegrationalTests
 
             var telegramEmployeeDetails = new CreateInvitationRequest
             {
-                TelegramUserName = "testUser",
+                UserName = "testUser",
                 FirstName = fixture.Create<string>(),
                 LastName = fixture.Create<string>(),
                 Position = fixture.Create<Position>(),

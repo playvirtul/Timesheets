@@ -8,11 +8,6 @@ namespace Timesheets.Domain
         public const int MIN_USERNAME_LENGTH = 5;
         public const int MAX_USERNAME_LENGTH = 32;
 
-        private TelegramInvitation(string firstName, string lastName, Position position, Role role)
-            : base(firstName, lastName, position, role)
-        {
-        }
-
         private TelegramInvitation(string userName, string firstName, string lastName, Position position, Role role)
             : base(firstName, lastName, position, role)
         {

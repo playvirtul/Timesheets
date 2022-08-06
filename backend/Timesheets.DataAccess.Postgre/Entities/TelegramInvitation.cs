@@ -3,7 +3,7 @@ using Timesheets.Domain.Auth;
 
 namespace Timesheets.DataAccess.Postgre.Entities
 {
-    public class Invitation
+    public class TelegramInvitation
     {
         public int Id { get; set; }
 
@@ -16,5 +16,7 @@ namespace Timesheets.DataAccess.Postgre.Entities
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
+
+        public string? UserName { get; set; }
     }
 }
