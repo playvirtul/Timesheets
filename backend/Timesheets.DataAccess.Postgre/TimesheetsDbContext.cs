@@ -7,13 +7,13 @@ namespace Timesheets.DataAccess.Postgre
     public class TimesheetsDbContext : DbContext
     {
         public TimesheetsDbContext(DbContextOptions<TimesheetsDbContext> options)
-            : base(options)
+            :base(options)
         {
         }
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Invitation> Invitations { get; set; }
+        public DbSet<TelegramInvitation> TelegramInvitations { get; set; }
 
         public DbSet<Project> Projects { get; set; }
 
@@ -32,7 +32,7 @@ namespace Timesheets.DataAccess.Postgre
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new SalaryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new InvitationConfiguration());
+            modelBuilder.ApplyConfiguration(new TelegramInvitationConfiguration());
             modelBuilder.ApplyConfiguration(new TelegramUserConfiguration());
 
             base.OnModelCreating(modelBuilder);

@@ -17,18 +17,18 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task Add(Domain.Invitation newInvitation)
+        public async Task Add(Domain.TelegramInvitation newInvitation)
         {
-            var invitation = _mapper.Map<Domain.Invitation, Invitation>(newInvitation);
+            var invitation = _mapper.Map<Domain.TelegramInvitation, TelegramInvitation>(newInvitation);
 
-            _context.Invitations.Add(invitation);
+            _context.TelegramInvitations.Add(invitation);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Domain.Invitation?> Get(string code)
+        public async Task<Domain.TelegramInvitation?> Get(string code)
         {
-            var invitationEntity = await _context.Invitations
+            var invitationEntity = await _context.TelegramInvitations
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Code == code);
 
@@ -37,20 +37,20 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 return null;
             }
 
-            var invitation = _mapper.Map<Invitation, Domain.TelegramInvitation>(invitationEntity);
+            var invitation = _mapper.Map<TelegramInvitation, Domain.TelegramInvitation>(invitationEntity);
 
             return invitation;
         }
 
         public async Task Delete(string code)
         {
-            var invitationEntity = await _context.Invitations
+            var invitationEntity = await _context.TelegramInvitations
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Code == code);
 
             if (invitationEntity != null)
             {
-                _context.Invitations.Remove(invitationEntity);
+                _context.TelegramInvitations.Remove(invitationEntity);
             }
 
             await _context.SaveChangesAsync();

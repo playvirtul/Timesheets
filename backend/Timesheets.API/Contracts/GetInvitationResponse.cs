@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Timesheets.Domain;
-using Timesheets.Domain.Auth;
+﻿using Timesheets.Domain;
 
 namespace Timesheets.API.Contracts
 {
-
     public class GetInvitationResponse
     {
         public string FirstName { get; set; }

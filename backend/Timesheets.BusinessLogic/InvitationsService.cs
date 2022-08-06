@@ -5,7 +5,7 @@ using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.BusinessLogic
 {
-    public class InvitationsService : IInvitationService
+    public class InvitationsService : IInvitationsService
     {
         private readonly IInvitationsRepository _invitationsRepository;
 
@@ -14,18 +14,18 @@ namespace Timesheets.BusinessLogic
             _invitationsRepository = invitationRepository;
         }
 
-        public async Task Create(Invitation invitation)
+        public async Task Create(TelegramInvitation invitation)
         {
             await _invitationsRepository.Add(invitation);
         }
 
-        public async Task<Result<Invitation>> Get(string code)
+        public async Task<Result<TelegramInvitation>> Get(string code)
         {
             var invitation = await _invitationsRepository.Get(code);
 
             if (invitation == null)
             {
-                return Result.Failure<Invitation>("no invitation with this code");
+                return Result.Failure<TelegramInvitation>("no invitation with this code");
             }
 
             return invitation;

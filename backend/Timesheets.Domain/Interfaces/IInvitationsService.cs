@@ -2,10 +2,10 @@
 
 namespace Timesheets.Domain.Interfaces
 {
-    public interface IInvitationService
+    public interface IInvitationsService
     {
-        Task Create(Invitation invitation);
+        Task Create(TelegramInvitation invitation);
 
-        Task<Result<Invitation>> Get(string code);
+        Task<Result<TelegramInvitation>> Get(string code);
     }
 }

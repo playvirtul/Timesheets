@@ -1,4 +1,5 @@
-﻿using Timesheets.Domain.Auth;
+﻿using System.Text;
+using Timesheets.Domain.Auth;
 
 namespace Timesheets.Domain
 {
@@ -25,7 +26,11 @@ namespace Timesheets.Domain
 
         protected string GenerateCode()
         {
-            return Guid.NewGuid().ToString();
+            var guidStr = Guid.NewGuid().ToString();
+
+            var guidBytes = Encoding.UTF8.GetBytes(guidStr);
+
+            return Convert.ToBase64String(guidBytes);
         }
     }
 }

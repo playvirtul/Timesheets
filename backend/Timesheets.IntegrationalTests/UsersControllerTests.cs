@@ -38,8 +38,8 @@ namespace Timesheets.IntegrationalTests
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
 
-                dbContext.Invitations
-                    .Add(new Entities.Invitation
+                dbContext.TelegramInvitations
+                    .Add(new Entities.TelegramInvitation
                     {
                         Id = fixture.Create<int>(),
                         FirstName = fixture.Create<string>(),

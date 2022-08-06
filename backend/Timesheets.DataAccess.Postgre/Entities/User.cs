@@ -8,6 +8,8 @@ namespace Timesheets.DataAccess.Postgre.Entities
 
         public string? Email { get; set; }
 
+        public string? TelegramUserName { get; set; }
+
         public string? PasswordHash { get; set; }
 
         public Role Role { get; set; }

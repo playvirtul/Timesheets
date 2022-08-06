@@ -13,6 +13,8 @@ namespace Timesheets.API
             CreateMap<Employee, GetEmployeeResponse>();
 
             CreateMap<Salary, GetSalaryResponse>();
+
+            CreateMap<Invitation, GetInvitationResponse>();
         }
     }
 }

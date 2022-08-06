@@ -6,6 +6,8 @@
 
         Task<User?> Get(string email);
 
+        Task<Domain.User?> Get(int id);
+
         Task<User?> Get(string email, string passwordHash);
 
         Task<int> Add(User user);

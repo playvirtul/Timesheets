@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Auth;
@@ -53,6 +52,18 @@ namespace Timesheets.BusinessLogic
             if (user == null)
             {
                 return Result.Failure<User>("No user with this email");
+            }
+
+            return user;
+        }
+
+        public async Task<Result<User>> Get(int id)
+        {
+            var user = await _usersRepository.Get(id);
+
+            if (user == null)
+            {
+                return Result.Failure<User>("No user with this id");
             }
 
             return user;

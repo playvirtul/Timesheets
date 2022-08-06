@@ -8,11 +8,16 @@ namespace Timesheets.BusinessLogic
     public class EmployeesService : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository;
+        private readonly ITelegramUsersRepository _telegramUsersRepository;
         private readonly ITelegramApiClient _telegramApiClient;
 
-        public EmployeesService(IEmployeesRepository employeesRepository, ITelegramApiClient telegramApiClient)
+        public EmployeesService(
+            IEmployeesRepository employeesRepository,
+            ITelegramUsersRepository telegramUsersRepositorym,
+            ITelegramApiClient telegramApiClient)
         {
             _employeesRepository = employeesRepository;
+            _telegramUsersRepository = telegramUsersRepositorym;
             _telegramApiClient = telegramApiClient;
         }
 
@@ -21,9 +26,16 @@ namespace Timesheets.BusinessLogic
             return await _employeesRepository.Add(employee);
         }
 
-        public async Task<bool> SendTelegramInvite(TelegramInvitation invitation)
+        public async Task<Result<bool>> SendTelegramInvite(TelegramInvitation invitation)
         {
-            return await _telegramApiClient.SendTelegramInvite(invitation);
+            var telegramUser = await _telegramUsersRepository.Get(invitation.UserName);
+
+            if (telegramUser == null)
+            {
+                return Result.Failure<bool>("The user is not yet registered in telegram");
+            }
+
+            return await _telegramApiClient.SendTelegramInvite(invitation, telegramUser.ChatId);
         }
 
         public async Task<Employee[]> Get()
