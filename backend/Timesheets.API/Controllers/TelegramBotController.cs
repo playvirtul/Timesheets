@@ -19,7 +19,7 @@ namespace Timesheets.API.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
+        [HttpPost("/TelegramUsers")]
         public async Task<IActionResult> Update([FromBody] Update update)
         {
             if (update.Type == UpdateType.Message)

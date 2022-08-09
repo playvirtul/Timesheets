@@ -13,11 +13,11 @@ namespace Timesheets.BusinessLogic
 
         public EmployeesService(
             IEmployeesRepository employeesRepository,
-            ITelegramUsersRepository telegramUsersRepositorym,
+            ITelegramUsersRepository telegramUsersRepository,
             ITelegramApiClient telegramApiClient)
         {
             _employeesRepository = employeesRepository;
-            _telegramUsersRepository = telegramUsersRepositorym;
+            _telegramUsersRepository = telegramUsersRepository;
             _telegramApiClient = telegramApiClient;
         }
 

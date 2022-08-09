@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Timesheets.DataAccess.Postgre;
-using Timesheets.Domain.Interfaces;
-
 namespace Timesheets.WorkTimeReporter
 {
     public class TelegramReporterWorker : BackgroundService
@@ -22,13 +18,6 @@ namespace Timesheets.WorkTimeReporter
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var scope = _serviceProvider.CreateScope();
-
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
-
-                var employees = await dbContext.Employees
-                    .Include(e => e.User)
-                    .AsNoTracking()
-                    .ToArrayAsync();
 
                 await Task.Delay(5000, stoppingToken);
             }
