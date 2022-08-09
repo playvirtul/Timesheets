@@ -39,41 +39,35 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
             var random = new Random();
-            var projectId = 0;
-            var employeeId = 0;
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var project = DbContext.Projects
+                .Add(new Entities.Project { Title = fixture.Create<string>() });
 
-                var project = dbContext.Projects
-                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+            var user = DbContext.Users
+               .Add(new Entities.User
+               {
+                   Id = fixture.Create<int>(),
+                   Email = fixture.Create<string>() + "@gmail.com",
+                   PasswordHash = fixture.Create<string>(),
+                   Role = fixture.Create<Role>()
+               });
 
-                var user = dbContext.Users
-                   .Add(new Entities.User
-                   {
-                       Id = fixture.Create<int>(),
-                       Email = fixture.Create<string>() + "@gmail.com",
-                       PasswordHash = fixture.Create<string>(),
-                       Role = fixture.Create<Role>()
-                   });
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
+                {
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
+                });
 
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
+            employee.Entity.Projects.Add(project.Entity);
 
-                employee.Entity.Projects.Add(project.Entity);
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
-                await dbContext.SaveChangesAsync();
-
-                projectId = project.Entity.Id;
-                employeeId = employee.Entity.Id;
-            }
+            var projectId = project.Entity.Id;
+            var employeeId = employee.Entity.Id;
 
             var workTime = new CreateWorkTimeRequest
             {
@@ -82,7 +76,7 @@ namespace Timesheets.IntegrationalTests
                 EmployeeId = employeeId
             };
 
-            var url = $"api/v1/projects/workTime";
+            var url = $"api/v1/projects/{projectId}/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);
@@ -97,39 +91,33 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
             var random = new Random();
-            var projectId = 0;
-            var employeeId = 0;
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var project = DbContext.Projects
+                .Add(new Entities.Project { Title = fixture.Create<string>() });
 
-                var project = dbContext.Projects
-                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+            var user = DbContext.Users
+               .Add(new Entities.User
+               {
+                   Id = fixture.Create<int>(),
+                   Email = fixture.Create<string>() + "@gmail.com",
+                   PasswordHash = fixture.Create<string>(),
+                   Role = fixture.Create<Role>()
+               });
 
-                var user = dbContext.Users
-                   .Add(new Entities.User
-                   {
-                       Id = fixture.Create<int>(),
-                       Email = fixture.Create<string>() + "@gmail.com",
-                       PasswordHash = fixture.Create<string>(),
-                       Role = fixture.Create<Role>()
-                   });
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
+                {
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
+                });
 
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
-                await dbContext.SaveChangesAsync();
-
-                projectId = project.Entity.Id;
-                employeeId = employee.Entity.Id;
-            }
+            var projectId = project.Entity.Id;
+            var employeeId = employee.Entity.Id;
 
             var workTime = new CreateWorkTimeRequest
             {
@@ -138,7 +126,7 @@ namespace Timesheets.IntegrationalTests
                 EmployeeId = employeeId
             };
 
-            var url = $"api/v1/projects/workTime";
+            var url = $"api/v1/projects/{projectId}/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);
@@ -153,39 +141,33 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
             var random = new Random();
-            var projectId = 0;
-            var employeeId = 0;
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var project = DbContext.Projects
+                .Add(new Entities.Project { Title = fixture.Create<string>() });
 
-                var project = dbContext.Projects
-                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+            var user = DbContext.Users
+               .Add(new Entities.User
+               {
+                   Id = fixture.Create<int>(),
+                   Email = fixture.Create<string>() + "@gmail.com",
+                   PasswordHash = fixture.Create<string>(),
+                   Role = fixture.Create<Role>()
+               });
 
-                var user = dbContext.Users
-                   .Add(new Entities.User
-                   {
-                       Id = fixture.Create<int>(),
-                       Email = fixture.Create<string>() + "@gmail.com",
-                       PasswordHash = fixture.Create<string>(),
-                       Role = fixture.Create<Role>()
-                   });
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
+                {
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
+                });
 
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
-                await dbContext.SaveChangesAsync();
-
-                projectId = project.Entity.Id;
-                employeeId = employee.Entity.Id;
-            }
+            var projectId = project.Entity.Id;
+            var employeeId = employee.Entity.Id;
 
             var workTime = new CreateWorkTimeRequest
             {
@@ -194,7 +176,7 @@ namespace Timesheets.IntegrationalTests
                 EmployeeId = employeeId
             };
 
-            var url = $"api/v1/projects/workTime";
+            var url = $"api/v1/projects/{projectId}/workTime";
 
             // act
             var response = await Client.PostAsJsonAsync(url, workTime);

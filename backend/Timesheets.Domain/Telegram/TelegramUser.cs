@@ -2,7 +2,7 @@
 
 namespace Timesheets.Domain.Telegram
 {
-    public class TelegramUser
+    public record TelegramUser
     {
         private TelegramUser(string userName, long chatId)
         {

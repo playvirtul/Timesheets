@@ -42,7 +42,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             return invitation;
         }
 
-        public async Task Delete(string code)
+        public async Task Accept(string code)
         {
             var invitationEntity = await _context.TelegramInvitations
                 .AsNoTracking()

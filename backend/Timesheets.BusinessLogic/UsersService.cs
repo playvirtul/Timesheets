@@ -40,7 +40,7 @@ namespace Timesheets.BusinessLogic
                 return Result.Failure<int>("User with this email already exists");
             }
 
-            await _invitationRepository.Delete(code);
+            await _invitationRepository.Accept(code);
 
             return await _usersRepository.Add(userRequest);
         }

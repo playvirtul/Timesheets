@@ -30,6 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheets.TelegramApiClien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timesheets.WorkTimeReporter", "Timesheets.WorkTimeReporter\Timesheets.WorkTimeReporter.csproj", "{9594254C-D79F-45E9-BD41-752C57CA9CD1}"
 	ProjectSection(ProjectDependencies) = postProject
+		{4DCBADB9-5D50-40E6-A49B-50427BC7D3EC} = {4DCBADB9-5D50-40E6-A49B-50427BC7D3EC}
 		{5A488A2C-5199-46F4-AD92-DF4793C07AC3} = {5A488A2C-5199-46F4-AD92-DF4793C07AC3}
 	EndProjectSection
 EndProject

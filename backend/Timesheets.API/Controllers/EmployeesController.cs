@@ -74,7 +74,7 @@ namespace Timesheets.API.Controllers
         /// </summary>
         /// <param name="emlpoyeeDetailsRequest"></param>
         /// <returns></returns>
-        [HttpPost("telegramInvitation/employeeDetails")]
+        [HttpPost("telegramInvitation")]
         public async Task<IActionResult> SendTelegramInvite([FromBody] CreateInvitationRequest emlpoyeeDetailsRequest)
         {
             var telergamInvitation = TelegramInvitation.Create(

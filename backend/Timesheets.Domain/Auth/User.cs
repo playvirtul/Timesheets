@@ -3,7 +3,7 @@ using Timesheets.Domain.Auth;
 
 namespace Timesheets.Domain
 {
-    public class User
+    public record User
     {
         public int Id { get; }
 

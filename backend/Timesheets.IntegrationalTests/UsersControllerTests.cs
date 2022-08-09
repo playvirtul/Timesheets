@@ -34,23 +34,20 @@ namespace Timesheets.IntegrationalTests
                 ConfirmPassword = password
             };
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            DbContext.TelegramInvitations
+                .Add(new Entities.TelegramInvitation
+                {
+                    Id = fixture.Create<int>(),
+                    UserName = fixture.Create<string>(),
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>(),
+                    Role = fixture.Create<Role>(),
+                    Code = code
+                });
 
-                dbContext.TelegramInvitations
-                    .Add(new Entities.TelegramInvitation
-                    {
-                        Id = fixture.Create<int>(),
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>(),
-                        Role = fixture.Create<Role>(),
-                        Code = code
-                    });
-
-                await dbContext.SaveChangesAsync();
-            }
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
             // act
             var response = await Client.PostAsJsonAsync($"api/v1/users?code={code}", newUser);
@@ -68,20 +65,16 @@ namespace Timesheets.IntegrationalTests
             var password = fixture.Create<string>();
             var passwordHash = new Password(password).Hash();
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            DbContext.Users
+                .Add(new Entities.User
+                {
+                    Id = fixture.Create<int>(),
+                    Email = email,
+                    PasswordHash = passwordHash
+                });
 
-                dbContext.Users
-                    .Add(new Entities.User
-                    {
-                        Id = fixture.Create<int>(),
-                        Email = email,
-                        PasswordHash = passwordHash
-                    });
-
-                await dbContext.SaveChangesAsync();
-            }
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
             var loginInfo = new CreateLoginRequest
             {

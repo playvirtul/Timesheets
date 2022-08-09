@@ -14,6 +14,10 @@ namespace Timesheets.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseDefaultServiceProvider((context, options) =>
+                {
+                    options.ValidateOnBuild = false;
+                })
                 .UseSerilog((context, services, configuration) =>
                 {
                     configuration

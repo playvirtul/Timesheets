@@ -38,9 +38,18 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
 
-            var telegramEmployeeDetails = new CreateInvitationRequest
+            DbContext.TelegramUsers.Add(new Entities.TelegramUser
             {
-                UserName = "testUser",
+                UserName = "playvirtul",
+                ChatId = 312433636
+            });
+
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
+
+            var invitationRequest = new CreateInvitationRequest
+            {
+                UserName = "playvirtul",
                 FirstName = fixture.Create<string>(),
                 LastName = fixture.Create<string>(),
                 Position = fixture.Create<Position>(),
@@ -49,59 +58,11 @@ namespace Timesheets.IntegrationalTests
 
             // act
             var responce = await Client
-                .PostAsJsonAsync("api/v1/employees/telegramInvitation/employeeDetails", telegramEmployeeDetails);
+                .PostAsJsonAsync("api/v1/employees/telegramInvitation", invitationRequest);
 
             // assert
             responce.EnsureSuccessStatusCode();
         }
-
-        //[Fact]
-        //public async Task Create_ShouldCreateEmployee()
-        //{
-        //    // arrange
-        //    var fixture = new Fixture();
-
-        //    var employee = new TelegramEmlpoyeeDetails
-        //    {
-        //        FirstName = fixture.Create<string>(),
-        //        LastName = fixture.Create<string>(),
-        //        Position = fixture.Create<Position>()
-        //    };
-
-        //    // act
-        //    var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
-
-        //    // assert
-        //    response.EnsureSuccessStatusCode();
-
-        //    var employeeId = await response.Content.ReadFromJsonAsync<int>();
-
-        //    Assert.NotEqual(default(int), employeeId);
-        //}
-
-        //[Theory]
-        //[InlineData("", "")]
-        //[InlineData(" ", " ")]
-        //[InlineData("     ", "     ")]
-        //[InlineData(null, null)]
-        //public async Task Create_InvalidEmployeeName_ShouldReturnBadRequest(string invalidFirstName, string invalidLastName)
-        //{
-        //    var fixture = new Fixture();
-
-        //    // arrange
-        //    var employee = new TelegramEmlpoyeeDetails
-        //    {
-        //        FirstName = invalidFirstName,
-        //        LastName = invalidLastName,
-        //        Position = fixture.Create<Position>()
-        //    };
-
-        //    // act
-        //    var response = await Client.PostAsJsonAsync("api/v1/employees", employee);
-
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //}
 
         [Fact]
         public async Task Save_ShouldCreateSalary()
@@ -116,34 +77,28 @@ namespace Timesheets.IntegrationalTests
                 SalaryType = fixture.Create<SalaryType>()
             };
 
-            var employeeId = 0;
+            var user = DbContext.Users
+                .Add(new Entities.User
+                {
+                    Id = fixture.Create<int>(),
+                    Email = fixture.Create<string>() + "@gmail.com",
+                    PasswordHash = fixture.Create<string>(),
+                    Role = fixture.Create<Role>()
+                });
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
+                {
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
+                });
 
-                var user = dbContext.Users
-                    .Add(new Entities.User
-                    {
-                        Id = fixture.Create<int>(),
-                        Email = fixture.Create<string>() + "@gmail.com",
-                        PasswordHash = fixture.Create<string>(),
-                        Role = fixture.Create<Role>()
-                    });
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
-
-                await dbContext.SaveChangesAsync();
-
-                employeeId = employee.Entity.Id;
-            }
+            var employeeId = employee.Entity.Id;
 
             // act
             var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
@@ -171,40 +126,36 @@ namespace Timesheets.IntegrationalTests
 
             var employeeId = 0;
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var user = DbContext.Users
+               .Add(new Entities.User
+               {
+                   Id = fixture.Create<int>(),
+                   Email = fixture.Create<string>() + "@gmail.com",
+                   PasswordHash = fixture.Create<string>(),
+                   Role = fixture.Create<Role>()
+               });
 
-                var user = dbContext.Users
-                   .Add(new Entities.User
-                   {
-                       Id = fixture.Create<int>(),
-                       Email = fixture.Create<string>() + "@gmail.com",
-                       PasswordHash = fixture.Create<string>(),
-                       Role = fixture.Create<Role>()
-                   });
-
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
-
-                dbContext.Salaries.Add(new Entities.Salary
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
                 {
-                    Amount = fixture.Create<decimal>(),
-                    Bonus = 0,
-                    SalaryType = fixture.Create<SalaryType>(),
-                    Employee = employee.Entity
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
                 });
 
-                await dbContext.SaveChangesAsync();
+            DbContext.Salaries.Add(new Entities.Salary
+            {
+                Amount = fixture.Create<decimal>(),
+                Bonus = 0,
+                SalaryType = fixture.Create<SalaryType>(),
+                Employee = employee.Entity
+            });
 
-                employeeId = employee.Entity.Id;
-            }
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
+
+            employeeId = employee.Entity.Id;
 
             // act
             var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
@@ -224,44 +175,39 @@ namespace Timesheets.IntegrationalTests
             var fixture = new Fixture();
             var random = new Random();
 
-            var employeeId = 0;
             var month = random.Next(1, 13);
             var year = DateTime.Now.Year;
 
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var user = DbContext.Users
+               .Add(new Entities.User
+               {
+                   Id = fixture.Create<int>(),
+                   Email = fixture.Create<string>() + "@gmail.com",
+                   PasswordHash = fixture.Create<string>(),
+                   Role = fixture.Create<Role>()
+               });
 
-                var user = dbContext.Users
-                   .Add(new Entities.User
-                   {
-                       Id = fixture.Create<int>(),
-                       Email = fixture.Create<string>() + "@gmail.com",
-                       PasswordHash = fixture.Create<string>(),
-                       Role = fixture.Create<Role>()
-                   });
-
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
-
-                dbContext.Salaries.Add(new Entities.Salary
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
                 {
-                    Amount = fixture.Create<decimal>(),
-                    Bonus = 0,
-                    SalaryType = fixture.Create<SalaryType>(),
-                    Employee = employee.Entity
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
                 });
 
-                await dbContext.SaveChangesAsync();
+            DbContext.Salaries.Add(new Entities.Salary
+            {
+                Amount = fixture.Create<decimal>(),
+                Bonus = 0,
+                SalaryType = fixture.Create<SalaryType>(),
+                Employee = employee.Entity
+            });
 
-                employeeId = employee.Entity.Id;
-            }
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
+
+            var employeeId = employee.Entity.Id;
 
             var url = $"api/v1/employees/{employeeId}/salary-calculation?month={month}&year={year}";
 
@@ -276,40 +222,34 @@ namespace Timesheets.IntegrationalTests
         public async Task BindProject_ValidEmployeeIdAndProjectId_ShouldBindProjectWithEmployee()
         {
             var fixture = new Fixture();
-            var employeeId = 0;
-            var projectId = 0;
 
             // arrange
-            using (var scope = Application.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<TimesheetsDbContext>();
+            var project = DbContext.Projects
+                .Add(new Entities.Project { Title = fixture.Create<string>() });
 
-                var project = dbContext.Projects
-                    .Add(new Entities.Project { Title = fixture.Create<string>() });
+            var user = DbContext.Users
+                .Add(new Entities.User
+                {
+                    Id = fixture.Create<int>(),
+                    Email = fixture.Create<string>() + "@gmail.com",
+                    PasswordHash = fixture.Create<string>(),
+                    Role = fixture.Create<Role>()
+                });
 
-                var user = dbContext.Users
-                    .Add(new Entities.User
-                    {
-                        Id = fixture.Create<int>(),
-                        Email = fixture.Create<string>() + "@gmail.com",
-                        PasswordHash = fixture.Create<string>(),
-                        Role = fixture.Create<Role>()
-                    });
+            var employee = DbContext.Employees
+                .Add(new Entities.Employee
+                {
+                    Id = user.Entity.Id,
+                    FirstName = fixture.Create<string>(),
+                    LastName = fixture.Create<string>(),
+                    Position = fixture.Create<Position>()
+                });
 
-                var employee = dbContext.Employees
-                    .Add(new Entities.Employee
-                    {
-                        Id = user.Entity.Id,
-                        FirstName = fixture.Create<string>(),
-                        LastName = fixture.Create<string>(),
-                        Position = fixture.Create<Position>()
-                    });
+            await DbContext.SaveChangesAsync();
+            DbContext.ChangeTracker.Clear();
 
-                await dbContext.SaveChangesAsync();
-
-                employeeId = employee.Entity.Id;
-                projectId = project.Entity.Id;
-            }
+            var employeeId = employee.Entity.Id;
+            var projectId = project.Entity.Id;
 
             // act
             var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/project", projectId);

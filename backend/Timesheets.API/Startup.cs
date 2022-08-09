@@ -116,14 +116,14 @@ namespace Timesheets.API
 
             services.AddHostedService<ConfigureWebhook>();
 
-            var botConfig = Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+            var botConfig = Configuration.GetSection(nameof(BotConfiguration)).Get<BotConfiguration>();
 
-            services.AddHttpClient("tgwebhook")
+            services.AddHttpClient(nameof(TelegramBotClient))
                 .AddTypedClient<ITelegramBotClient>(httpClient => new TelegramBotClient(botConfig.BotToken, httpClient));
 
             services.AddScoped<ITelegramApiClient, TelegramApiClient.TelegramApiClient>(x =>
             {
-                var token = Configuration.GetSection("BotConfiguration").Get<BotConfiguration>().BotToken;
+                var token = Configuration.GetSection(nameof(BotConfiguration)).Get<BotConfiguration>().BotToken;
 
                 return new TelegramApiClient.TelegramApiClient(token);
             });
