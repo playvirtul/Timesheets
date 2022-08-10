@@ -11,5 +11,7 @@ namespace Timesheets.Domain.Interfaces
         Task<Result<User>> Get(string email);
 
         Task<Result<User>> Get(int id);
+
+        Task<User[]> Get();
     }
 }

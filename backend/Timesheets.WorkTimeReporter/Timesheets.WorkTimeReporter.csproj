@@ -10,4 +10,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Timesheets.BusinessLogic\Timesheets.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Timesheets.DataAccess.Postgre\Timesheets.DataAccess.Postgre.csproj" />
+    <ProjectReference Include="..\Timesheets.Domain\Timesheets.Domain.csproj" />
+    <ProjectReference Include="..\Timesheets.TelegramApiClient\Timesheets.TelegramApiClient.csproj" />
+  </ItemGroup>
 </Project>

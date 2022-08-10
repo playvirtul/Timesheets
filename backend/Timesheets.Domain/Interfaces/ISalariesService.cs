@@ -8,6 +8,6 @@ namespace Timesheets.Domain.Interfaces
 
         Task<Result<Salary>> Get(int employeeId);
 
-        Task<decimal> SalaryCalculation(int employeeId, int month, int year);
+        Task<Result<Report>> SalaryCalculation(int employeeId, int month, int year);
     }
 }

@@ -68,5 +68,12 @@ namespace Timesheets.BusinessLogic
 
             return user;
         }
+
+        public async Task<User[]> Get()
+        {
+            var users = await _usersRepository.Get();
+
+            return users;
+        }
     }
 }

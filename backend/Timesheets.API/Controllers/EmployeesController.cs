@@ -157,9 +157,15 @@ namespace Timesheets.API.Controllers
             [FromQuery, Range(1, 12)] int month,
             [FromQuery] int year)
         {
-            var amountSalary = await _salariesService.SalaryCalculation(employeeId, month, year);
+            var report = await _salariesService.SalaryCalculation(employeeId, month, year);
 
-            return Ok(amountSalary);
+            if (report.IsFailure)
+            {
+                _logger.LogError("{errors}", report.Error);
+                return BadRequest(report.Error);
+            }
+
+            return Ok(report.Value.SalaryAmount);
         }
     }
 }

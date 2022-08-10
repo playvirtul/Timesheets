@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using System.Linq;
 using System.Threading.Tasks;
 using Timesheets.Domain;
 using Timesheets.Domain.Interfaces;
@@ -33,23 +34,30 @@ namespace Timesheets.BusinessLogic
             return await _salariesRepository.Save(salary);
         }
 
-        public async Task<decimal> SalaryCalculation(int employeeId, int month, int year)
+        public async Task<Result<Report>> SalaryCalculation(int employeeId, int month, int year)
         {
             if (month < 1 || month > 12)
             {
-                return default(decimal);
+                return Result.Failure<Report>("The number of months must be between 1 and 12");
             }
 
             var salary = await _salariesRepository.Get(employeeId);
 
             if (salary == null)
             {
-                return default;
+                return Result.Failure<Report>("An employee with this id has no salary");
             }
 
             var workTimesPerMonth = await _workTimesRepository.Get(employeeId, month, year);
 
-            return salary.SalaryCalculation(workTimesPerMonth);
+            var hoursPerMonth = workTimesPerMonth.Sum(x => x.Hours);
+            var salaryAmountPerMonth = salary.SalaryCalculation(workTimesPerMonth);
+
+            return new Report
+            {
+                Hours = hoursPerMonth,
+                SalaryAmount = salaryAmountPerMonth
+            };
         }
     }
 }

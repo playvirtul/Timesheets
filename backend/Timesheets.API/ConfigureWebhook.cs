@@ -25,12 +25,12 @@ namespace Timesheets.API
             using var scope = _services.CreateScope();
             var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            var webhookAddress = $"{_botConfig.HostAddress}/api/v1/telegrambot";
+            var webhookAddress = $"{_botConfig.HostAddress}/api/v1/TelegramUsers";
 
-            //await botClient.SetWebhookAsync(
-            //    url: webhookAddress,
-            //    allowedUpdates: Array.Empty<UpdateType>(),
-            //    cancellationToken: cancellationToken);
+            await botClient.SetWebhookAsync(
+                url: webhookAddress,
+                allowedUpdates: Array.Empty<UpdateType>(),
+                cancellationToken: cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
