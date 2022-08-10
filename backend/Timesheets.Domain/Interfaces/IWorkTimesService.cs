@@ -7,7 +7,5 @@ namespace Timesheets.Domain.Interfaces
         Task<Result<int>> Add(WorkTime workTime);
 
         Task<WorkTime[]> Get(int employeeId);
-
-        Task<WorkTime[]> GetReport(int employeeId);
     }
 }

@@ -24,14 +24,6 @@ namespace Timesheets.BusinessLogic
             return workTimes;
         }
 
-        public async Task<WorkTime[]> GetReport(int employeeId)
-        {
-            var workTimes = await _workTimesRepository
-                .Get(employeeId, DateTime.Now.Month, DateTime.Now.Year);
-
-            return workTimes;
-        }
-
         public async Task<Result<int>> Add(WorkTime workTime)
         {
             var employee = await _employeesRepository.Get(workTime.EmployeeId);
