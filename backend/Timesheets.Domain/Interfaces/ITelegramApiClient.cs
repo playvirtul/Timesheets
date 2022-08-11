@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Timesheets.Domain.Telegram;
 
 namespace Timesheets.Domain.Interfaces
 {
