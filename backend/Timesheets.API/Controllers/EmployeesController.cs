@@ -90,15 +90,21 @@ namespace Timesheets.API.Controllers
                 return BadRequest(telergamInvitation.Error);
             }
 
-            var result = await _employeesService.SendTelegramInvite(telergamInvitation.Value);
+            var inviteStatus = await _employeesService.SendTelegramInvite(telergamInvitation.Value);
 
-            if (result.IsFailure)
+            if (inviteStatus.IsFailure)
             {
-                _logger.LogError("{error}", result.Error);
-                return BadRequest(result.Error);
+                _logger.LogError("{error}", inviteStatus.Error);
+                return BadRequest(inviteStatus.Error);
             }
 
-            await _invitationsService.Create(telergamInvitation.Value);
+            var invitationStatus = await _invitationsService.Create(telergamInvitation.Value);
+
+            if (invitationStatus.IsFailure)
+            {
+                _logger.LogError("{error}", invitationStatus.Error);
+                return BadRequest(invitationStatus.Error);
+            }
 
             return Ok();
         }

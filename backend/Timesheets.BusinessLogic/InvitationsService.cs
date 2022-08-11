@@ -14,9 +14,9 @@ namespace Timesheets.BusinessLogic
             _invitationsRepository = invitationRepository;
         }
 
-        public async Task Create(TelegramInvitation invitation)
+        public async Task<Result> Create(TelegramInvitation invitation)
         {
-            await _invitationsRepository.Add(invitation);
+            return await _invitationsRepository.Add(invitation);
         }
 
         public async Task<Result<TelegramInvitation>> Get(string code)

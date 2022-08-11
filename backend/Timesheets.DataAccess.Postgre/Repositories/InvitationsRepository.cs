@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Timesheets.DataAccess.Postgre.Entities;
@@ -17,13 +18,25 @@ namespace Timesheets.DataAccess.Postgre.Repositories
             _mapper = mapper;
         }
 
-        public async Task Add(Domain.TelegramInvitation newInvitation)
+        public async Task<Result> Add(Domain.TelegramInvitation newInvitation)
         {
+            var existInvitation = await _context
+                .TelegramInvitations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == newInvitation.UserName);
+
+            if (existInvitation != null)
+            {
+                return Result.Failure("You can't send multiple invitations to the same user");
+            }
+
             var invitation = _mapper.Map<Domain.TelegramInvitation, TelegramInvitation>(newInvitation);
 
             _context.TelegramInvitations.Add(invitation);
 
             await _context.SaveChangesAsync();
+
+            return Result.Success();
         }
 
         public async Task<Domain.TelegramInvitation?> Get(string code)

@@ -4,7 +4,7 @@ namespace Timesheets.Domain.Interfaces
 {
     public interface IEmployeesService
     {
-        Task<Result<bool>> SendTelegramInvite(TelegramInvitation invitation);
+        Task<Result> SendTelegramInvite(TelegramInvitation invitation);
 
         Task<int> Create(Employee employee);
 
