@@ -26,13 +26,13 @@ namespace Timesheets.BusinessLogic
             return await _employeesRepository.Add(employee);
         }
 
-        public async Task<Result<bool>> SendTelegramInvite(TelegramInvitation invitation)
+        public async Task<Result> SendTelegramInvite(TelegramInvitation invitation)
         {
             var telegramUser = await _telegramUsersRepository.Get(invitation.UserName);
 
             if (telegramUser == null)
             {
-                return Result.Failure<bool>("The user is not yet registered in telegram");
+                return Result.Failure("Failed to send invitation by this username");
             }
 
             return await _telegramApiClient.SendTelegramInvite(invitation, telegramUser.ChatId);
