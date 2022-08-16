@@ -9,7 +9,8 @@ using Xunit.Abstractions;
 
 namespace Timesheets.IntegrationalTests
 {
-    public abstract class BaseControllerTests : IClassFixture<DatabaseFixture>
+    [Collection("Database")]
+    public abstract class BaseControllerTests
     {
         public BaseControllerTests(ITestOutputHelper outputHelper)
         {
@@ -29,5 +30,10 @@ namespace Timesheets.IntegrationalTests
         protected HttpClient Client { get; }
 
         protected TimesheetsDbContext DbContext { get; }
+    }
+
+    [CollectionDefinition("Database")]
+    public class DatabaseCollection : IClassFixture<DatabaseFixture>
+    {
     }
 }
