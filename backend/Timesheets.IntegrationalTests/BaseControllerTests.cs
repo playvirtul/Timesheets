@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Linq;
 using System.Net.Http;
 using Timesheets.API;
 using Timesheets.DataAccess.Postgre;
@@ -11,7 +9,8 @@ using Xunit.Abstractions;
 
 namespace Timesheets.IntegrationalTests
 {
-    public abstract class BaseControllerTests : IClassFixture<DatabaseFixture>
+    [Collection("Database")]
+    public abstract class BaseControllerTests
     {
         public BaseControllerTests(ITestOutputHelper outputHelper)
         {
@@ -31,5 +30,10 @@ namespace Timesheets.IntegrationalTests
         protected HttpClient Client { get; }
 
         protected TimesheetsDbContext DbContext { get; }
+    }
+
+    [CollectionDefinition("Database")]
+    public class DatabaseCollection : IClassFixture<DatabaseFixture>
+    {
     }
 }

@@ -32,7 +32,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             var invitation = _mapper.Map<Domain.TelegramInvitation, TelegramInvitation>(newInvitation);
 
-            _context.TelegramInvitations.Add(invitation);
+            await _context.TelegramInvitations.AddAsync(invitation);
 
             await _context.SaveChangesAsync();
 

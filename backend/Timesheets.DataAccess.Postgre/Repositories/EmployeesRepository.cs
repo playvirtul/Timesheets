@@ -55,7 +55,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         {
             var employee = _mapper.Map<Domain.Employee, Employee>(newEmployee);
 
-            _context.Employees.Add(employee);
+            await _context.Employees.AddAsync(employee);
 
             await _context.SaveChangesAsync();
 

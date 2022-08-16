@@ -34,9 +34,9 @@ namespace Timesheets.IntegrationalTests
 
         public string ConnectionString { get; }
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         public async Task DisposeAsync()
@@ -44,6 +44,7 @@ namespace Timesheets.IntegrationalTests
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 await conn.OpenAsync();
+
                 await _checkpoint.Reset(conn);
             }
         }

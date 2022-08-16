@@ -43,7 +43,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
 
             if (salaryEntity == null)
             {
-                _context.Salaries.Add(salaryToSave);
+                await _context.Salaries.AddAsync(salaryToSave);
             }
             else
             {

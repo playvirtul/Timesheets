@@ -1,10 +1,8 @@
 ﻿using AutoFixture;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
-using Timesheets.DataAccess.Postgre;
 using Timesheets.Domain;
 using Timesheets.Domain.Auth;
 using Xunit;
@@ -37,10 +35,11 @@ namespace Timesheets.IntegrationalTests
         {
             // arrange
             var fixture = new Fixture();
+            var userName = "dsfsdfsdfsaf";
 
-            DbContext.TelegramUsers.Add(new Entities.TelegramUser
+            await DbContext.TelegramUsers.AddAsync(new Entities.TelegramUser
             {
-                UserName = "playvirtul",
+                UserName = userName,
                 ChatId = 312433636
             });
 
@@ -49,7 +48,7 @@ namespace Timesheets.IntegrationalTests
 
             var invitationRequest = new CreateInvitationRequest
             {
-                UserName = "playvirtul",
+                UserName = userName,
                 FirstName = fixture.Create<string>(),
                 LastName = fixture.Create<string>(),
                 Position = fixture.Create<Position>(),
@@ -57,11 +56,11 @@ namespace Timesheets.IntegrationalTests
             };
 
             // act
-            var responce = await Client
+            var response = await Client
                 .PostAsJsonAsync("api/v1/employees/telegramInvitation", invitationRequest);
 
             // assert
-            responce.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
         }
 
         [Fact]
@@ -77,8 +76,8 @@ namespace Timesheets.IntegrationalTests
                 SalaryType = fixture.Create<SalaryType>()
             };
 
-            var user = DbContext.Users
-                .Add(new Entities.User
+            var user = await DbContext.Users
+                .AddAsync(new Entities.User
                 {
                     Id = fixture.Create<int>(),
                     Email = fixture.Create<string>() + "@gmail.com",
@@ -86,8 +85,8 @@ namespace Timesheets.IntegrationalTests
                     Role = fixture.Create<Role>()
                 });
 
-            var employee = DbContext.Employees
-                .Add(new Entities.Employee
+            var employee = await DbContext.Employees
+                .AddAsync(new Entities.Employee
                 {
                     Id = user.Entity.Id,
                     FirstName = fixture.Create<string>(),
@@ -124,10 +123,8 @@ namespace Timesheets.IntegrationalTests
                 SalaryType = fixture.Create<SalaryType>()
             };
 
-            var employeeId = 0;
-
-            var user = DbContext.Users
-               .Add(new Entities.User
+            var user = await DbContext.Users
+               .AddAsync(new Entities.User
                {
                    Id = fixture.Create<int>(),
                    Email = fixture.Create<string>() + "@gmail.com",
@@ -135,8 +132,8 @@ namespace Timesheets.IntegrationalTests
                    Role = fixture.Create<Role>()
                });
 
-            var employee = DbContext.Employees
-                .Add(new Entities.Employee
+            var employee = await DbContext.Employees
+                .AddAsync(new Entities.Employee
                 {
                     Id = user.Entity.Id,
                     FirstName = fixture.Create<string>(),
@@ -144,7 +141,7 @@ namespace Timesheets.IntegrationalTests
                     Position = fixture.Create<Position>()
                 });
 
-            DbContext.Salaries.Add(new Entities.Salary
+            await DbContext.Salaries.AddAsync(new Entities.Salary
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = 0,
@@ -155,7 +152,7 @@ namespace Timesheets.IntegrationalTests
             await DbContext.SaveChangesAsync();
             DbContext.ChangeTracker.Clear();
 
-            employeeId = employee.Entity.Id;
+            var employeeId = employee.Entity.Id;
 
             // act
             var response = await Client.PostAsJsonAsync($"api/v1/employees/{employeeId}/salary", salary);
@@ -178,8 +175,8 @@ namespace Timesheets.IntegrationalTests
             var month = random.Next(1, 13);
             var year = DateTime.Now.Year;
 
-            var user = DbContext.Users
-               .Add(new Entities.User
+            var user = await DbContext.Users
+               .AddAsync(new Entities.User
                {
                    Id = fixture.Create<int>(),
                    Email = fixture.Create<string>() + "@gmail.com",
@@ -187,8 +184,8 @@ namespace Timesheets.IntegrationalTests
                    Role = fixture.Create<Role>()
                });
 
-            var employee = DbContext.Employees
-                .Add(new Entities.Employee
+            var employee = await DbContext.Employees
+                .AddAsync(new Entities.Employee
                 {
                     Id = user.Entity.Id,
                     FirstName = fixture.Create<string>(),
@@ -196,7 +193,7 @@ namespace Timesheets.IntegrationalTests
                     Position = fixture.Create<Position>()
                 });
 
-            DbContext.Salaries.Add(new Entities.Salary
+            await DbContext.Salaries.AddAsync(new Entities.Salary
             {
                 Amount = fixture.Create<decimal>(),
                 Bonus = 0,
@@ -224,11 +221,11 @@ namespace Timesheets.IntegrationalTests
             var fixture = new Fixture();
 
             // arrange
-            var project = DbContext.Projects
-                .Add(new Entities.Project { Title = fixture.Create<string>() });
+            var project = await DbContext.Projects
+                .AddAsync(new Entities.Project { Title = fixture.Create<string>() });
 
-            var user = DbContext.Users
-                .Add(new Entities.User
+            var user = await DbContext.Users
+                .AddAsync(new Entities.User
                 {
                     Id = fixture.Create<int>(),
                     Email = fixture.Create<string>() + "@gmail.com",
@@ -236,8 +233,8 @@ namespace Timesheets.IntegrationalTests
                     Role = fixture.Create<Role>()
                 });
 
-            var employee = DbContext.Employees
-                .Add(new Entities.Employee
+            var employee = await DbContext.Employees
+                .AddAsync(new Entities.Employee
                 {
                     Id = user.Entity.Id,
                     FirstName = fixture.Create<string>(),

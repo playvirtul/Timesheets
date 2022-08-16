@@ -1,11 +1,9 @@
 using AutoFixture;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
-using Timesheets.DataAccess.Postgre;
 using Timesheets.Domain;
 using Timesheets.Domain.Auth;
 using Xunit;
