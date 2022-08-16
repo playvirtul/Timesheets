@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
-using Timesheets.DataAccess.Postgre;
 using Timesheets.Domain;
 using Timesheets.Domain.Auth;
 using Xunit;
@@ -24,7 +22,7 @@ namespace Timesheets.IntegrationalTests
         {
             // arrange
             var fixture = new Fixture();
-            var password = fixture.Create<string>();
+            var password = "Qwerty123";
             var code = fixture.Create<string>();
 
             var newUser = new CreateUserRequest
@@ -34,8 +32,8 @@ namespace Timesheets.IntegrationalTests
                 ConfirmPassword = password
             };
 
-            DbContext.TelegramInvitations
-                .Add(new Entities.TelegramInvitation
+            await DbContext.TelegramInvitations
+                .AddAsync(new Entities.TelegramInvitation
                 {
                     Id = fixture.Create<int>(),
                     UserName = fixture.Create<string>(),
@@ -62,11 +60,11 @@ namespace Timesheets.IntegrationalTests
             // arrange
             var fixture = new Fixture();
             var email = fixture.Create<string>() + "@gmail.com";
-            var password = fixture.Create<string>();
+            var password = "Qwerty123";
             var passwordHash = new Password(password).Hash();
 
-            DbContext.Users
-                .Add(new Entities.User
+            await DbContext.Users
+                .AddAsync(new Entities.User
                 {
                     Id = fixture.Create<int>(),
                     Email = email,

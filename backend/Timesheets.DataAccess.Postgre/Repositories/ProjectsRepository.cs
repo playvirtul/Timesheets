@@ -48,7 +48,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         {
             var project = _mapper.Map<Domain.Project, Project>(newProject);
 
-            _context.Projects.Add(project);
+            await _context.Projects.AddAsync(project);
 
             await _context.SaveChangesAsync();
 

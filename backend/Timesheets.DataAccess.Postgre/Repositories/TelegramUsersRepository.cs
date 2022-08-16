@@ -30,7 +30,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
                 return default;
             }
 
-            _context.TelegramUsers.Add(telegramUserEntity);
+            await _context.TelegramUsers.AddAsync(telegramUserEntity);
 
             await _context.SaveChangesAsync();
 

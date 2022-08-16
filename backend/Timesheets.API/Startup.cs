@@ -66,9 +66,8 @@ namespace Timesheets.API
                 .AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
                 .AddJaegerExporter(options => options.AgentHost = "jaeger")
                 .AddSource(serviceName)
-                .SetResourceBuilder(
-                    ResourceBuilder.CreateDefault()
-                        .AddService(serviceName)));
+                .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                    .AddService(serviceName)));
 
             services.AddSwaggerGen(c =>
             {
