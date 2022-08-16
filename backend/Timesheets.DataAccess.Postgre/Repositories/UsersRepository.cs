@@ -21,7 +21,7 @@ namespace Timesheets.DataAccess.Postgre.Repositories
         {
             var user = _mapper.Map<Domain.User, User>(newUser);
 
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return user.Id;

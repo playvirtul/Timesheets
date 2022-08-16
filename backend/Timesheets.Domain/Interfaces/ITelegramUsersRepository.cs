@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Timesheets.Domain.Telegram;
+﻿using Timesheets.Domain.Telegram;
 
 namespace Timesheets.Domain.Interfaces
 {

@@ -25,7 +25,7 @@ namespace Timesheets.BusinessLogic
 
             if (invitation == null)
             {
-                return Result.Failure<TelegramInvitation>("no invitation with this code");
+                return Result.Failure<TelegramInvitation>("No invitation with this code");
             }
 
             return invitation;

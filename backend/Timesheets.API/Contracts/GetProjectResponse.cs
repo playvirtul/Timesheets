@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Timesheets.Domain;
-
-namespace Timesheets.API.Contracts
+﻿namespace Timesheets.API.Contracts
 {
     public class GetProjectResponse
     {
