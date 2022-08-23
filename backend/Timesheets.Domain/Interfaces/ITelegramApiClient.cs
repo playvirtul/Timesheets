@@ -6,6 +6,6 @@ namespace Timesheets.Domain.Interfaces
     {
         Task<Result> SendTelegramInvite(TelegramInvitation invitaion, long chatId);
 
-        Task<bool> SendTelegramReport(long chatId, string message);
+        Task<bool> SendTelegramMessage(long chatId, string message);
     }
 }

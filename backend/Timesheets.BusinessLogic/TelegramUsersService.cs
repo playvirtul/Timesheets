@@ -8,14 +8,20 @@ namespace Timesheets.BusinessLogic
     public class TelegramUsersService : ITelegramUsersService
     {
         private readonly ITelegramUsersRepository _telegramUserRepository;
+        private readonly Domain.Interfaces.ITelegramApiClient _telegramApiClient;
 
-        public TelegramUsersService(ITelegramUsersRepository telegramUserRepository)
+        public TelegramUsersService(ITelegramUsersRepository telegramUserRepository, ITelegramApiClient telegramApiClient)
         {
             _telegramUserRepository = telegramUserRepository;
+            _telegramApiClient = telegramApiClient;
         }
 
         public async Task<int> Create(TelegramUser telegramUser)
         {
+            await _telegramApiClient.SendTelegramMessage(
+                telegramUser.ChatId,
+                "Вы удачно зарегистрированы в системе! Ожидайте приглашения.");
+
             return await _telegramUserRepository.Create(telegramUser);
         }
 

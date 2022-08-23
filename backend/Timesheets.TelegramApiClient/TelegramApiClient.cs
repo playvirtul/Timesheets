@@ -30,7 +30,7 @@ namespace Timesheets.TelegramApiClient
             return Result.Success();
         }
 
-        public async Task<bool> SendTelegramReport(long chatId, string message)
+        public async Task<bool> SendTelegramMessage(long chatId, string message)
         {
             await _botClient.SendTextMessageAsync(
                 chatId: chatId,
