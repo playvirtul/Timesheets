@@ -14,6 +14,21 @@ namespace Timesheets.API.Controllers
     [Consumes(MediaTypeNames.Application.Json)]
     public class BaseController : ControllerBase
     {
+        protected Result<int> UserId
+        {
+            get
+            {
+                var claim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                if (claim == null)
+                {
+                    return Result.Failure<int>($"{nameof(claim)} cannot be null");
+                }
+
+                return int.Parse(claim.Value);
+            }
+        }
+
         protected Result<Role> UserRole
         {
             get

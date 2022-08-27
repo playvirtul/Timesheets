@@ -113,8 +113,6 @@ namespace Timesheets.API
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
 
-            services.AddHostedService<ConfigureWebhook>();
-
             var botConfig = Configuration.GetSection(nameof(BotConfiguration)).Get<BotConfiguration>();
 
             services.AddHttpClient(nameof(TelegramBotClient))
