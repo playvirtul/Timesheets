@@ -22,6 +22,7 @@ namespace Timesheets.IntegrationalTests
         public async Task Get_ShouldReturnEmployees()
         {
             // arrange
+            await SignInChief();
 
             // act
             var response = await Client.GetAsync("api/v1/employees");
@@ -34,6 +35,8 @@ namespace Timesheets.IntegrationalTests
         public async Task SendTelegramInvite_ShouldSendTelegramInvite()
         {
             // arrange
+            await SignInChief();
+
             var fixture = new Fixture();
             var userName = "dsfsdfsdfsaf";
 
@@ -85,6 +88,8 @@ namespace Timesheets.IntegrationalTests
                     Role = fixture.Create<Role>()
                 });
 
+            await SignInChief(user.Entity.Id);
+
             var employee = await DbContext.Employees
                 .AddAsync(new Entities.Employee
                 {
@@ -131,6 +136,8 @@ namespace Timesheets.IntegrationalTests
                    PasswordHash = fixture.Create<string>(),
                    Role = fixture.Create<Role>()
                });
+
+            await SignInChief(user.Entity.Id);
 
             var employee = await DbContext.Employees
                 .AddAsync(new Entities.Employee
@@ -184,6 +191,8 @@ namespace Timesheets.IntegrationalTests
                    Role = fixture.Create<Role>()
                });
 
+            await SignInChief(user.Entity.Id);
+
             var employee = await DbContext.Employees
                 .AddAsync(new Entities.Employee
                 {
@@ -232,6 +241,8 @@ namespace Timesheets.IntegrationalTests
                     PasswordHash = fixture.Create<string>(),
                     Role = fixture.Create<Role>()
                 });
+
+            await SignInChief(user.Entity.Id);
 
             var employee = await DbContext.Employees
                 .AddAsync(new Entities.Employee

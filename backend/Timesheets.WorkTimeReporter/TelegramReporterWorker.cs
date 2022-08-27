@@ -47,7 +47,7 @@ namespace Timesheets.WorkTimeReporter
                     var message = $"Количество рабочих часов за месяц - {report.Value.Hours}" +
                         $"\nЗарплата за рабочие часы - {report.Value.SalaryAmount}";
 
-                    await telegramApiClient.SendTelegramReport(telegramUser.Value.ChatId, message);
+                    await telegramApiClient.SendTelegramMessage(telegramUser.Value.ChatId, message);
                 }
 
                 await Task.Delay(10000);

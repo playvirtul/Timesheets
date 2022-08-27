@@ -103,7 +103,7 @@ namespace Timesheets.API.Controllers
         }
 
         [HttpPost("token")]
-        public async Task<IActionResult> Login([FromBody] CreateLoginRequest loginInfo)
+        public async Task<IActionResult> GetToken([FromBody] CreateLoginRequest loginInfo)
         {
             var user = await _usersService.AuthenticateUser(loginInfo.Email, loginInfo.Password);
 

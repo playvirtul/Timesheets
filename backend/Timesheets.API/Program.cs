@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
+using System;
 
 namespace Timesheets.API
 {
@@ -14,6 +16,13 @@ namespace Timesheets.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
+                {
+                    if (context.HostingEnvironment.EnvironmentName != "Testing")
+                    {
+                        services.AddHostedService<ConfigureWebhook>();
+                    }
+                })
                 .UseDefaultServiceProvider((context, options) =>
                 {
                     options.ValidateOnBuild = false;

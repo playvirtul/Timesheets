@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Timesheets.API.Contracts;
 using Timesheets.Domain;
+using Timesheets.Domain.Auth;
 using Timesheets.Domain.Interfaces;
 
 namespace Timesheets.API.Controllers
@@ -13,6 +16,7 @@ namespace Timesheets.API.Controllers
     /// <summary>
     /// Employee controller.
     /// </summary>
+    [Authorize]
     public class EmployeesController : BaseController
     {
         private readonly IEmployeesService _employeesService;
@@ -77,6 +81,12 @@ namespace Timesheets.API.Controllers
         [HttpPost("telegramInvitation")]
         public async Task<IActionResult> SendTelegramInvite([FromBody] CreateInvitationRequest emlpoyeeDetailsRequest)
         {
+            if (UserRole.Value != Role.Chief || UserRole.IsFailure)
+            {
+                _logger.LogError("No access rights.");
+                return BadRequest("No access rights");
+            }
+
             var telergamInvitation = TelegramInvitation.Create(
                 emlpoyeeDetailsRequest.UserName,
                 emlpoyeeDetailsRequest.FirstName,
@@ -118,7 +128,13 @@ namespace Timesheets.API.Controllers
         [HttpPost("{employeeId:int}/project")]
         public async Task<IActionResult> BindProject([FromRoute] int employeeId, [FromQuery] int projectId)
         {
-            var error = await _employeesService.BindProject(employeeId, projectId);
+            if (UserId.IsFailure)
+            {
+                _logger.LogError("No access rights.");
+                return BadRequest("No access rights");
+            }
+
+            var error = await _employeesService.BindProject(UserId.Value, projectId);
 
             if (error != string.Empty)
             {
@@ -137,6 +153,12 @@ namespace Timesheets.API.Controllers
         [HttpPost("{employeeId:int}/salary")]
         public async Task<IActionResult> SaveSalary([FromRoute] int employeeId, [FromBody] CreateSalaryRequest salaryRequest)
         {
+            if (UserRole.Value != Role.Chief)
+            {
+                _logger.LogError("No access rights.");
+                return BadRequest("No access rights");
+            }
+
             var salary = Salary.Create(employeeId, salaryRequest.Amount, salaryRequest.Bonus, salaryRequest.SalaryType);
 
             if (salary.IsFailure)
